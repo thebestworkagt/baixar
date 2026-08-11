@@ -729,93 +729,53 @@
   // ============================================================
   // CARREGAR BEAT DO SUPABASE - COM FALLBACK E LOGS
   // ============================================================
-  async function loadBeat() {
+async function loadBeat() {
     try {
-      console.log('📡 Buscando beat: slug=' + beatSlug);
-      
-      // Estratégia 1: Buscar por slug
-      let { data, error } = await supabase
-        .from('beats')
-        .select('*')
-        .eq('slug', beatSlug)
-        .maybeSingle();
-
-      // Estratégia 2: Buscar por título (case insensitive)
-      if (!data) {
-        console.log('⚠️ Slug não encontrado, buscando por título: ' + beatSlug);
-        const { data: dataByTitle, error: errorByTitle } = await supabase
-          .from('beats')
-          .select('*')
-          .ilike('title', beatSlug)
-          .maybeSingle();
+        console.log('📡 Buscando beat: slug=' + beatSlug);
         
-        if (dataByTitle) {
-          data = dataByTitle;
-          error = null;
-        }
-      }
+        // Buscar o beat pelo slug
+        const { data, error } = await supabase
+            .from('beats')
+            .select('*')
+            .eq('slug', beatSlug)
+            .single();
 
-      // Estratégia 3: Buscar todos e filtrar manualmente
-      if (!data) {
-        console.log('⚠️ Buscando todos os beats...');
-        const { data: allBeats, error: allError } = await supabase
-          .from('beats')
-          .select('*');
+        if (error || !data) {
+            console.error('❌ Beat não encontrado:', error);
+            document.getElementById('beatContent').innerHTML = `
+                <div class="beat-loading">
+                    <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+                    <p>Beat não encontrado: "${beatSlug}"</p>
+                    <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
+                        Verifique se o slug está correto.
+                    </p>
+                    <p style="font-size:0.8rem;margin-top:0.3rem;">
+                        <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        const beat = data;
+        console.log('✅ Beat encontrado:', beat.title);
+        console.log('📊 Áudio:', beat.audio);
         
-        if (!allError && allBeats && allBeats.length > 0) {
-          const found = allBeats.find(b => 
-            b.slug === beatSlug || 
-            (b.title && b.title.toLowerCase() === beatSlug.toLowerCase()) ||
-            (b.title && b.title.toLowerCase().includes(beatSlug.toLowerCase()))
-          );
-          if (found) {
-            data = found;
-            error = null;
-            console.log('✅ Beat encontrado na busca manual:', found.title);
-          }
-        }
-      }
-
-      // Se não encontrou
-      if (error || !data) {
-        console.error('❌ Beat não encontrado:', error);
-        document.getElementById('beatContent').innerHTML = `
-          <div class="beat-loading">
-            <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-            <p>Beat não encontrado: "${beatSlug}"</p>
-            <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
-              Verifique se o beat existe no banco de dados.
-            </p>
-            <p style="font-size:0.8rem;margin-top:0.3rem;">
-              <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
-            </p>
-          </div>
-        `;
-        return;
-      }
-
-      const beat = data;
-      console.log('✅ Beat encontrado:', beat.title);
-      console.log('📊 Dados do beat:', JSON.stringify(beat, null, 2));
-      
-      document.title = `${beat.title} - Beatsao`;
-      renderBeat(beat);
+        document.title = `${beat.title} - Beatsao`;
+        renderBeat(beat);
     } catch (error) {
-      console.error('❌ Erro ao carregar beat:', error);
-      document.getElementById('beatContent').innerHTML = `
-        <div class="beat-loading">
-          <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-          <p>Erro ao carregar o beat</p>
-          <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
-            ${error.message || 'Erro desconhecido'}
-          </p>
-          <p style="font-size:0.8rem;margin-top:0.3rem;">
-            <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
-          </p>
-        </div>
-      `;
+        console.error('❌ Erro:', error);
+        document.getElementById('beatContent').innerHTML = `
+            <div class="beat-loading">
+                <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+                <p>Erro ao carregar o beat</p>
+                <p style="font-size:0.8rem;margin-top:0.3rem;">
+                    <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
+                </p>
+            </div>
+        `;
     }
-  }
+}
 
   // ============================================================
   // RENDERIZAR BEAT - COM FALLBACKS PARA DADOS FALTANDO
