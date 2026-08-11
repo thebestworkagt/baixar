@@ -15,11 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
-    /* ============================================================
-       CSS COMPLETO - BEST BEATS V11 (PÁGINA ÚNICA)
-       ============================================================ */
-    
-    /* ----- VARIÁVEIS ----- */
+    /* ===== VARIÁVEIS ===== */
     :root {
       --bg-primary: #08080e;
       --bg-secondary: #12121a;
@@ -33,8 +29,8 @@
       --border-color: rgba(247, 201, 72, 0.08);
       --border-hover: rgba(247, 201, 72, 0.2);
       --shadow: 0 20px 40px rgba(0,0,0,0.6);
-      --radius: 40px;
-      --radius-sm: 16px;
+      --radius: 24px;
+      --radius-sm: 12px;
       --transition: 0.25s ease;
     }
     
@@ -50,7 +46,7 @@
       --shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
-    /* ----- RESET ----- */
+    /* ===== RESET ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg-primary);
@@ -67,371 +63,7 @@
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* ============================================================
-       CSS DO MODO BEAT (capa centralizada)
-       ============================================================ */
-    .beat-page {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-    .beat-page.active { display: flex; }
-
-    .beat-page .beat-card-single {
-      position: relative;
-      z-index: 1;
-      max-width: 520px;
-      width: 100%;
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 32px;
-      padding: 40px 35px 30px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow);
-      transition: transform 0.3s ease;
-    }
-
-    .beat-page .cover-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto 28px;
-      aspect-ratio: 1/1;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(106, 13, 173, 0.3), 0 0 80px var(--gold-glow);
-    }
-    .beat-page .cover-wrapper::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 22px;
-      padding: 2px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-    .beat-page .cover-wrapper .cover-glow {
-      position: absolute;
-      inset: -30%;
-      background: radial-gradient(circle at 50% 50%, var(--gold-glow), transparent 70%);
-      animation: pulseGlow 3s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
-    }
-    .beat-page .cover-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: relative;
-      z-index: 1;
-      display: block;
-    }
-    .beat-page .cover-placeholder {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #1a0a2e, #2d1b4e, #1a0a2e);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-      color: white;
-    }
-    .beat-page .cover-placeholder .icon-big {
-      font-size: 64px;
-      color: rgba(247, 201, 72, 0.4);
-      margin-bottom: 12px;
-    }
-    .beat-page .cover-placeholder .title-art {
-      font-size: 28px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 4px;
-    }
-    .beat-page .cover-placeholder .sub-art {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.25);
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    .beat-page .beat-name-single {
-      font-size: 38px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-    .beat-page .beat-artist-single {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: 0.3rem;
-      text-align: center;
-    }
-    .beat-page .beat-artist-single i { color: var(--gold); margin-right: 0.3rem; }
-    .beat-page .beat-tags-single {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-    .beat-page .beat-tags-single .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      background: rgba(247, 201, 72, 0.08);
-      border: 1px solid rgba(247, 201, 72, 0.15);
-      color: rgba(255, 255, 255, 0.7);
-      text-transform: uppercase;
-    }
-    .beat-page .beat-tags-single .tag i { font-size: 11px; color: var(--gold); }
-    .beat-page .beat-tags-single .tag.key-tag { background: rgba(251, 191, 36, 0.08); border-color: rgba(251, 191, 36, 0.15); color: rgba(251, 191, 36, 0.6); }
-    .beat-page .beat-tags-single .tag.key-tag i { color: #fbbf24; }
-
-    .beat-page .btn-voltar {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 1.5rem;
-      cursor: pointer;
-      transition: 0.2s;
-      background: none;
-      border: none;
-      font-family: 'Inter', sans-serif;
-    }
-    .beat-page .btn-voltar:hover { color: var(--gold-dark); }
-    .beat-page .btn-voltar i { font-size: 0.8rem; }
-
-    /* ---- PLAYER DO MODO BEAT ---- */
-    .beat-page .player-wrapper-single {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
-      padding: 18px 20px 16px;
-      margin-bottom: 24px;
-      border: 1px solid var(--border-color);
-    }
-    .beat-page .player-controls-single {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .beat-page .play-btn-single {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #0a0a0f;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px var(--gold-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .beat-page .play-btn-single:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--gold-glow); }
-    .beat-page .play-btn-single.playing {
-      background: linear-gradient(135deg, #f472b6, #ec4899);
-      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
-    }
-    .beat-page .player-info-single { flex: 1; min-width: 0; }
-    .beat-page .player-time-single {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.3);
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      margin-top: 4px;
-    }
-    .beat-page .progress-bar-single {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 4px;
-      cursor: pointer;
-      position: relative;
-      transition: height 0.2s ease;
-    }
-    .beat-page .progress-bar-single:hover { height: 6px; }
-    .beat-page .progress-fill-single {
-      height: 100%;
-      width: 0%;
-      border-radius: 4px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-      transition: width 0.1s linear;
-      position: relative;
-    }
-    .beat-page .progress-fill-single::after {
-      content: '';
-      position: absolute;
-      right: -4px;
-      top: -4px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      box-shadow: 0 0 20px var(--gold-glow);
-    }
-    .beat-page .progress-bar-single:hover .progress-fill-single::after { opacity: 1; }
-
-    .beat-page .visualizer-single {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      height: 30px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-color);
-    }
-    .beat-page .visualizer-single .bar {
-      width: 4px;
-      height: 8px;
-      background: rgba(247, 201, 72, 0.15);
-      border-radius: 2px;
-      transition: height 0.15s ease;
-    }
-    .beat-page .visualizer-single.active .bar {
-      background: linear-gradient(to top, var(--gold), var(--gold-dark));
-      animation: visualizeSingle 0.6s ease-in-out infinite alternate;
-    }
-    .beat-page .visualizer-single .bar:nth-child(1) { animation-delay: 0.0s; }
-    .beat-page .visualizer-single .bar:nth-child(2) { animation-delay: 0.1s; }
-    .beat-page .visualizer-single .bar:nth-child(3) { animation-delay: 0.2s; }
-    .beat-page .visualizer-single .bar:nth-child(4) { animation-delay: 0.3s; }
-    .beat-page .visualizer-single .bar:nth-child(5) { animation-delay: 0.15s; }
-    .beat-page .visualizer-single .bar:nth-child(6) { animation-delay: 0.05s; }
-    .beat-page .visualizer-single .bar:nth-child(7) { animation-delay: 0.25s; }
-    .beat-page .visualizer-single .bar:nth-child(8) { animation-delay: 0.35s; }
-    .beat-page .visualizer-single .bar:nth-child(9) { animation-delay: 0.1s; }
-    .beat-page .visualizer-single .bar:nth-child(10) { animation-delay: 0.2s; }
-    .beat-page .visualizer-single .bar:nth-child(11) { animation-delay: 0.3s; }
-    .beat-page .visualizer-single .bar:nth-child(12) { animation-delay: 0.05s; }
-    .beat-page .visualizer-single .bar:nth-child(13) { animation-delay: 0.15s; }
-    .beat-page .visualizer-single .bar:nth-child(14) { animation-delay: 0.25s; }
-    .beat-page .visualizer-single .bar:nth-child(15) { animation-delay: 0.35s; }
-    @keyframes visualizeSingle {
-      0% { height: 6px; }
-      100% { height: 28px; }
-    }
-    .beat-page .visualizer-single .bar.inactive {
-      height: 6px !important;
-      animation: none !important;
-    }
-
-    .beat-page .download-section-single {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .beat-page .download-btn-single {
-      flex: 1;
-      padding: 14px 8px;
-      border: none;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
-    .beat-page .download-btn-single::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      padding: 2px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-    .beat-page .btn-mp3-single {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.25);
-    }
-    .beat-page .btn-mp3-single:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
-    }
-    .beat-page .btn-wav-single {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
-    }
-    .beat-page .btn-wav-single:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.35);
-    }
-
-    .beat-page .footer-single {
-      text-align: center;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
-      margin-top: 4px;
-    }
-    .beat-page .footer-single a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      letter-spacing: 0.5px;
-    }
-    .beat-page .footer-single a:hover { color: var(--gold); }
-    .beat-page .footer-single a i { margin-right: 6px; font-size: 12px; }
-
-    .beat-page .beat-loading-single {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-muted);
-    }
-    .beat-page .beat-loading-single i {
-      font-size: 2.5rem;
-      color: var(--gold);
-      display: block;
-      margin-bottom: 1rem;
-    }
-
-    /* ----- MENU FIXO ----- */
+    /* ===== MENU FIXO ===== */
     .menu-fixed {
       position: fixed;
       top: 1rem;
@@ -442,7 +74,6 @@
     .hamburger-btn {
       background: var(--bg-card);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-color);
       color: var(--text-primary);
       padding: 0.6rem 1rem;
@@ -504,7 +135,6 @@
     .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
-    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
     .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
@@ -517,47 +147,10 @@
     .user-info-display .admin-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
     .user-info-display .user-details { display: flex; flex-direction: column; }
     .user-info-display .user-name { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
-    .user-info-display .user-email { 
-      font-size: 0.7rem; 
-      color: var(--text-muted);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 1px;
-    }
-    .user-info-display .user-email .email-text {
-      transition: all 0.3s ease;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 1px;
-    }
-    .user-info-display .user-email .email-text.hidden {
-      color: var(--text-muted);
-      opacity: 0.5;
-      letter-spacing: 2px;
-    }
-    .user-info-display .user-email .email-toggle-btn {
-      background: none;
-      border: none;
-      color: var(--gold);
-      cursor: pointer;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.3rem;
-      border-radius: 4px;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.2rem;
-    }
-    .user-info-display .user-email .email-toggle-btn:hover {
-      background: var(--gold-glow);
-    }
-    .user-info-display .user-email .email-toggle-btn i {
-      font-size: 0.6rem;
-    }
+    .user-info-display .user-email { font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem; }
+    .user-info-display .user-email .email-toggle-btn { background: none; border: none; color: var(--gold); cursor: pointer; font-size: 0.6rem; padding: 0.1rem 0.3rem; border-radius: 4px; transition: 0.2s; }
 
-    /* ----- HEADER ----- */
+    /* ===== HEADER ===== */
     .header {
       display: flex;
       flex-direction: column;
@@ -601,7 +194,7 @@
       display: inline-block;
     }
 
-    /* ----- ADMIN TOOLBAR ----- */
+    /* ===== ADMIN TOOLBAR ===== */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
@@ -611,19 +204,8 @@
       margin-bottom: 1.5rem;
       width: 100%;
     }
-    .admin-toolbar-left {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      flex: 1;
-    }
-    .admin-toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
+    .admin-toolbar-left { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; flex: 1; }
+    .admin-toolbar-right { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
 
     .search-container {
       display: flex;
@@ -652,15 +234,7 @@
       outline: none;
     }
     .search-container input::placeholder { color: var(--text-muted); }
-    .search-container .clear-search {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.7rem;
-      display: none;
-    }
+    .search-container .clear-search { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.2rem 0.6rem; font-size: 0.7rem; display: none; }
     .search-container .clear-search.visible { display: block; }
 
     .filter-select, .sort-select {
@@ -708,7 +282,7 @@
       text-align: center;
     }
 
-    /* ----- TOAST ----- */
+    /* ===== TOAST ===== */
     .toast-container {
       position: fixed;
       top: 5rem;
@@ -758,7 +332,7 @@
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
-    /* ----- LOADING ----- */
+    /* ===== LOADING ===== */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -807,21 +381,22 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ----- BEATS LIST (MODO LISTA) ----- */
+    /* ===== BEATS LIST ===== */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
+    
+    /* ===== BEAT CARD - NOVO DESIGN ===== */
     .beat-card {
       background: var(--bg-card);
       backdrop-filter: blur(14px);
       border-radius: var(--radius);
       border: 1px solid var(--border-color);
       padding: 1.2rem 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
       box-shadow: var(--shadow);
       transition: var(--transition);
-      flex-wrap: wrap;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
     }
     .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--border-hover); }
     
@@ -840,10 +415,7 @@
       box-shadow: 0 4px 20px var(--gold-glow);
       z-index: 2;
     }
-    .beat-card .popularity-badge i {
-      margin-right: 0.3rem;
-      font-size: 0.5rem;
-    }
+    .beat-card .popularity-badge i { margin-right: 0.3rem; font-size: 0.5rem; }
     
     .card-edit-btn {
       position: absolute;
@@ -866,340 +438,277 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* ----- PLAYER (MODO LISTA) ----- */
-    .player-wrapper {
-      flex: 0 0 160px;
-      width: 160px;
-      height: 160px;
-      border-radius: 20px;
-      position: relative;
-      overflow: hidden;
-      background: var(--bg-secondary);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-      margin-top: 0.5rem;
-      cursor: pointer;
+    /* ===== LINHA PRINCIPAL DO CARD ===== */
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
     }
-    .player-bg {
-      position: absolute;
-      inset: 0;
+
+    /* ===== CAPA (placeholder) ===== */
+    .card-cover {
+      flex: 0 0 100px;
+      width: 100px;
+      height: 100px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a0a2e, #2d1b4e, #1a0a2e);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 25px rgba(106, 13, 173, 0.2);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+    .card-cover img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: blur(8px) brightness(0.6);
-      transform: scale(1.05);
-    }
-    .player-overlay {
       position: absolute;
       inset: 0;
-      backdrop-filter: blur(12px);
-      background: rgba(10, 10, 15, 0.35);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 0.6rem;
-      color: white;
     }
-    .player-artist {
+    .card-cover .cover-text {
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+      padding: 0.2rem;
+    }
+    .card-cover .cover-text .genre {
       font-size: 0.5rem;
       font-weight: 400;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.5);
       text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #d4d4e0;
-      background: rgba(0,0,0,0.3);
-      padding: 0.1rem 0.5rem;
-      border-radius: 30px;
-      backdrop-filter: blur(4px);
-      margin-bottom: 0.1rem;
     }
-    .player-title {
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-align: center;
-      line-height: 1.2;
-      margin: 0.1rem 0 0.1rem;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    }
-    .player-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      margin-top: 0.1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn-play {
-      background: var(--gold);
-      border: none;
-      color: #0a0a0f;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px var(--gold-glow);
-      transition: 0.2s;
-      cursor: pointer;
-    }
-    .btn-play:hover { transform: scale(1.04); background: var(--gold-dark); }
-    .btn-next {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #eee;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-next:hover { background: rgba(255,255,255,0.2); }
-    .btn-playlist {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #d0d0dd;
-      padding: 0.1rem 0.5rem;
-      border-radius: 40px;
-      font-size: 0.55rem;
-      font-weight: 400;
-      backdrop-filter: blur(4px);
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      transition: 0.2s;
-    }
-    .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .btn-playlist.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-    .btn-playlist.added:hover { background: rgba(37, 211, 102, 0.15); }
-    .progress-area {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      margin: 0.05rem 0 0.05rem;
-      padding: 0 0.1rem;
-    }
-    .progress-bar {
-      flex: 1;
-      height: 2px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 10px;
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-    }
-    .progress-bar::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gold);
-      cursor: pointer;
-      box-shadow: 0 0 12px var(--gold-glow);
-    }
-    .progress-bar::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
-    .time-display { font-size: 0.5rem; font-weight: 300; color: #bfbfd0; min-width: 28px; }
-    .volume-wrap { display: flex; align-items: center; gap: 0.15rem; margin-top: 0.05rem; }
-    .volume-wrap i { font-size: 0.55rem; color: #b0b0c0; }
-    .volume-slider {
-      width: 30px;
-      height: 2px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 10px;
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-    }
-    .volume-slider::-webkit-slider-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-    .volume-slider::-moz-range-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); border: none; }
-    .badge-genre {
+    .card-cover .cover-glow {
       position: absolute;
-      top: 6px;
-      right: 8px;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(6px);
-      padding: 0.05rem 0.5rem;
-      border-radius: 30px;
-      font-size: 0.45rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      color: var(--gold);
-      border: 1px solid var(--border-color);
-      text-transform: uppercase;
+      inset: -20%;
+      background: radial-gradient(circle at 50% 50%, rgba(247, 201, 72, 0.1), transparent 70%);
+      pointer-events: none;
     }
 
-    /* ----- BEAT INFO (MODO LISTA) ----- */
-    .beat-info {
+    /* ===== INFO DO BEAT ===== */
+    .card-info {
       flex: 1;
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .card-info .beat-name {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .card-info .beat-name i { color: var(--gold); font-size: 0.8rem; margin-left: 0.3rem; opacity: 0.6; }
+    .card-info .beat-meta {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .card-info .beat-meta span { display: flex; align-items: center; gap: 0.2rem; }
+    .card-info .beat-meta i { color: var(--gold); font-size: 0.6rem; }
+
+    /* ===== PLAYER ===== */
+    .card-player {
+      flex: 1;
+      min-width: 180px;
       display: flex;
       flex-direction: column;
       gap: 0.3rem;
-      min-width: 140px;
+      padding: 0.3rem 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
     }
-    .beat-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-    .beat-title i { color: var(--gold); font-size: 0.9rem; opacity: 0.7; }
-    .beat-meta {
+    .player-row {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      flex-wrap: wrap;
-      margin: 0.05rem 0;
     }
-    .beat-genre {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-weight: 300;
-      letter-spacing: 0.2px;
-      background: rgba(255,255,255,0.04);
-      padding: 0.05rem 0.6rem;
-      border-radius: 30px;
-      border: 1px solid var(--border-color);
-    }
-    .beat-genre i { color: var(--gold); margin-right: 3px; }
-    .beat-price {
-      display: inline-block;
-      background: var(--gold-glow);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(4px);
-      padding: 0.1rem 0.8rem;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--gold);
-    }
-    .beat-price i { margin-right: 4px; color: var(--gold-dark); }
-    .beat-exclusivo {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      font-weight: 300;
-      letter-spacing: 0.5px;
-      margin-top: -0.05rem;
-    }
-    .beat-exclusivo i { color: var(--gold); margin-right: 3px; font-size: 0.6rem; }
-    .beat-stats {
-      display: flex;
-      gap: 0.8rem;
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-    .beat-stats i { color: var(--gold); margin-right: 2px; }
-    .beat-plays {
-      transition: color 0.3s;
-    }
-    .beat-plays.highlight {
-      color: var(--gold);
-    }
-    .beat-rating {
+    .btn-play-small {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border: none;
+      color: #0a0a0f;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
       display: flex;
       align-items: center;
-      gap: 0.2rem;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px var(--gold-glow);
     }
-    .beat-rating .stars {
-      color: var(--gold);
+    .btn-play-small:hover { transform: scale(1.05); }
+    .btn-play-small.playing { background: linear-gradient(135deg, #f472b6, #ec4899); box-shadow: 0 2px 12px rgba(236, 72, 153, 0.3); }
+    
+    .player-track {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .player-progress {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: height 0.2s;
+    }
+    .player-progress:hover { height: 5px; }
+    .player-progress .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      transition: width 0.1s linear;
+    }
+    .player-times {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== BOTÕES DE DOWNLOAD (dentro do player) ===== */
+    .download-btns {
+      display: flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+    }
+    .btn-download-small {
+      padding: 0.15rem 0.6rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-download-small.btn-mp3 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+    .btn-download-small.btn-wav { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+    .btn-download-small:hover { transform: scale(1.05); opacity: 0.9; }
+
+    /* ===== BOTÃO MAIS/MENOS ===== */
+    .btn-more {
+      background: none;
+      border: none;
+      color: var(--text-muted);
       font-size: 0.7rem;
-      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
     }
-    .beat-actions {
+    .btn-more:hover { color: var(--gold); background: var(--gold-glow); border-color: var(--gold); }
+    .btn-more i { font-size: 0.6rem; }
+
+    /* ===== INFORMAÇÕES EXPANDIDAS ===== */
+    .card-expand {
+      display: none;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border-color);
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .card-expand.open { display: flex; }
+
+    .expand-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .expand-row .tag-group {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .expand-row .tag-group .tag {
+      padding: 0.15rem 0.7rem;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 500;
+      background: rgba(247, 201, 72, 0.06);
+      border: 1px solid rgba(247, 201, 72, 0.1);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .expand-row .tag-group .tag i { color: var(--gold); margin-right: 0.2rem; font-size: 0.5rem; }
+    .expand-row .tag-group .tag.key-tag { background: rgba(251, 191, 36, 0.06); border-color: rgba(251, 191, 36, 0.1); color: rgba(251, 191, 36, 0.7); }
+    .expand-row .tag-group .tag.key-tag i { color: #fbbf24; }
+
+    .expand-actions {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
-      margin-top: 0.2rem;
+      align-items: center;
     }
-    .btn-share {
-      background: rgba(255,255,255,0.04);
+    .expand-actions .btn-action {
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
       border: 1px solid var(--border-color);
+      background: rgba(255,255,255,0.03);
       color: var(--text-secondary);
-      padding: 0.25rem 1rem;
-      border-radius: 60px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      cursor: pointer;
-      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-family: 'Inter', sans-serif;
-      backdrop-filter: blur(4px);
+      gap: 0.3rem;
     }
-    .btn-share:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
-    .btn-share i { font-size: 0.8rem; }
-    .btn-whatsapp {
-      background: linear-gradient(135deg, #25D366, #1ebe5c);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      padding: 0.25rem 1.2rem;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 0.75rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
-      transition: 0.2s;
-      cursor: pointer;
-      text-decoration: none;
-      letter-spacing: 0.3px;
-      backdrop-filter: blur(4px);
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-whatsapp i { font-size: 0.9rem; }
-    .btn-whatsapp:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); background: linear-gradient(135deg, #2fd16e, #1ebe5c); }
-    .btn-cart {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      padding: 0.25rem 1rem;
-      border-radius: 60px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
-    .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-
-    /* BOTÃO VER BEAT */
-    .btn-ver-beat {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      padding: 0.25rem 1rem;
-      border-radius: 60px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: 'Inter', sans-serif;
-      text-decoration: none;
-      backdrop-filter: blur(4px);
+    .expand-actions .btn-action:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
+    .expand-actions .btn-action i { font-size: 0.6rem; }
+    .expand-actions .btn-action .fa-whatsapp { color: #25D366; font-size: 0.7rem; }
+    .expand-actions .btn-action.btn-negociar { 
+      background: linear-gradient(135deg, #25D366, #1ebe5c); 
+      color: #fff; 
       border: none;
-      background: none;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
     }
-    .btn-ver-beat:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
-    .btn-ver-beat i { font-size: 0.7rem; }
+    .expand-actions .btn-action.btn-negociar:hover { 
+      transform: scale(1.03); 
+      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.3); 
+      background: linear-gradient(135deg, #2fd16e, #1ebe5c);
+    }
+    .expand-actions .btn-action.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* ----- FOOTER ----- */
+    /* ===== STATS (plays, rating) ===== */
+    .expand-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+    .expand-stats i { color: var(--gold); margin-right: 0.2rem; font-size: 0.55rem; }
+    .expand-stats .stars { color: var(--gold); letter-spacing: 1px; }
+
+    /* ===== FOOTER ===== */
     .footer {
       margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
@@ -1225,7 +734,7 @@
     }
     .social-icons .social-link:hover { color: var(--gold); transform: translateY(-2px); }
 
-    /* ----- MODALS ----- */
+    /* ===== MODALS ===== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1347,7 +856,7 @@
     .modal .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
     .modal .login-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 0.5rem; display: none; }
 
-    /* ----- PLAYLIST MODAL ----- */
+    /* ===== PLAYLIST MODAL ===== */
     #playlistContainer {
       max-height: 400px;
       overflow-y: auto;
@@ -1410,7 +919,7 @@
     .empty-playlist p { font-weight: 300; font-size: 0.9rem; }
     .empty-playlist .sub { font-size: 0.75rem; margin-top: 0.2rem; }
 
-    /* ----- CART MODAL ----- */
+    /* ===== CART MODAL ===== */
     .cart-item {
       display: flex;
       align-items: center;
@@ -1422,24 +931,11 @@
     .cart-item .info { flex: 1; }
     .cart-item .info .title { font-weight: 600; font-size: 0.9rem; }
     .cart-item .info .sub { font-size: 0.75rem; color: var(--text-secondary); }
-    .cart-item .remove-item {
-      background: none;
-      border: none;
-      color: #ff6b6b;
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 0.2rem 0.4rem;
-    }
-    .cart-total {
-      text-align: right;
-      padding-top: 0.8rem;
-      border-top: 2px solid var(--border-color);
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
+    .cart-item .remove-item { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 0.9rem; padding: 0.2rem 0.4rem; }
+    .cart-total { text-align: right; padding-top: 0.8rem; border-top: 2px solid var(--border-color); font-size: 1.1rem; font-weight: 700; }
     .cart-total span { color: var(--gold); }
 
-    /* ----- SHARE TOAST ----- */
+    /* ===== SHARE TOAST ===== */
     .share-toast {
       position: fixed;
       bottom: 2rem;
@@ -1461,13 +957,13 @@
     .share-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
     .share-toast i { color: var(--gold); margin-right: 0.5rem; }
 
-    /* ----- PREVIEW ----- */
+    /* ===== PREVIEW ===== */
     .preview-container { display: flex; gap: 0.8rem; margin: 0.3rem 0; flex-wrap: wrap; }
     .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.4rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.4rem; }
     .preview-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
     .preview-item i { font-size: 1.5rem; color: var(--gold); }
 
-    /* ----- THEME TOGGLE ----- */
+    /* ===== THEME TOGGLE ===== */
     .theme-toggle {
       position: fixed;
       bottom: 80px;
@@ -1490,18 +986,19 @@
     }
     .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
 
-    /* ----- RESPONSIVE ----- */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 850px) {
       body { padding-top: 5rem; }
       .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.5rem; }
       .admin-toolbar-left { flex-wrap: wrap; }
       .admin-toolbar-right { justify-content: center; }
       .search-container { min-width: 100px; }
-      .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.2rem; padding-top: 1.8rem; }
-      .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
-      .beat-info { align-items: center; width: 100%; }
-      .beat-meta { justify-content: center; }
-      .beat-actions { justify-content: center; }
+      .card-row { flex-direction: column; align-items: stretch; }
+      .card-cover { flex: 0 0 80px; width: 80px; height: 80px; align-self: center; }
+      .card-player { min-width: 100%; }
+      .download-btns { justify-content: center; }
+      .expand-row { flex-direction: column; align-items: stretch; }
+      .expand-actions { justify-content: center; }
       .modal { padding: 1.2rem 1.5rem; }
       .toast-container { right: 1rem; left: 1rem; max-width: none; top: 5rem; }
       .hamburger-dropdown { right: -10px; min-width: 180px; }
@@ -1514,50 +1011,29 @@
       .hamburger-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
       .hamburger-btn .btn-label { display: none; }
       .beat-card .popularity-badge { top: -0.2rem; left: 1rem; font-size: 0.5rem; padding: 0.1rem 0.6rem; }
-      .beat-page .beat-card-single { padding: 24px 18px 20px; border-radius: 24px; }
-      .beat-page .beat-name-single { font-size: 30px; }
-      .beat-page .cover-wrapper { max-width: 240px; }
-      .beat-page .download-section-single { flex-direction: column; gap: 8px; }
-      .beat-page .download-btn-single { padding: 16px; }
-      .beat-page .player-controls-single { gap: 12px; }
-      .beat-page .play-btn-single { width: 42px; height: 42px; min-width: 42px; font-size: 17px; }
-      .beat-page .beat-tags-single .tag { font-size: 10px; padding: 3px 10px; }
-      .beat-page .visualizer-single .bar { width: 3px; }
+      .beat-card { padding: 1rem; }
     }
     @media (max-width: 480px) {
       body { padding-top: 4.5rem; }
       .brand { font-size: 1.6rem; }
       .logo { width: 50px; height: 50px; }
-      .player-wrapper { flex: 0 0 120px; width: 120px; height: 120px; }
+      .card-cover { flex: 0 0 70px; width: 70px; height: 70px; }
+      .card-cover .cover-text { font-size: 0.6rem; }
+      .card-info .beat-name { font-size: 1rem; }
       .search-container input { font-size: 0.75rem; min-width: 60px; }
       .filter-select, .sort-select { font-size: 0.65rem; padding: 0.15rem 0.5rem; min-width: 60px; }
       .toast-container { top: 4.5rem; }
       .menu-fixed { top: 0.5rem; right: 0.5rem; }
       .hamburger-btn { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
       .beat-card .popularity-badge { top: -0.15rem; left: 0.8rem; font-size: 0.45rem; padding: 0.05rem 0.5rem; }
-      .beat-page .beat-card-single { padding: 18px 12px 16px; }
-      .beat-page .beat-name-single { font-size: 26px; }
-      .beat-page .cover-wrapper { max-width: 180px; }
-      .beat-page .beat-tags-single .tag { font-size: 9px; padding: 2px 8px; }
+      .beat-card { padding: 0.8rem; }
+      .expand-actions .btn-action { font-size: 0.55rem; padding: 0.15rem 0.6rem; }
     }
-
-    /* ----- OCULTAR/MOSTRAR MODOS ----- */
-    .mode-list { display: block; }
-    .mode-list.hidden { display: none; }
-    .mode-beat { display: none; }
-    .mode-beat.active { display: block; }
   </style>
 </head>
 <body>
 
-<!-- ANALYTICS -->
-<script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: '5oy6a7uemm',
-    });
-</script>
-
-<!-- MENU FIXO -->
+<!-- ===== MENU FIXO ===== -->
 <div class="menu-fixed">
   <div class="hamburger-menu">
     <button class="hamburger-btn" id="menuBtn">
@@ -1613,112 +1089,76 @@
       </button>
       
       <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
-        Best Beats v11.0
+        Best Beats v12.0
       </div>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ===== TOAST ===== -->
 <div class="toast-container" id="toastContainer"></div>
+<div class="share-toast" id="shareToast"><i class="fas fa-check-circle"></i> Link copiado</div>
 
-<!-- SHARE TOAST -->
-<div class="share-toast" id="shareToast">
-  <i class="fas fa-check-circle"></i> Link copiado para a área de transferência
-</div>
-
-<!-- THEME TOGGLE -->
-<button class="theme-toggle" id="themeToggle" title="Alternar tema">
-  <i class="fas fa-moon"></i>
-</button>
+<!-- ===== THEME TOGGLE ===== -->
+<button class="theme-toggle" id="themeToggle" title="Alternar tema"><i class="fas fa-moon"></i></button>
 
 <div class="app">
 
-  <!-- ============================================================
-       MODO LISTA (PÁGINA PRINCIPAL)
-       ============================================================ -->
-  <div id="modeList" class="mode-list">
-    <!-- HEADER -->
-    <header class="header">
-      <a href="?" class="logo-wrapper" id="logoLink">
-        <img src="logo.png" alt="Best Beats" class="logo">
-        <span class="brand">Best Beats</span>
-      </a>
-      <div class="subtitle">ouça e compre</div>
-    </header>
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <a href="?" class="logo-wrapper" id="logoLink">
+      <img src="logo.png" alt="Best Beats" class="logo">
+      <span class="brand">Best Beats</span>
+    </a>
+    <div class="subtitle">ouça e compre</div>
+  </header>
 
-    <!-- ADMIN TOOLBAR -->
-    <div class="admin-toolbar">
-      <div class="admin-toolbar-left">
-        <div class="search-container">
-          <i class="fas fa-search"></i>
-          <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
-          <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
-        </div>
-        <select class="filter-select" id="filterGenre">
-          <option value="all">Todos os gêneros</option>
-        </select>
-        <select class="sort-select" id="sortBy">
-          <option value="recent">Mais recentes</option>
-          <option value="popular">Mais populares</option>
-          <option value="price-low">Menor preço</option>
-          <option value="price-high">Maior preço</option>
-          <option value="rating">Melhor avaliação</option>
-        </select>
+  <!-- ===== ADMIN TOOLBAR ===== -->
+  <div class="admin-toolbar">
+    <div class="admin-toolbar-left">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
+        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
       </div>
-      <div class="admin-toolbar-right">
-        <button class="cart-btn" id="cartBtn">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cartCount">0</span>
-        </button>
-      </div>
+      <select class="filter-select" id="filterGenre"><option value="all">Todos os gêneros</option></select>
+      <select class="sort-select" id="sortBy">
+        <option value="recent">Mais recentes</option>
+        <option value="popular">Mais populares</option>
+        <option value="price-low">Menor preço</option>
+        <option value="price-high">Maior preço</option>
+        <option value="rating">Melhor avaliação</option>
+      </select>
     </div>
-
-    <!-- LOADING -->
-    <div id="loading" class="loading-wrapper">
-      <div class="loading-wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <div class="loading-text">Carregando beats</div>
-      <div class="loading-progress">
-        <div class="loading-progress-bar"></div>
-      </div>
-    </div>
-
-    <!-- BEATS LIST -->
-    <div class="beats-list" id="beatsContainer"></div>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div class="social-icons">
-        <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
-        <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" aria-label="Instagram"><i class="fab fa-instagram"></i></button>
-        <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
-        <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-      </div>
-      <div>© 2026 Best Beats · todos os direitos reservados</div>
-    </footer>
-  </div>
-
-  <!-- ============================================================
-       MODO BEAT (PÁGINA INDIVIDUAL)
-       ============================================================ -->
-  <div id="modeBeat" class="mode-beat">
-    <div class="beat-page">
-      <button class="btn-voltar" id="btnVoltarBeat">
-        <i class="fas fa-arrow-left"></i> Voltar para lista
-      </button>
-      <div id="beatContent" class="beat-card-single">
-        <div class="beat-loading-single">
-          <i class="fas fa-spinner fa-spin"></i>
-          <p>Carregando beat...</p>
-        </div>
-      </div>
+    <div class="admin-toolbar-right">
+      <button class="cart-btn" id="cartBtn"><i class="fas fa-shopping-cart"></i> <span class="cart-count" id="cartCount">0</span></button>
     </div>
   </div>
+
+  <!-- ===== LOADING ===== -->
+  <div id="loading" class="loading-wrapper">
+    <div class="loading-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="loading-text">Carregando beats</div>
+    <div class="loading-progress"><div class="loading-progress-bar"></div></div>
+  </div>
+
+  <!-- ===== BEATS LIST ===== -->
+  <div class="beats-list" id="beatsContainer"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="social-icons">
+      <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')"><i class="fab fa-youtube"></i></button>
+      <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')"><i class="fab fa-instagram"></i></button>
+      <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')"><i class="fab fa-facebook-f"></i></button>
+      <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')"><i class="fab fa-whatsapp"></i></button>
+    </div>
+    <div>© 2026 Best Beats · todos os direitos reservados</div>
+  </footer>
 
 </div>
+
+<!-- ===== MODALS ===== -->
 
 <!-- MODAL LOGIN -->
 <div class="modal-overlay" id="loginModal">
@@ -1745,42 +1185,31 @@
     <form id="beatForm" enctype="multipart/form-data">
       <label for="fTitle">Título *</label>
       <input type="text" id="fTitle" placeholder="Ex: Aurora" required>
-      
       <label for="fArtist">Artista *</label>
       <input type="text" id="fArtist" placeholder="Ex: Pedro" required>
-      
       <label for="fGenre">Gênero *</label>
       <input type="text" id="fGenre" placeholder="Ex: Trap" required>
-      
       <label for="fPrice">Preço *</label>
       <input type="text" id="fPrice" placeholder="Kz 3.500" required>
-      
       <label for="fBpm">BPM</label>
       <input type="text" id="fBpm" placeholder="Ex: 140">
-      
       <label for="fKey">Tom</label>
       <input type="text" id="fKey" placeholder="Ex: A Minor">
-      
       <label for="fCoverFile">Imagem de Capa</label>
       <input type="file" id="fCoverFile" accept="image/*">
       <div class="file-status" id="coverStatus">Selecionar</div>
-
       <label for="fAudioStream">Link de Streaming (MP3 - OpenDrive) *</label>
       <input type="url" id="fAudioStream" placeholder="https://od.lk/s/..." required>
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para ouvir no player</div>
-
       <label for="fAudioMp3">Link Download MP3 (OpenDrive)</label>
       <input type="url" id="fAudioMp3" placeholder="https://od.lk/d/...">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar MP3</div>
-
       <label for="fAudioWav">Link Download WAV (OpenDrive)</label>
       <input type="url" id="fAudioWav" placeholder="https://od.lk/d/...">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar WAV</div>
-
       <label for="fPassword">Senha de Download</label>
       <input type="text" id="fPassword" placeholder="Ex: Love2026">
-      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Senha para liberar o download (deixe em branco para padrão)</div>
-
+      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Senha para liberar o download</div>
       <div class="preview-container" id="previewContainer"></div>
       <div class="modal-actions">
         <button type="button" class="btn-cancel" id="formCancel">Cancelar</button>
@@ -1800,9 +1229,7 @@
       <p>Sua playlist está vazia</p>
       <p class="sub">Adicione beats clicando em "Add" nos cards</p>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="playlistCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="playlistCancel">Fechar</button></div>
   </div>
 </div>
 
@@ -1815,14 +1242,10 @@
       <i class="fas fa-shopping-bag" style="font-size:2rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
       <p>Seu carrinho está vazio</p>
     </div>
-    <div class="cart-total" id="cartTotal" style="display:none;">
-      Total: <span id="cartTotalValue">Kz 0</span>
-    </div>
+    <div class="cart-total" id="cartTotal" style="display:none;">Total: <span id="cartTotalValue">Kz 0</span></div>
     <div class="modal-actions">
       <button type="button" class="btn-cancel" id="cartCancel">Fechar</button>
-      <button type="button" class="btn-save" id="cartCheckout">
-        <i class="fab fa-whatsapp"></i> Finalizar Compra
-      </button>
+      <button type="button" class="btn-save" id="cartCheckout"><i class="fab fa-whatsapp"></i> Finalizar Compra</button>
     </div>
   </div>
 </div>
@@ -1853,9 +1276,7 @@
       <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem;">Beats Mais Ouvidos</div>
       <div id="topBeats"></div>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="dashboardCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="dashboardCancel">Fechar</button></div>
   </div>
 </div>
 
@@ -1897,9 +1318,7 @@
         <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-whatsapp"></i></button>
       </div>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="aboutCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="aboutCancel">Fechar</button></div>
   </div>
 </div>
 
@@ -1924,1747 +1343,1221 @@
   </div>
 </div>
 
-<script>
-  (function() {
-    // ============================================================
-    // 1. CONFIGURAÇÃO DO SUPABASE
-    // ============================================================
-    const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZ2hmZmx0bWlxY2xqdW9rYmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NzIyODgsImV4cCI6MjEwMDI0ODI4OH0.n1mYWDG2803VEbGQ8qyWlCkthtezu-3Yuh-k58bo0xE';
-
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ============================================================
-    // 2. ESTADO GLOBAL
-    // ============================================================
-    let beatsData = [];
-    let filteredBeats = [];
-    let editMode = false;
-    let editingId = null;
-    let isLoggedIn = false;
-    let currentUser = null;
-    let selectedCoverFile = null;
-    let playlistAudio = null;
-    let playlistAudioId = null;
-    let currentBeatSlug = null;
-    let beatAudio = null; // Para o player do modo beat
-    
-    // Cart
-    let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
-    
-    // Ratings
-    let userRatings = {};
-    
-    // Email visibility
-    let emailVisible = true;
-    let emailText = '';
-
-    // ============================================================
-    // 3. TOAST
-    // ============================================================
-    function showToast(title, message, type = 'info', duration = 4000) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-      toast.innerHTML = `
-        <div class="toast-icon ${type}"><i class="fas ${icons[type] || icons.info}"></i></div>
-        <div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>
-        <button class="toast-close"><i class="fas fa-times"></i></button>
-      `;
-      container.appendChild(toast);
-      const closeBtn = toast.querySelector('.toast-close');
-      closeBtn.addEventListener('click', () => removeToast(toast));
-      if (duration > 0) setTimeout(() => removeToast(toast), duration);
-      return toast;
-    }
-    function removeToast(toast) {
-      if (toast.classList.contains('removing')) return;
-      toast.classList.add('removing');
-      setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 350);
-    }
-
-    // ============================================================
-    // 4. EMAIL TOGGLE
-    // ============================================================
-    function toggleEmailVisibility() {
-      emailVisible = !emailVisible;
-      const emailElement = document.getElementById('emailText');
-      const eyeIcon = document.getElementById('emailEyeIcon');
-      const userEmail = currentUser?.email || 'usuario@email.com';
-      
-      if (emailVisible) {
-        emailElement.textContent = emailText || userEmail;
-        eyeIcon.className = 'fas fa-eye';
-        localStorage.setItem('bestBeatsEmailVisible', 'true');
-        showToast('Email visível', 'O email está visível.', 'info', 2000);
-      } else {
-        const hiddenText = userEmail.replace(/[^@]/g, '•');
-        emailElement.textContent = hiddenText;
-        eyeIcon.className = 'fas fa-eye-slash';
-        localStorage.setItem('bestBeatsEmailVisible', 'false');
-        showToast('Email oculto', 'O email foi ocultado.', 'info', 2000);
-      }
-    }
-
-    function loadEmailVisibility() {
-      const saved = localStorage.getItem('bestBeatsEmailVisible');
-      const userEmail = currentUser?.email || 'usuario@email.com';
-      const emailElement = document.getElementById('emailText');
-      const eyeIcon = document.getElementById('emailEyeIcon');
-      
-      emailText = userEmail;
-      
-      if (saved === 'false') {
-        emailVisible = false;
-        const hiddenText = userEmail.replace(/[^@]/g, '•');
-        emailElement.textContent = hiddenText;
-        eyeIcon.className = 'fas fa-eye-slash';
-      } else {
-        emailVisible = true;
-        emailElement.textContent = userEmail;
-        eyeIcon.className = 'fas fa-eye';
-      }
-    }
-
-    // ============================================================
-    // 5. PLAYLIST
-    // ============================================================
-    function getPlaylist() {
-      try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
-    }
-    function savePlaylist(ids) {
-      localStorage.setItem('favoriteBeats', JSON.stringify(ids));
-      updatePlaylistCount();
-    }
-    function togglePlaylist(beatId) {
-      let playlist = getPlaylist();
-      const index = playlist.indexOf(beatId);
-      if (index > -1) { playlist.splice(index, 1); savePlaylist(playlist); return false; }
-      else { playlist.push(beatId); savePlaylist(playlist); return true; }
-    }
-    function isInPlaylist(beatId) { return getPlaylist().includes(beatId); }
-    function updatePlaylistCount() {
-      const count = getPlaylist().length;
-      const el = document.getElementById('playlistCount');
-      if (el) el.textContent = count;
-    }
-
-    // ============================================================
-    // 6. CART
-    // ============================================================
-    function updateCart() {
-      localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
-      document.getElementById('cartCount').textContent = cart.length;
-    }
-    function toggleCart(beatId) {
-      const index = cart.indexOf(beatId);
-      if (index > -1) { cart.splice(index, 1); updateCart(); return false; }
-      else { cart.push(beatId); updateCart(); return true; }
-    }
-    function getCartBeats() {
-      return beatsData.filter(b => cart.includes(b.id));
-    }
-    function getCartTotal() {
-      return getCartBeats().reduce((sum, b) => {
-        const price = parseFloat(b.price.replace(/[^0-9.]/g, ''));
-        return sum + (isNaN(price) ? 0 : price);
-      }, 0);
-    }
-
-    // ============================================================
-    // 7. RATING
-    // ============================================================
-    async function loadRatings() {
-      try {
-        const { data, error } = await supabase
-          .from('ratings')
-          .select('*');
-        if (error) throw error;
-        userRatings = {};
-        if (data) {
-          data.forEach(r => {
-            if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
-            userRatings[r.beat_id].push(r.rating);
-          });
-        }
-      } catch (error) {
-        console.error('Erro ao carregar avaliações:', error);
-      }
-    }
-
-    async function rateBeat(beatId, rating) {
-      try {
-        const { error } = await supabase
-          .from('ratings')
-          .insert([{
-            beat_id: beatId,
-            rating: rating,
-            user_id: currentUser?.id || 'anonymous'
-          }]);
-        if (error) throw error;
-        await loadRatings();
-        renderBeats();
-        showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
-      } catch (error) {
-        console.error('Erro ao salvar avaliação:', error);
-        showToast('Erro', 'Não foi possível salvar sua avaliação.', 'error');
-      }
-    }
-
-    function getBeatAverageRating(beatId) {
-      const ratings = userRatings[beatId] || [];
-      if (ratings.length === 0) return 0;
-      const sum = ratings.reduce((a, b) => a + b, 0);
-      return sum / ratings.length;
-    }
-
-    function getBeatRatingCount(beatId) {
-      return (userRatings[beatId] || []).length;
-    }
-
-    // ============================================================
-    // 8. SHARE
-    // ============================================================
-    function showShareToast(message) {
-      const toast = document.getElementById('shareToast');
-      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-      toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 3000);
-    }
-    function shareBeat(beat) {
-      const baseUrl = window.location.origin + window.location.pathname;
-      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const shareUrl = `${baseUrl}?beat=${slug}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado'))
-          .catch(() => fallbackCopy(shareUrl));
-      } else { fallbackCopy(shareUrl); }
-    }
-    function fallbackCopy(text) {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      try { document.execCommand('copy'); showShareToast('Link do beat copiado'); }
-      catch (err) { showShareToast('Copie o link manualmente'); }
-      document.body.removeChild(textArea);
-    }
-
-    // ============================================================
-    // 9. THEME
-    // ============================================================
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('bestBeatsTheme', next);
-      document.getElementById('themeToggle').innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    }
-    function loadTheme() {
-      const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
-      document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    }
-
-    // ============================================================
-    // 10. PLAYS
-    // ============================================================
-    async function incrementPlays(beatId) {
-      try {
-        const { data, error } = await supabase
-          .from('beats')
-          .select('plays')
-          .eq('id', beatId)
-          .single();
-        
-        if (error) throw error;
-        
-        const currentPlays = data?.plays || 0;
-        const newPlays = currentPlays + 1;
-        
-        const { error: updateError } = await supabase
-          .from('beats')
-          .update({ plays: newPlays })
-          .eq('id', beatId);
-        
-        if (updateError) throw updateError;
-        
-        const beat = beatsData.find(b => b.id === beatId);
-        if (beat) {
-          beat.plays = newPlays;
-        }
-        
-        updateBeatPlaysDisplay(beatId, newPlays);
-        
-      } catch (error) {
-        console.error('❌ Erro ao incrementar plays:', error);
-        showToast('Erro', 'Não foi possível registrar a reprodução.', 'error');
-      }
-    }
-
-    function updateBeatPlaysDisplay(beatId, newPlays) {
-      const cards = document.querySelectorAll('.beat-card');
-      cards.forEach(card => {
-        if (parseInt(card.dataset.id) === beatId) {
-          const stats = card.querySelector('.beat-stats');
-          if (stats) {
-            const playSpan = stats.querySelector('.beat-plays');
-            if (playSpan) {
-              playSpan.innerHTML = `<i class="fas fa-headphones"></i> ${newPlays} plays`;
-              playSpan.classList.add('highlight');
-              setTimeout(() => {
-                playSpan.classList.remove('highlight');
-              }, 800);
-            }
-          }
-        }
-      });
-    }
-
-    // ============================================================
-    // 11. CRUD
-    // ============================================================
-    async function loadBeats() {
-      try {
-        document.getElementById('loading').style.display = 'flex';
-        document.getElementById('beatsContainer').innerHTML = '';
-        const { data, error } = await supabase.from('beats').select('*').order('id', { ascending: false });
-        if (error) throw error;
-        beatsData = data || [];
-        
-        await loadRatings();
-        
-        const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
-        const filterSelect = document.getElementById('filterGenre');
-        const currentVal = filterSelect.value;
-        filterSelect.innerHTML = '<option value="all">Todos os gêneros</option>';
-        genres.forEach(g => {
-          const opt = document.createElement('option');
-          opt.value = g;
-          opt.textContent = g;
-          filterSelect.appendChild(opt);
-        });
-        filterSelect.value = currentVal;
-        applyFilters();
-        updatePlaylistCount();
-        updateCart();
-        detectBeatFromUrl();
-      } catch (error) {
-        console.error('Erro ao carregar beats:', error);
-        showToast('Erro ao carregar', 'Não foi possível carregar os beats.', 'error');
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-      }
-    }
-
-    async function saveBeatToSupabase(beatData) {
-      try {
-        const slug = beatData.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-
-        const newBeat = {
-          title: beatData.title,
-          artist: beatData.artist,
-          genre: beatData.genre,
-          price: beatData.price,
-          bpm: beatData.bpm || null,
-          key: beatData.key || null,
-          cover: beatData.cover || null,
-          audio: beatData.audioStream,
-          audio_download_mp3: beatData.audioMp3,
-          audio_download_wav: beatData.audioWav,
-          password: beatData.password || 'Thebestwork2026',
-          slug: slug,
-          plays: 0,
-          user_id: currentUser?.id
-        };
-        
-        if (editingId) {
-          const { error } = await supabase
-            .from('beats')
-            .update(newBeat)
-            .eq('id', editingId);
-          
-          if (error) throw error;
-          showToast('Sucesso', 'O beat foi atualizado.', 'success');
-        } else {
-          const { error } = await supabase.from('beats').insert([newBeat]);
-          if (error) throw error;
-          showToast('Sucesso', 'Novo beat lançado!', 'success');
-        }
-        
-        await loadBeats();
-        closeFormModal();
-      } catch (error) {
-        console.error('Erro ao salvar beat:', error);
-        showToast('Erro ao salvar', error.message || 'Ocorreu um erro.', 'error');
-      }
-    }
-
-    async function uploadFile(file, bucket, path) {
-      if (!file) return null;
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${path}.${fileExt}`;
-      const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: true });
-      if (error) { console.error('Erro no upload:', error); throw error; }
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
-      return urlData.publicUrl;
-    }
-
-    async function deleteBeat(id) {
-      if (!confirm('Tem certeza que deseja excluir este beat?')) return;
-      
-      try {
-        const { data: beat, error: fetchError } = await supabase
-          .from('beats')
-          .select('cover')
-          .eq('id', id)
-          .single();
-        
-        if (fetchError) throw fetchError;
-        
-        const { error } = await supabase
-          .from('beats')
-          .delete()
-          .eq('id', id);
-        
-        if (error) throw error;
-        
-        if (beat?.cover) {
-          const coverPath = beat.cover.split('/').pop();
-          if (coverPath) {
-            await supabase.storage.from('covers').remove([coverPath]);
-          }
-        }
-        
-        await loadBeats();
-        showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
-      } catch (error) {
-        console.error('Erro ao excluir:', error);
-        showToast('Erro ao excluir', error.message || 'Não foi possível excluir.', 'error');
-      }
-    }
-
-    // ============================================================
-    // 12. FILTERS
-    // ============================================================
-    function applyFilters() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const genre = document.getElementById('filterGenre').value;
-      const sort = document.getElementById('sortBy').value;
-
-      filteredBeats = beatsData.filter(b => {
-        const matchSearch = b.title.toLowerCase().includes(search) || b.artist.toLowerCase().includes(search);
-        const matchGenre = genre === 'all' || b.genre === genre;
-        return matchSearch && matchGenre;
-      });
-
-      switch(sort) {
-        case 'recent': filteredBeats.sort((a, b) => b.id - a.id); break;
-        case 'popular': filteredBeats.sort((a, b) => (b.plays || 0) - (a.plays || 0)); break;
-        case 'price-low': filteredBeats.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''))); break;
-        case 'price-high': filteredBeats.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, ''))); break;
-        case 'rating': filteredBeats.sort((a, b) => getBeatAverageRating(b.id) - getBeatAverageRating(a.id)); break;
-      }
-
-      renderBeats();
-    }
-
-    // ============================================================
-    // 13. RENDER - MODO LISTA
-    // ============================================================
-    function renderBeats() {
-      const container = document.getElementById('beatsContainer');
-      const list = filteredBeats.length > 0 ? filteredBeats : beatsData;
-      
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center;padding:3rem 0;color:var(--text-muted);">
-            <i class="fas fa-search" style="font-size:2.5rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
-            <p style="font-size:1.1rem;font-weight:300;">Nenhum beat encontrado</p>
-            <p style="font-size:0.85rem;">Tente ajustar sua busca ou filtros</p>
-          </div>
-        `;
-        updateUI();
-        return;
-      }
-
-      container.innerHTML = '';
-      list.forEach(beat => {
-        const card = createBeatCard(beat);
-        container.appendChild(card);
-      });
-      updateUI();
-    }
-
-    function createBeatCard(beat) {
-      const card = document.createElement('div');
-      card.className = 'beat-card';
-      card.dataset.id = beat.id;
-
-      if ((beat.plays || 0) > 3) {
-        const badge = document.createElement('div');
-        badge.className = 'popularity-badge';
-        badge.innerHTML = '<i class="fas fa-fire"></i> Popular';
-        card.appendChild(badge);
-      }
-
-      const editBtn = document.createElement('button');
-      editBtn.className = 'card-edit-btn';
-      if (isLoggedIn) editBtn.classList.add('visible');
-      editBtn.innerHTML = '<i class="fas fa-pen"></i>';
-      editBtn.addEventListener('click', (e) => { e.stopPropagation(); if (isLoggedIn) openEditModal(beat.id); });
-      card.appendChild(editBtn);
-
-      if (isLoggedIn) {
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'card-edit-btn';
-        deleteBtn.style.right = '52px';
-        deleteBtn.style.color = '#ff6b6b';
-        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteBeat(beat.id); });
-        card.appendChild(deleteBtn);
-      }
-
-      // PLAYER
-      const playerWrapper = document.createElement('div');
-      playerWrapper.className = 'player-wrapper';
-      
-      const bgImg = document.createElement('img');
-      bgImg.className = 'player-bg';
-      bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
-      bgImg.alt = `${beat.title} cover`;
-      bgImg.loading = 'lazy';
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'player-overlay';
-      
-      const artistSpan = document.createElement('div');
-      artistSpan.className = 'player-artist';
-      artistSpan.textContent = beat.artist;
-      
-      const titleSpan = document.createElement('div');
-      titleSpan.className = 'player-title';
-      titleSpan.textContent = beat.title;
-      
-      const controls = document.createElement('div');
-      controls.className = 'player-controls';
-      
-      const playBtn = document.createElement('button');
-      playBtn.className = 'btn-play';
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.setAttribute('data-playing', 'false');
-      
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn-next';
-      nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
-      
-      const playlistBtn = document.createElement('button');
-      playlistBtn.className = 'btn-playlist';
-      if (isInPlaylist(beat.id)) { 
-        playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
-        playlistBtn.classList.add('added'); 
-      } else { 
-        playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
-      }
-      playlistBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const added = togglePlaylist(beat.id);
-        if (added) { 
-          showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
-          playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
-          playlistBtn.classList.add('added'); 
-        } else { 
-          showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
-          playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
-          playlistBtn.classList.remove('added'); 
-        }
-        updatePlaylistCount();
-      });
-      
-      controls.appendChild(playBtn);
-      controls.appendChild(nextBtn);
-      controls.appendChild(playlistBtn);
-      
-      const progressArea = document.createElement('div');
-      progressArea.className = 'progress-area';
-      const progress = document.createElement('input');
-      progress.type = 'range';
-      progress.className = 'progress-bar';
-      progress.min = 0; progress.max = 100; progress.value = 0;
-      const timeDisplay = document.createElement('span');
-      timeDisplay.className = 'time-display';
-      timeDisplay.textContent = '0:00';
-      progressArea.appendChild(progress);
-      progressArea.appendChild(timeDisplay);
-      
-      const volumeWrap = document.createElement('div');
-      volumeWrap.className = 'volume-wrap';
-      const volIcon = document.createElement('i');
-      volIcon.className = 'fas fa-volume-low';
-      const volSlider = document.createElement('input');
-      volSlider.type = 'range';
-      volSlider.className = 'volume-slider';
-      volSlider.min = 0; volSlider.max = 100; volSlider.value = 70;
-      volumeWrap.appendChild(volIcon);
-      volumeWrap.appendChild(volSlider);
-      
-      const genreBadge = document.createElement('span');
-      genreBadge.className = 'badge-genre';
-      genreBadge.textContent = beat.genre;
-      
-      overlay.appendChild(artistSpan);
-      overlay.appendChild(titleSpan);
-      overlay.appendChild(controls);
-      overlay.appendChild(progressArea);
-      overlay.appendChild(volumeWrap);
-      overlay.appendChild(genreBadge);
-      
-      playerWrapper.appendChild(bgImg);
-      playerWrapper.appendChild(overlay);
-
-      // INFO
-      const infoDiv = document.createElement('div');
-      infoDiv.className = 'beat-info';
-      
-      const titleInfo = document.createElement('div');
-      titleInfo.className = 'beat-title';
-      titleInfo.innerHTML = `${beat.title} <i class="fas fa-wave-square"></i>`;
-      
-      const metaDiv = document.createElement('div');
-      metaDiv.className = 'beat-meta';
-      const genreSpan = document.createElement('span');
-      genreSpan.className = 'beat-genre';
-      genreSpan.innerHTML = `<i class="fas fa-tag"></i> ${beat.genre}`;
-      const priceSpan = document.createElement('span');
-      priceSpan.className = 'beat-price';
-      priceSpan.innerHTML = `<i class="fas fa-coins"></i> ${beat.price}`;
-      metaDiv.appendChild(genreSpan);
-      metaDiv.appendChild(priceSpan);
-      
-      const exclusivo = document.createElement('div');
-      exclusivo.className = 'beat-exclusivo';
-      exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
-      
-      const avgRating = getBeatAverageRating(beat.id);
-      const ratingCount = getBeatRatingCount(beat.id);
-      const starsFull = Math.round(avgRating);
-      const starsEmpty = 5 - starsFull;
-      
-      const statsDiv = document.createElement('div');
-      statsDiv.className = 'beat-stats';
-      statsDiv.innerHTML = `
-        <span class="beat-plays"><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
-        <span class="beat-rating">
-          <i class="fas fa-star"></i> 
-          <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span>
-          <span style="font-size:0.6rem;color:var(--text-muted);">${avgRating ? avgRating.toFixed(1) : '0.0'} (${ratingCount})</span>
-        </span>
-        ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
-        ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
-      `;
-      
-      // AÇÕES
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'beat-actions';
-      
-      // Botão Ver Beat - AGORA CHAMA O MODO BEAT
-      const verBeatBtn = document.createElement('button');
-      verBeatBtn.className = 'btn-ver-beat';
-      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
-      verBeatBtn.addEventListener('click', () => {
-        showBeatMode(slug);
-      });
-      
-      const shareBtn = document.createElement('button');
-      shareBtn.className = 'btn-share';
-      shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
-      shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
-      
-      const rateBtn = document.createElement('button');
-      rateBtn.className = 'btn-share';
-      rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
-      rateBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('ratingBeatId').value = beat.id;
-        document.getElementById('ratingValue').value = 0;
-        document.querySelectorAll('#ratingStars span').forEach(s => {
-          s.style.color = 'var(--text-muted)';
-        });
-        document.getElementById('ratingModal').classList.add('active');
-      });
-      
-      const cartBtn = document.createElement('button');
-      cartBtn.className = 'btn-cart';
-      if (cart.includes(beat.id)) { 
-        cartBtn.classList.add('in-cart'); 
-        cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
-      } else { 
-        cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
-      }
-      cartBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const added = toggleCart(beat.id);
-        if (added) { 
-          cartBtn.classList.add('in-cart'); 
-          cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
-          showToast('Adicionado', `${beat.title} foi adicionado ao carrinho.`, 'success'); 
-        } else { 
-          cartBtn.classList.remove('in-cart'); 
-          cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
-          showToast('Removido', `${beat.title} foi removido do carrinho.`, 'info'); 
-        }
-        updateCart();
-      });
-      
-      const buyBtn = document.createElement('a');
-      buyBtn.className = 'btn-whatsapp';
-      buyBtn.href = '#';
-      buyBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Comprar`;
-      buyBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const msg = encodeURIComponent(`Olá! Gostaria de comprar o beat "${beat.title}" de ${beat.artist}.`);
-        window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
-      });
-      
-      actionsDiv.appendChild(verBeatBtn);
-      actionsDiv.appendChild(shareBtn);
-      actionsDiv.appendChild(rateBtn);
-      actionsDiv.appendChild(cartBtn);
-      actionsDiv.appendChild(buyBtn);
-      
-      infoDiv.appendChild(titleInfo);
-      infoDiv.appendChild(metaDiv);
-      infoDiv.appendChild(exclusivo);
-      infoDiv.appendChild(statsDiv);
-      infoDiv.appendChild(actionsDiv);
-      
-      card.appendChild(playerWrapper);
-      card.appendChild(infoDiv);
-
-      // ÁUDIO
-      let audio = null;
-      let isPlaying = false;
-
-      playBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (!beat.audio) { 
-          showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
-          return; 
-        }
-        
-        if (!audio) {
-          audio = new Audio(beat.audio);
-          audio.volume = 0.7;
-          
-          audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-              const percent = (audio.currentTime / audio.duration) * 100;
-              progress.value = percent;
-              const mins = Math.floor(audio.currentTime / 60);
-              const secs = Math.floor(audio.currentTime % 60);
-              timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            }
-          });
-          
-          audio.addEventListener('ended', () => {
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
-            isPlaying = false;
-            progress.value = 0;
-            timeDisplay.textContent = '0:00';
-          });
-        }
-        
-        if (isPlaying) { 
-          audio.pause(); 
-          playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
-          isPlaying = false;
-        } else { 
-          audio.play().catch(() => {});
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          isPlaying = true;
-          incrementPlays(beat.id);
-        }
-      });
-
-      nextBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!beat.audio) return;
-        if (!audio) {
-          audio = new Audio(beat.audio);
-          audio.volume = 0.7;
-        }
-        audio.currentTime = 0;
-        if (!isPlaying) { 
-          audio.play().catch(() => {}); 
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
-          isPlaying = true; 
-        }
-      });
-
-      progress.addEventListener('input', function() { 
-        if (audio && audio.duration) {
-          audio.currentTime = (progress.value / 100) * audio.duration; 
-        }
-      });
-
-      volSlider.addEventListener('input', function() {
-        if (audio) {
-          audio.volume = volSlider.value / 100;
-          volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
-        }
-      });
-
-      return card;
-    }
-
-    // ============================================================
-    // 14. MODO BEAT - MOSTRAR BEAT INDIVIDUAL
-    // ============================================================
-    // ============================================================
-// 14. MODO BEAT - MOSTRAR BEAT INDIVIDUAL (CORRIGIDO)
-// ============================================================
-async function showBeatMode(slug) {
-  currentBeatSlug = slug;
-  
-  // Esconder modo lista, mostrar modo beat
-  document.getElementById('modeList').classList.add('hidden');
-  document.getElementById('modeBeat').classList.add('active');
-  
-  // Atualizar URL sem recarregar
-  const url = new URL(window.location);
-  url.searchParams.set('beat', slug);
-  window.history.pushState({ beat: slug }, '', url);
-  
-  // Carregar o beat
-  document.getElementById('beatContent').innerHTML = `
-    <div class="beat-loading-single">
-      <i class="fas fa-spinner fa-spin"></i>
-      <p>Carregando beat...</p>
+<!-- MODAL SENHA (para download) -->
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal" style="max-width: 400px;">
+    <h2><i class="fas fa-lock"></i> Download Protegido</h2>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Digite a senha para liberar o download</p>
+    <div class="input-group" style="position:relative;margin-bottom:1rem;">
+      <i class="fas fa-key" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);"></i>
+      <input type="password" id="passwordInput" placeholder="Digite a senha" style="width:100%;padding:0.7rem 1rem 0.7rem 48px;border-radius:30px;border:1px solid var(--border-color);background:rgba(255,255,255,0.04);color:var(--text-primary);font-size:1rem;outline:none;">
     </div>
+    <div class="error-msg" id="errorMsg" style="color:#ef4444;font-size:0.8rem;text-align:center;min-height:20px;display:none;">Senha incorreta</div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="modalCancel">Cancelar</button>
+      <button type="button" class="btn-save" id="modalConfirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE
+// ============================================================
+const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZ2hmZmx0bWlxY2xqdW9rYmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NzIyODgsImV4cCI6MjEwMDI0ODI4OH0.n1mYWDG2803VEbGQ8qyWlCkthtezu-3Yuh-k58bo0xE';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================================
+// ESTADO
+// ============================================================
+let beatsData = [];
+let filteredBeats = [];
+let editMode = false;
+let editingId = null;
+let isLoggedIn = false;
+let currentUser = null;
+let selectedCoverFile = null;
+let playlistAudio = null;
+let playlistAudioId = null;
+let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
+let userRatings = {};
+let emailVisible = true;
+let emailText = '';
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(title, message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  toast.innerHTML = `
+    <div class="toast-icon ${type}"><i class="fas ${icons[type] || icons.info}"></i></div>
+    <div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>
+    <button class="toast-close"><i class="fas fa-times"></i></button>
   `;
-  
-  try {
-    console.log('🔍 Buscando beat com slug:', slug);
-    
-    // ESTRATÉGIA 1: Buscar por slug
-    let { data, error } = await supabase
-      .from('beats')
-      .select('*')
-      .eq('slug', slug)
-      .maybeSingle();
-    
-    // ESTRATÉGIA 2: Se não encontrou, buscar por título
-    if (!data) {
-      console.log('⚠️ Slug não encontrado, buscando por título...');
-      const { data: titleData, error: titleError } = await supabase
-        .from('beats')
-        .select('*')
-        .ilike('title', slug)
-        .maybeSingle();
-      
-      if (titleData) {
-        data = titleData;
-        error = null;
-        console.log('✅ Beat encontrado por título:', data.title);
-      }
-    }
-    
-    // ESTRATÉGIA 3: Se ainda não encontrou, buscar o primeiro beat
-    if (!data) {
-      console.log('⚠️ Buscando o primeiro beat disponível...');
-      const { data: firstData, error: firstError } = await supabase
-        .from('beats')
-        .select('*')
-        .limit(1)
-        .maybeSingle();
-      
-      if (firstData) {
-        data = firstData;
-        error = null;
-        console.log('✅ Beat encontrado (primeiro):', data.title);
-      }
-    }
-    
-    if (error || !data) {
-      document.getElementById('beatContent').innerHTML = `
-        <div class="beat-loading-single">
-          <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-          <p>Nenhum beat encontrado</p>
-          <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
-            <i class="fas fa-arrow-left"></i> Voltar para lista
-          </button>
-        </div>
-      `;
-      return;
-    }
-    
-    renderBeatSingle(data);
-  } catch (error) {
-    console.error('❌ Erro ao carregar beat:', error);
-    document.getElementById('beatContent').innerHTML = `
-      <div class="beat-loading-single">
-        <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-        <p>Erro ao carregar o beat</p>
-        <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
-          <i class="fas fa-arrow-left"></i> Voltar para lista
-        </button>
-      </div>
-    `;
+  container.appendChild(toast);
+  const closeBtn = toast.querySelector('.toast-close');
+  closeBtn.addEventListener('click', () => removeToast(toast));
+  if (duration > 0) setTimeout(() => removeToast(toast), duration);
+  return toast;
+}
+function removeToast(toast) {
+  if (toast.classList.contains('removing')) return;
+  toast.classList.add('removing');
+  setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 350);
+}
+
+// ============================================================
+// EMAIL TOGGLE
+// ============================================================
+function toggleEmailVisibility() {
+  emailVisible = !emailVisible;
+  const emailElement = document.getElementById('emailText');
+  const eyeIcon = document.getElementById('emailEyeIcon');
+  const userEmail = currentUser?.email || 'usuario@email.com';
+  if (emailVisible) {
+    emailElement.textContent = emailText || userEmail;
+    eyeIcon.className = 'fas fa-eye';
+    localStorage.setItem('bestBeatsEmailVisible', 'true');
+  } else {
+    const hiddenText = userEmail.replace(/[^@]/g, '•');
+    emailElement.textContent = hiddenText;
+    eyeIcon.className = 'fas fa-eye-slash';
+    localStorage.setItem('bestBeatsEmailVisible', 'false');
+  }
+}
+function loadEmailVisibility() {
+  const saved = localStorage.getItem('bestBeatsEmailVisible');
+  const userEmail = currentUser?.email || 'usuario@email.com';
+  const emailElement = document.getElementById('emailText');
+  const eyeIcon = document.getElementById('emailEyeIcon');
+  emailText = userEmail;
+  if (saved === 'false') {
+    emailVisible = false;
+    emailElement.textContent = userEmail.replace(/[^@]/g, '•');
+    eyeIcon.className = 'fas fa-eye-slash';
+  } else {
+    emailVisible = true;
+    emailElement.textContent = userEmail;
+    eyeIcon.className = 'fas fa-eye';
   }
 }
 
-    // ============================================================
-    // 15. MODO BEAT - RENDERIZAR
-    // ============================================================
-    function renderBeatSingle(beat) {
-      // Parar áudio anterior se estiver tocando
-      if (beatAudio) {
-        beatAudio.pause();
-        beatAudio = null;
-      }
-      
-      const html = `
-        <!-- CAPA -->
-        <div class="cover-wrapper">
-          <div class="cover-glow"></div>
-          ${beat.cover ? 
-            `<img src="${beat.cover}" alt="${beat.title}">` :
-            `<div class="cover-placeholder">
-              <div class="icon-big">♫</div>
-              <div class="title-art">${beat.title.toUpperCase()}</div>
-              <div class="sub-art">${beat.genre || 'Afro'}</div>
-            </div>`
-          }
-        </div>
+// ============================================================
+// PLAYLIST
+// ============================================================
+function getPlaylist() {
+  try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
+}
+function savePlaylist(ids) {
+  localStorage.setItem('favoriteBeats', JSON.stringify(ids));
+  updatePlaylistCount();
+}
+function togglePlaylist(beatId) {
+  let playlist = getPlaylist();
+  const index = playlist.indexOf(beatId);
+  if (index > -1) { playlist.splice(index, 1); savePlaylist(playlist); return false; }
+  else { playlist.push(beatId); savePlaylist(playlist); return true; }
+}
+function isInPlaylist(beatId) { return getPlaylist().includes(beatId); }
+function updatePlaylistCount() {
+  const count = getPlaylist().length;
+  const el = document.getElementById('playlistCount');
+  if (el) el.textContent = count;
+}
 
-        <!-- INFORMAÇÕES -->
-        <div class="beat-info" style="text-align:center;margin-bottom:24px;">
-          <div class="beat-name-single">${beat.title}</div>
-          <div class="beat-artist-single"><i class="fas fa-user"></i> ${beat.artist || 'Produtor'}</div>
-          <div class="beat-tags-single">
-            <span class="tag"><i class="fas fa-music"></i> ${beat.genre || 'Afro'}</span>
-            <span class="tag"><i class="fas fa-tachometer-alt"></i> ${beat.bpm || '--'} BPM</span>
-            <span class="tag key-tag"><i class="fas fa-key"></i> ${beat.key || 'em breve'}</span>
-            <span class="tag"><i class="fas fa-coins"></i> ${beat.price || 'Kz 0'}</span>
-          </div>
-        </div>
+// ============================================================
+// CART
+// ============================================================
+function updateCart() {
+  localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
+  document.getElementById('cartCount').textContent = cart.length;
+}
+function toggleCart(beatId) {
+  const index = cart.indexOf(beatId);
+  if (index > -1) { cart.splice(index, 1); updateCart(); return false; }
+  else { cart.push(beatId); updateCart(); return true; }
+}
+function getCartBeats() { return beatsData.filter(b => cart.includes(b.id)); }
+function getCartTotal() {
+  return getCartBeats().reduce((sum, b) => {
+    const price = parseFloat(b.price.replace(/[^0-9.]/g, ''));
+    return sum + (isNaN(price) ? 0 : price);
+  }, 0);
+}
 
-        <!-- PLAYER -->
-        <div class="player-wrapper-single">
-          <div class="player-controls-single">
-            <button class="play-btn-single" id="playBtnSingle" aria-label="Play/Pause">
-              <i class="fas fa-play"></i>
-            </button>
-            <div class="player-info-single">
-              <div class="progress-bar-single" id="progressBarSingle">
-                <div class="progress-fill-single" id="progressFillSingle"></div>
-              </div>
-              <div class="player-time-single">
-                <span id="currentTimeSingle">0:00</span>
-                <span id="totalTimeSingle">0:00</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- VISUALIZER -->
-          <div class="visualizer-single" id="visualizerSingle">
-            ${Array(15).fill(0).map(() => `<div class="bar inactive"></div>`).join('')}
-          </div>
-        </div>
-
-        <!-- DOWNLOADS -->
-        <div class="download-section-single">
-          <button class="download-btn-single btn-mp3-single" data-format="mp3" data-beat-id="${beat.id}">
-            <i class="fas fa-file-audio"></i> MP3
-          </button>
-          <button class="download-btn-single btn-wav-single" data-format="wav" data-beat-id="${beat.id}">
-            <i class="fas fa-file-audio"></i> WAV
-          </button>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer-single">
-          <a href="https://beatsao.site" target="_blank">
-            <i class="fas fa-globe"></i> beatsao.site
-          </a>
-        </div>
-      `;
-
-      document.getElementById('beatContent').innerHTML = html;
-
-      // Inicializar player se tiver áudio
-      if (beat.audio) {
-        initializePlayerSingle(beat.audio, beat.id);
-      } else {
-        console.warn('⚠️ Beat sem áudio');
-        const playBtn = document.getElementById('playBtnSingle');
-        if (playBtn) {
-          playBtn.style.opacity = '0.5';
-          playBtn.style.cursor = 'not-allowed';
-        }
-      }
-
-      // Inicializar download
-      initializeDownloadSingle(beat);
+// ============================================================
+// RATING
+// ============================================================
+async function loadRatings() {
+  try {
+    const { data, error } = await supabase.from('ratings').select('*');
+    if (error) throw error;
+    userRatings = {};
+    if (data) {
+      data.forEach(r => {
+        if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
+        userRatings[r.beat_id].push(r.rating);
+      });
     }
+  } catch (error) { console.error('Erro ao carregar avaliações:', error); }
+}
+async function rateBeat(beatId, rating) {
+  try {
+    const { error } = await supabase.from('ratings').insert([{ beat_id: beatId, rating: rating, user_id: currentUser?.id || 'anonymous' }]);
+    if (error) throw error;
+    await loadRatings();
+    renderBeats();
+    showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
+  } catch (error) {
+    console.error('Erro ao salvar avaliação:', error);
+    showToast('Erro', 'Não foi possível salvar sua avaliação.', 'error');
+  }
+}
+function getBeatAverageRating(beatId) {
+  const ratings = userRatings[beatId] || [];
+  if (ratings.length === 0) return 0;
+  return ratings.reduce((a, b) => a + b, 0) / ratings.length;
+}
+function getBeatRatingCount(beatId) { return (userRatings[beatId] || []).length; }
 
-    // ============================================================
-    // 16. PLAYER DO MODO BEAT
-    // ============================================================
-    function initializePlayerSingle(audioUrl, beatId) {
-      if (beatAudio) {
-        beatAudio.pause();
-        beatAudio = null;
-      }
+// ============================================================
+// SHARE
+// ============================================================
+function showShareToast(message) {
+  const toast = document.getElementById('shareToast');
+  toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 3000);
+}
+function shareBeat(beat) {
+  const baseUrl = window.location.origin + window.location.pathname;
+  const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const shareUrl = `${baseUrl}?beat=${slug}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado')).catch(() => fallbackCopy(shareUrl));
+  } else { fallbackCopy(shareUrl); }
+}
+function fallbackCopy(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  document.body.appendChild(textArea);
+  textArea.select();
+  try { document.execCommand('copy'); showShareToast('Link do beat copiado'); } catch (err) { showShareToast('Copie o link manualmente'); }
+  document.body.removeChild(textArea);
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('bestBeatsTheme', next);
+  document.getElementById('themeToggle').innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+function loadTheme() {
+  const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+
+// ============================================================
+// PLAYS
+// ============================================================
+async function incrementPlays(beatId) {
+  try {
+    const { data, error } = await supabase.from('beats').select('plays').eq('id', beatId).single();
+    if (error) throw error;
+    const currentPlays = data?.plays || 0;
+    const newPlays = currentPlays + 1;
+    await supabase.from('beats').update({ plays: newPlays }).eq('id', beatId);
+    const beat = beatsData.find(b => b.id === beatId);
+    if (beat) beat.plays = newPlays;
+  } catch (error) { console.error('Erro ao incrementar plays:', error); }
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+async function loadBeats() {
+  try {
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('beatsContainer').innerHTML = '';
+    const { data, error } = await supabase.from('beats').select('*').order('id', { ascending: false });
+    if (error) throw error;
+    beatsData = data || [];
+    await loadRatings();
+    const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
+    const filterSelect = document.getElementById('filterGenre');
+    const currentVal = filterSelect.value;
+    filterSelect.innerHTML = '<option value="all">Todos os gêneros</option>';
+    genres.forEach(g => { const opt = document.createElement('option'); opt.value = g; opt.textContent = g; filterSelect.appendChild(opt); });
+    filterSelect.value = currentVal;
+    applyFilters();
+    updatePlaylistCount();
+    updateCart();
+  } catch (error) {
+    console.error('Erro ao carregar beats:', error);
+    showToast('Erro ao carregar', 'Não foi possível carregar os beats.', 'error');
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+async function saveBeatToSupabase(beatData) {
+  try {
+    const slug = beatData.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const newBeat = {
+      title: beatData.title,
+      artist: beatData.artist,
+      genre: beatData.genre,
+      price: beatData.price,
+      bpm: beatData.bpm || null,
+      key: beatData.key || null,
+      cover: beatData.cover || null,
+      audio: beatData.audioStream,
+      audio_download_mp3: beatData.audioMp3,
+      audio_download_wav: beatData.audioWav,
+      password: beatData.password || 'Thebestwork2026',
+      slug: slug,
+      plays: 0,
+      user_id: currentUser?.id
+    };
+    if (editingId) {
+      await supabase.from('beats').update(newBeat).eq('id', editingId);
+      showToast('Sucesso', 'O beat foi atualizado.', 'success');
+    } else {
+      await supabase.from('beats').insert([newBeat]);
+      showToast('Sucesso', 'Novo beat lançado!', 'success');
+    }
+    await loadBeats();
+    closeFormModal();
+  } catch (error) {
+    console.error('Erro ao salvar beat:', error);
+    showToast('Erro ao salvar', error.message || 'Ocorreu um erro.', 'error');
+  }
+}
+
+async function uploadFile(file, bucket, path) {
+  if (!file) return null;
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${path}.${fileExt}`;
+  const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: true });
+  if (error) { console.error('Erro no upload:', error); throw error; }
+  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+  return urlData.publicUrl;
+}
+
+async function deleteBeat(id) {
+  if (!confirm('Tem certeza que deseja excluir este beat?')) return;
+  try {
+    const { data: beat, error: fetchError } = await supabase.from('beats').select('cover').eq('id', id).single();
+    if (fetchError) throw fetchError;
+    await supabase.from('beats').delete().eq('id', id);
+    if (beat?.cover) {
+      const coverPath = beat.cover.split('/').pop();
+      if (coverPath) await supabase.storage.from('covers').remove([coverPath]);
+    }
+    await loadBeats();
+    showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
+  } catch (error) {
+    console.error('Erro ao excluir:', error);
+    showToast('Erro ao excluir', error.message || 'Não foi possível excluir.', 'error');
+  }
+}
+
+// ============================================================
+// FILTERS
+// ============================================================
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const genre = document.getElementById('filterGenre').value;
+  const sort = document.getElementById('sortBy').value;
+  filteredBeats = beatsData.filter(b => {
+    const matchSearch = b.title.toLowerCase().includes(search) || b.artist.toLowerCase().includes(search);
+    const matchGenre = genre === 'all' || b.genre === genre;
+    return matchSearch && matchGenre;
+  });
+  switch(sort) {
+    case 'recent': filteredBeats.sort((a, b) => b.id - a.id); break;
+    case 'popular': filteredBeats.sort((a, b) => (b.plays || 0) - (a.plays || 0)); break;
+    case 'price-low': filteredBeats.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''))); break;
+    case 'price-high': filteredBeats.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, ''))); break;
+    case 'rating': filteredBeats.sort((a, b) => getBeatAverageRating(b.id) - getBeatAverageRating(a.id)); break;
+  }
+  renderBeats();
+}
+
+// ============================================================
+// RENDER - BEATS
+// ============================================================
+function renderBeats() {
+  const container = document.getElementById('beatsContainer');
+  const list = filteredBeats.length > 0 ? filteredBeats : beatsData;
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:3rem 0;color:var(--text-muted);"><i class="fas fa-search" style="font-size:2.5rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i><p style="font-size:1.1rem;font-weight:300;">Nenhum beat encontrado</p><p style="font-size:0.85rem;">Tente ajustar sua busca ou filtros</p></div>`;
+    updateUI();
+    return;
+  }
+  container.innerHTML = '';
+  list.forEach(beat => { const card = createBeatCard(beat); container.appendChild(card); });
+  updateUI();
+}
+
+// ============================================================
+// CRIAÇÃO DO CARD - NOVO DESIGN
+// ============================================================
+function createBeatCard(beat) {
+  const card = document.createElement('div');
+  card.className = 'beat-card';
+  card.dataset.id = beat.id;
+
+  // Badge Popular
+  if ((beat.plays || 0) > 3) {
+    const badge = document.createElement('div');
+    badge.className = 'popularity-badge';
+    badge.innerHTML = '<i class="fas fa-fire"></i> Popular';
+    card.appendChild(badge);
+  }
+
+  // Botões de edição (admin)
+  const editBtn = document.createElement('button');
+  editBtn.className = 'card-edit-btn';
+  if (isLoggedIn) editBtn.classList.add('visible');
+  editBtn.innerHTML = '<i class="fas fa-pen"></i>';
+  editBtn.addEventListener('click', (e) => { e.stopPropagation(); if (isLoggedIn) openEditModal(beat.id); });
+  card.appendChild(editBtn);
+
+  if (isLoggedIn) {
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'card-edit-btn';
+    deleteBtn.style.right = '52px';
+    deleteBtn.style.color = '#ff6b6b';
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteBeat(beat.id); });
+    card.appendChild(deleteBtn);
+  }
+
+  // ===== LINHA PRINCIPAL =====
+  const row = document.createElement('div');
+  row.className = 'card-row';
+
+  // Capa
+  const cover = document.createElement('div');
+  cover.className = 'card-cover';
+  if (beat.cover) {
+    const img = document.createElement('img');
+    img.src = beat.cover;
+    img.alt = beat.title;
+    cover.appendChild(img);
+  } else {
+    const glow = document.createElement('div');
+    glow.className = 'cover-glow';
+    cover.appendChild(glow);
+    const text = document.createElement('div');
+    text.className = 'cover-text';
+    text.innerHTML = `${beat.title.toUpperCase()}<span class="genre">${beat.genre || 'AFRO'}</span>`;
+    cover.appendChild(text);
+  }
+  row.appendChild(cover);
+
+  // Info
+  const info = document.createElement('div');
+  info.className = 'card-info';
+  const name = document.createElement('div');
+  name.className = 'beat-name';
+  name.innerHTML = `${beat.title} <i class="fas fa-wave-square"></i>`;
+  info.appendChild(name);
+  const meta = document.createElement('div');
+  meta.className = 'beat-meta';
+  meta.innerHTML = `
+    <span><i class="fas fa-tag"></i> ${beat.genre || 'Afro'}</span>
+    <span><i class="fas fa-tachometer-alt"></i> ${beat.bpm || '--'} BPM</span>
+    <span><i class="fas fa-coins"></i> ${beat.price || 'Kz 0'}</span>
+  `;
+  info.appendChild(meta);
+  row.appendChild(info);
+
+  // Player
+  const player = document.createElement('div');
+  player.className = 'card-player';
+
+  const playerRow = document.createElement('div');
+  playerRow.className = 'player-row';
+
+  const playBtn = document.createElement('button');
+  playBtn.className = 'btn-play-small';
+  playBtn.innerHTML = '<i class="fas fa-play"></i>';
+  playBtn.dataset.playing = 'false';
+  playerRow.appendChild(playBtn);
+
+  const track = document.createElement('div');
+  track.className = 'player-track';
+
+  const progress = document.createElement('div');
+  progress.className = 'player-progress';
+  const fill = document.createElement('div');
+  fill.className = 'progress-fill';
+  progress.appendChild(fill);
+  track.appendChild(progress);
+
+  const times = document.createElement('div');
+  times.className = 'player-times';
+  const currentTime = document.createElement('span');
+  currentTime.textContent = '0:00';
+  const totalTime = document.createElement('span');
+  totalTime.textContent = '0:00';
+  times.appendChild(currentTime);
+  times.appendChild(totalTime);
+  track.appendChild(times);
+
+  playerRow.appendChild(track);
+
+  // Botões de download
+  const downloadBtns = document.createElement('div');
+  downloadBtns.className = 'download-btns';
+  const btnMp3 = document.createElement('button');
+  btnMp3.className = 'btn-download-small btn-mp3';
+  btnMp3.textContent = 'MP3';
+  btnMp3.dataset.format = 'mp3';
+  const btnWav = document.createElement('button');
+  btnWav.className = 'btn-download-small btn-wav';
+  btnWav.textContent = 'WAV';
+  btnWav.dataset.format = 'wav';
+  downloadBtns.appendChild(btnMp3);
+  downloadBtns.appendChild(btnWav);
+  playerRow.appendChild(downloadBtns);
+
+  player.appendChild(playerRow);
+  row.appendChild(player);
+  card.appendChild(row);
+
+  // ===== BOTÃO MAIS =====
+  const moreBtn = document.createElement('button');
+  moreBtn.className = 'btn-more';
+  moreBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Mais';
+  card.appendChild(moreBtn);
+
+  // ===== INFORMAÇÕES EXPANDIDAS =====
+  const expand = document.createElement('div');
+  expand.className = 'card-expand';
+
+  // Tags
+  const expandRow = document.createElement('div');
+  expandRow.className = 'expand-row';
+  const tagGroup = document.createElement('div');
+  tagGroup.className = 'tag-group';
+  tagGroup.innerHTML = `
+    <span class="tag"><i class="fas fa-music"></i> ${beat.genre || 'Afro'}</span>
+    <span class="tag"><i class="fas fa-tachometer-alt"></i> ${beat.bpm || '--'} BPM</span>
+    <span class="tag key-tag"><i class="fas fa-key"></i> ${beat.key || 'em breve'}</span>
+    <span class="tag"><i class="fas fa-coins"></i> ${beat.price || 'Kz 0'}</span>
+  `;
+  expandRow.appendChild(tagGroup);
+  expand.appendChild(expandRow);
+
+  // Ações
+  const actionsRow = document.createElement('div');
+  actionsRow.className = 'expand-row';
+  const actions = document.createElement('div');
+  actions.className = 'expand-actions';
+
+  // Compartilhar
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'btn-action';
+  shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
+  shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
+  actions.appendChild(shareBtn);
+
+  // Avaliar
+  const rateBtn = document.createElement('button');
+  rateBtn.className = 'btn-action';
+  rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
+  rateBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('ratingBeatId').value = beat.id;
+    document.getElementById('ratingValue').value = 0;
+    document.querySelectorAll('#ratingStars span').forEach(s => s.style.color = 'var(--text-muted)');
+    document.getElementById('ratingModal').classList.add('active');
+  });
+  actions.appendChild(rateBtn);
+
+  // Negociar (WhatsApp)
+  const negociarBtn = document.createElement('button');
+  negociarBtn.className = 'btn-action btn-negociar';
+  negociarBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Negociar';
+  negociarBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const msg = encodeURIComponent(`Olá! Gostaria de negociar o beat "${beat.title}" de ${beat.artist}.`);
+    window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
+  });
+  actions.appendChild(negociarBtn);
+
+  // Add à Playlist
+  const playlistBtn = document.createElement('button');
+  playlistBtn.className = 'btn-action';
+  if (isInPlaylist(beat.id)) { 
+    playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
+    playlistBtn.classList.add('in-cart');
+  } else { 
+    playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
+  }
+  playlistBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const added = togglePlaylist(beat.id);
+    if (added) { 
+      playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
+      playlistBtn.classList.add('in-cart');
+      showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success'); 
+    } else { 
+      playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
+      playlistBtn.classList.remove('in-cart');
+      showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info'); 
+    }
+    updatePlaylistCount();
+  });
+  actions.appendChild(playlistBtn);
+
+  // Carrinho
+  const cartBtn = document.createElement('button');
+  cartBtn.className = 'btn-action';
+  if (cart.includes(beat.id)) { 
+    cartBtn.classList.add('in-cart'); 
+    cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
+  } else { 
+    cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
+  }
+  cartBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const added = toggleCart(beat.id);
+    if (added) { 
+      cartBtn.classList.add('in-cart'); 
+      cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
+      showToast('Adicionado', `${beat.title} foi adicionado ao carrinho.`, 'success'); 
+    } else { 
+      cartBtn.classList.remove('in-cart'); 
+      cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
+      showToast('Removido', `${beat.title} foi removido do carrinho.`, 'info'); 
+    }
+    updateCart();
+  });
+  actions.appendChild(cartBtn);
+
+  actionsRow.appendChild(actions);
+  expand.appendChild(actionsRow);
+
+  // Stats
+  const avgRating = getBeatAverageRating(beat.id);
+  const ratingCount = getBeatRatingCount(beat.id);
+  const starsFull = Math.round(avgRating);
+  const starsEmpty = 5 - starsFull;
+  
+  const statsRow = document.createElement('div');
+  statsRow.className = 'expand-stats';
+  statsRow.innerHTML = `
+    <span><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
+    <span><i class="fas fa-star"></i> <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span> ${avgRating ? avgRating.toFixed(1) : '0.0'} (${ratingCount})</span>
+    ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
+    ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
+  `;
+  expand.appendChild(statsRow);
+
+  card.appendChild(expand);
+
+  // ===== EVENTO MAIS/MENOS =====
+  let expanded = false;
+  moreBtn.addEventListener('click', () => {
+    expanded = !expanded;
+    if (expanded) {
+      expand.classList.add('open');
+      moreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Menos';
+    } else {
+      expand.classList.remove('open');
+      moreBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Mais';
+    }
+  });
+
+  // ===== ÁUDIO =====
+  let audio = null;
+  let isPlaying = false;
+
+  playBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!beat.audio) { 
+      showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
+      return; 
+    }
+    
+    if (!audio) {
+      audio = new Audio(beat.audio);
+      audio.volume = 0.7;
       
-      beatAudio = new Audio(audioUrl);
-      const playBtn = document.getElementById('playBtnSingle');
-      const progressFill = document.getElementById('progressFillSingle');
-      const progressBar = document.getElementById('progressBarSingle');
-      const currentTimeEl = document.getElementById('currentTimeSingle');
-      const totalTimeEl = document.getElementById('totalTimeSingle');
-      const visualizer = document.getElementById('visualizerSingle');
-      const bars = visualizer?.querySelectorAll('.bar') || [];
-
-      let isDragging = false;
-
-      function formatTime(seconds) {
-        if (isNaN(seconds)) return '0:00';
-        const m = Math.floor(seconds / 60);
-        const s = Math.floor(seconds % 60);
-        return m + ':' + (s < 10 ? '0' : '') + s;
-      }
-
-      function updateProgress() {
-        if (!isDragging && beatAudio.duration) {
-          const percent = (beatAudio.currentTime / beatAudio.duration) * 100 || 0;
-          progressFill.style.width = percent + '%';
-          currentTimeEl.textContent = formatTime(beatAudio.currentTime);
-        }
-      }
-
-      beatAudio.addEventListener('loadedmetadata', () => {
-        totalTimeEl.textContent = formatTime(beatAudio.duration);
-      });
-
-      beatAudio.addEventListener('timeupdate', updateProgress);
-
-      playBtn?.addEventListener('click', () => {
-        if (beatAudio.paused) {
-          beatAudio.play().catch(() => console.warn('Erro ao reproduzir'));
-          if (beatId) incrementPlays(beatId);
-        } else {
-          beatAudio.pause();
+      audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100;
+          fill.style.width = percent + '%';
+          const mins = Math.floor(audio.currentTime / 60);
+          const secs = Math.floor(audio.currentTime % 60);
+          currentTime.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
       });
-
-      beatAudio.addEventListener('play', () => {
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        playBtn.classList.add('playing');
-        visualizer?.classList.add('active');
-        bars.forEach(b => b.classList.remove('inactive'));
+      
+      audio.addEventListener('loadedmetadata', () => {
+        const mins = Math.floor(audio.duration / 60);
+        const secs = Math.floor(audio.duration % 60);
+        totalTime.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
       });
-
-      beatAudio.addEventListener('pause', () => {
+      
+      audio.addEventListener('ended', () => {
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         playBtn.classList.remove('playing');
-        visualizer?.classList.remove('active');
-        bars.forEach(b => b.classList.add('inactive'));
-      });
-
-      beatAudio.addEventListener('ended', () => {
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        playBtn.classList.remove('playing');
-        visualizer?.classList.remove('active');
-        bars.forEach(b => b.classList.add('inactive'));
-        progressFill.style.width = '0%';
-        currentTimeEl.textContent = '0:00';
-      });
-
-      progressBar?.addEventListener('click', (e) => {
-        const rect = progressBar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        beatAudio.currentTime = percent * beatAudio.duration;
-      });
-
-      progressBar?.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        const rect = progressBar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        beatAudio.currentTime = percent * beatAudio.duration;
-        updateProgress();
-
-        const onMove = (ev) => {
-          const r = progressBar.getBoundingClientRect();
-          let p = (ev.clientX - r.left) / r.width;
-          p = Math.max(0, Math.min(1, p));
-          beatAudio.currentTime = p * beatAudio.duration;
-          progressFill.style.width = (p * 100) + '%';
-          currentTimeEl.textContent = formatTime(beatAudio.currentTime);
-        };
-
-        const onUp = () => {
-          isDragging = false;
-          document.removeEventListener('mousemove', onMove);
-          document.removeEventListener('mouseup', onUp);
-        };
-
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseup', onUp);
+        isPlaying = false;
+        fill.style.width = '0%';
+        currentTime.textContent = '0:00';
       });
     }
+    
+    if (isPlaying) { 
+      audio.pause(); 
+      playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+      playBtn.classList.remove('playing');
+      isPlaying = false;
+    } else { 
+      audio.play().catch(() => {});
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      playBtn.classList.add('playing');
+      isPlaying = true;
+      incrementPlays(beat.id);
+    }
+  });
 
-    // ============================================================
-    // 17. DOWNLOAD DO MODO BEAT
-    // ============================================================
-    function initializeDownloadSingle(beat) {
-      let selectedFormat = null;
+  // Progresso clicável
+  progress.addEventListener('click', function(e) {
+    if (!audio || !audio.duration) return;
+    const rect = progress.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = percent * audio.duration;
+  });
 
-      const modal = document.getElementById('passwordModal');
-      const passwordInput = document.getElementById('passwordInput');
-      const errorMsg = document.getElementById('errorMsg');
-      const modalConfirm = document.getElementById('modalConfirm');
-      const modalCancel = document.getElementById('modalCancel');
+  // ===== DOWNLOAD COM SENHA =====
+  btnMp3.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openPasswordModal('mp3', beat);
+  });
 
-      document.querySelectorAll('.download-btn-single').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedFormat = btn.dataset.format;
-          passwordInput.value = '';
-          passwordInput.className = '';
-          errorMsg.classList.remove('show');
-          modal.classList.add('active');
-          setTimeout(() => passwordInput.focus(), 100);
-        });
-      });
+  btnWav.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openPasswordModal('wav', beat);
+  });
 
-      async function confirmPassword() {
-        const password = passwordInput.value.trim();
+  return card;
+}
 
-        if (!password) {
-          errorMsg.textContent = 'Digite a senha primeiro';
-          errorMsg.classList.add('show');
-          passwordInput.className = 'error';
-          setTimeout(() => {
-            passwordInput.className = '';
-            errorMsg.classList.remove('show');
-          }, 2000);
-          return;
-        }
+// ============================================================
+// DOWNLOAD COM SENHA
+// ============================================================
+let currentDownloadBeat = null;
+let currentDownloadFormat = null;
 
-        try {
-          const response = await fetch('/api/download', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              password: password,
-              format: selectedFormat,
-              beatSlug: currentBeatSlug
-            })
-          });
+function openPasswordModal(format, beat) {
+  currentDownloadFormat = format;
+  currentDownloadBeat = beat;
+  
+  const modal = document.getElementById('passwordModal');
+  const passwordInput = document.getElementById('passwordInput');
+  const errorMsg = document.getElementById('errorMsg');
+  
+  passwordInput.value = '';
+  passwordInput.className = '';
+  errorMsg.style.display = 'none';
+  modal.classList.add('active');
+  setTimeout(() => passwordInput.focus(), 100);
+}
 
-          const data = await response.json();
+document.getElementById('modalConfirm').addEventListener('click', async () => {
+  const password = document.getElementById('passwordInput').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+  
+  if (!password) {
+    errorMsg.textContent = 'Digite a senha primeiro';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  try {
+    const response = await fetch('/api/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: password,
+        format: currentDownloadFormat,
+        beatSlug: currentDownloadBeat.slug || currentDownloadBeat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      document.getElementById('passwordInput').className = 'success';
+      errorMsg.style.display = 'none';
+      
+      const link = document.createElement('a');
+      link.href = data.url;
+      link.download = data.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setTimeout(() => {
+        document.getElementById('passwordModal').classList.remove('active');
+        document.getElementById('passwordInput').className = '';
+      }, 500);
+      
+    } else {
+      document.getElementById('passwordInput').className = 'error';
+      errorMsg.textContent = data.error || 'Senha incorreta';
+      errorMsg.style.display = 'block';
+      document.getElementById('passwordInput').value = '';
+      setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+      setTimeout(() => {
+        document.getElementById('passwordInput').className = '';
+      }, 2000);
+    }
+  } catch (error) {
+    errorMsg.textContent = 'Erro de conexão. Tente novamente.';
+    errorMsg.style.display = 'block';
+    document.getElementById('passwordInput').className = 'error';
+    setTimeout(() => {
+      document.getElementById('passwordInput').className = '';
+      errorMsg.style.display = 'none';
+    }, 3000);
+  }
+});
 
-          if (data.success) {
-            passwordInput.className = 'success';
-            errorMsg.classList.remove('show');
+document.getElementById('modalCancel').addEventListener('click', () => {
+  document.getElementById('passwordModal').classList.remove('active');
+  document.getElementById('passwordInput').className = '';
+  document.getElementById('errorMsg').style.display = 'none';
+});
 
-            const link = document.createElement('a');
-            link.href = data.url;
-            link.download = data.filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('modalConfirm').click();
+  }
+});
 
-            setTimeout(() => {
-              modal.classList.remove('active');
-              passwordInput.className = '';
-            }, 500);
+document.getElementById('passwordModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('passwordModal').classList.remove('active');
+    document.getElementById('passwordInput').className = '';
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+});
 
-          } else {
-            passwordInput.className = 'error';
-            errorMsg.textContent = data.error || 'Senha incorreta';
-            errorMsg.classList.add('show');
-            passwordInput.value = '';
-            setTimeout(() => passwordInput.focus(), 100);
+// ============================================================
+// MODALS
+// ============================================================
+function openFormModal(beat = null) {
+  if (!isLoggedIn) return;
+  document.getElementById('fCoverFile').value = '';
+  document.getElementById('coverStatus').textContent = 'Selecionar';
+  document.getElementById('previewContainer').innerHTML = '';
+  document.getElementById('fAudioStream').value = '';
+  document.getElementById('fAudioMp3').value = '';
+  document.getElementById('fAudioWav').value = '';
+  document.getElementById('fPassword').value = '';
+  if (beat) {
+    document.getElementById('modalTitle').querySelector('span').textContent = 'Editar Beat';
+    document.getElementById('fTitle').value = beat.title;
+    document.getElementById('fArtist').value = beat.artist;
+    document.getElementById('fGenre').value = beat.genre;
+    document.getElementById('fPrice').value = beat.price;
+    document.getElementById('fBpm').value = beat.bpm || '';
+    document.getElementById('fKey').value = beat.key || '';
+    document.getElementById('fAudioStream').value = beat.audio || '';
+    document.getElementById('fAudioMp3').value = beat.audio_download_mp3 || '';
+    document.getElementById('fAudioWav').value = beat.audio_download_wav || '';
+    document.getElementById('fPassword').value = beat.password || '';
+    editingId = beat.id;
+    if (beat.cover) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; document.getElementById('previewContainer').appendChild(div); }
+  } else {
+    document.getElementById('modalTitle').querySelector('span').textContent = 'Novo Beat';
+    document.getElementById('beatForm').reset();
+    document.getElementById('fBpm').value = '';
+    document.getElementById('fKey').value = '';
+    editingId = null;
+  }
+  document.getElementById('formModal').classList.add('active');
+  document.getElementById('mainDropdown').classList.remove('active');
+}
+function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; }
+function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
-            setTimeout(() => {
-              passwordInput.className = '';
-            }, 2000);
-          }
-        } catch (error) {
-          errorMsg.textContent = 'Erro de conexão. Tente novamente.';
-          errorMsg.classList.add('show');
-          passwordInput.className = 'error';
-          setTimeout(() => {
-            passwordInput.className = '';
-            errorMsg.classList.remove('show');
-          }, 3000);
-        }
+// ============================================================
+// UI UPDATE
+// ============================================================
+function updateUI() {
+  if (isLoggedIn && currentUser) {
+    document.getElementById('userInfoDisplay').style.display = 'flex';
+    document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
+    document.getElementById('emailText').textContent = currentUser.email || 'usuario@email.com';
+    document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
+    document.getElementById('dividerAfterUser').style.display = 'block';
+    document.getElementById('dropdownLogin').style.display = 'none';
+    document.getElementById('dropdownNewBeat').style.display = 'flex';
+    document.getElementById('dropdownToggleEdit').style.display = 'flex';
+    document.getElementById('dropdownDashboard').style.display = 'flex';
+    document.getElementById('dividerBeforeLogout').style.display = 'block';
+    document.getElementById('dropdownLogout').style.display = 'flex';
+    document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
+    document.getElementById('menuLabel').textContent = 'Admin';
+    loadEmailVisibility();
+  } else {
+    document.getElementById('userInfoDisplay').style.display = 'none';
+    document.getElementById('avatarContainer').innerHTML = '';
+    document.getElementById('dividerAfterUser').style.display = 'none';
+    document.getElementById('dropdownLogin').style.display = 'flex';
+    document.getElementById('dropdownNewBeat').style.display = 'none';
+    document.getElementById('dropdownToggleEdit').style.display = 'none';
+    document.getElementById('dropdownDashboard').style.display = 'none';
+    document.getElementById('dividerBeforeLogout').style.display = 'none';
+    document.getElementById('dropdownLogout').style.display = 'none';
+    document.getElementById('menuLabel').textContent = 'Menu';
+  }
+  document.querySelectorAll('.card-edit-btn').forEach(btn => { if (isLoggedIn) btn.classList.add('visible'); else btn.classList.remove('visible'); });
+  updatePlaylistCount();
+  updateCart();
+}
+
+function updatePlaylistButtons(beatId) {
+  document.querySelectorAll('.beat-card').forEach(card => {
+    if (parseInt(card.dataset.id) === beatId) {
+      const btn = card.querySelector('.btn-action .fa-plus, .btn-action .fa-check');
+      if (btn) {
+        // Atualiza botão da playlist se necessário
       }
-
-      modalConfirm.addEventListener('click', confirmPassword);
-      passwordInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') confirmPassword();
-      });
-      modalCancel.addEventListener('click', () => {
-        modal.classList.remove('active');
-        passwordInput.className = '';
-        errorMsg.classList.remove('show');
-      });
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.classList.remove('active');
-          passwordInput.className = '';
-          errorMsg.classList.remove('show');
-        }
-      });
     }
+  });
+}
 
-    // ============================================================
-    // 18. VOLTAR PARA LISTA
-    // ============================================================
-    function showListMode() {
-      // Parar áudio
-      if (beatAudio) {
-        beatAudio.pause();
-        beatAudio = null;
-      }
-      
-      document.getElementById('modeBeat').classList.remove('active');
-      document.getElementById('modeList').classList.remove('hidden');
-      
-      // Remover parâmetro da URL
-      const url = new URL(window.location);
-      url.searchParams.delete('beat');
-      window.history.pushState({}, '', url);
-      
-      // Scroll para o topo
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // ============================================================
-    // 19. DETECTAR BEAT NA URL
-    // ============================================================
-    function detectBeatFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('beat');
-      
-      if (slug) {
-        // Verificar se o beat existe
-        setTimeout(() => {
-          showBeatMode(slug);
-        }, 500);
-        return;
-      }
-      
-      // Se não tiver beat na URL, mostrar lista
-      document.getElementById('modeList').classList.remove('hidden');
-      document.getElementById('modeBeat').classList.remove('active');
-    }
-
-    // ============================================================
-    // 20. MODALS
-    // ============================================================
-    function openFormModal(beat = null) {
-      if (!isLoggedIn) return;
-      
-      document.getElementById('fCoverFile').value = '';
-      document.getElementById('coverStatus').textContent = 'Selecionar';
-      document.getElementById('previewContainer').innerHTML = '';
-      document.getElementById('fAudioStream').value = '';
-      document.getElementById('fAudioMp3').value = '';
-      document.getElementById('fAudioWav').value = '';
-      document.getElementById('fPassword').value = '';
-      
+// ============================================================
+// PLAYLIST MODAL
+// ============================================================
+function openPlaylistModal() {
+  const container = document.getElementById('playlistContainer');
+  const emptyMsg = document.getElementById('emptyPlaylist');
+  const playlist = getPlaylist();
+  if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
+  if (playlist.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; } else {
+    emptyMsg.style.display = 'none';
+    container.innerHTML = '';
+    playlist.forEach(id => {
+      const beat = beatsData.find(b => b.id === id);
       if (beat) {
-        document.getElementById('modalTitle').querySelector('span').textContent = 'Editar Beat';
-        document.getElementById('fTitle').value = beat.title;
-        document.getElementById('fArtist').value = beat.artist;
-        document.getElementById('fGenre').value = beat.genre;
-        document.getElementById('fPrice').value = beat.price;
-        document.getElementById('fBpm').value = beat.bpm || '';
-        document.getElementById('fKey').value = beat.key || '';
-        document.getElementById('fAudioStream').value = beat.audio || '';
-        document.getElementById('fAudioMp3').value = beat.audio_download_mp3 || '';
-        document.getElementById('fAudioWav').value = beat.audio_download_wav || '';
-        document.getElementById('fPassword').value = beat.password || '';
-        editingId = beat.id;
-        if (beat.cover) { 
-          const div = document.createElement('div'); 
-          div.className = 'preview-item'; 
-          div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; 
-          document.getElementById('previewContainer').appendChild(div); 
-        }
-      } else {
-        document.getElementById('modalTitle').querySelector('span').textContent = 'Novo Beat';
-        document.getElementById('beatForm').reset();
-        document.getElementById('fBpm').value = '';
-        document.getElementById('fKey').value = '';
-        editingId = null;
-      }
-      document.getElementById('formModal').classList.add('active');
-      document.getElementById('mainDropdown').classList.remove('active');
-    }
-    function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; }
-    function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
-
-    // ============================================================
-    // 21. UI UPDATE
-    // ============================================================
-    function updateUI() {
-      if (isLoggedIn && currentUser) {
-        document.getElementById('userInfoDisplay').style.display = 'flex';
-        document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
-        document.getElementById('emailText').textContent = currentUser.email || 'usuario@email.com';
-        document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
-        document.getElementById('dividerAfterUser').style.display = 'block';
-        document.getElementById('dropdownLogin').style.display = 'none';
-        document.getElementById('dropdownNewBeat').style.display = 'flex';
-        document.getElementById('dropdownToggleEdit').style.display = 'flex';
-        document.getElementById('dropdownDashboard').style.display = 'flex';
-        document.getElementById('dividerBeforeLogout').style.display = 'block';
-        document.getElementById('dropdownLogout').style.display = 'flex';
-        document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
-        document.getElementById('menuLabel').textContent = 'Admin';
-        loadEmailVisibility();
-      } else {
-        document.getElementById('userInfoDisplay').style.display = 'none';
-        document.getElementById('avatarContainer').innerHTML = '';
-        document.getElementById('dividerAfterUser').style.display = 'none';
-        document.getElementById('dropdownLogin').style.display = 'flex';
-        document.getElementById('dropdownNewBeat').style.display = 'none';
-        document.getElementById('dropdownToggleEdit').style.display = 'none';
-        document.getElementById('dropdownDashboard').style.display = 'none';
-        document.getElementById('dividerBeforeLogout').style.display = 'none';
-        document.getElementById('dropdownLogout').style.display = 'none';
-        document.getElementById('menuLabel').textContent = 'Menu';
-      }
-      document.querySelectorAll('.card-edit-btn').forEach(btn => {
-        if (isLoggedIn) btn.classList.add('visible');
-        else btn.classList.remove('visible');
-      });
-      updatePlaylistCount();
-      updateCart();
-    }
-
-    function updatePlaylistButtons(beatId) {
-      document.querySelectorAll('.beat-card').forEach(card => {
-        if (parseInt(card.dataset.id) === beatId) {
-          const btn = card.querySelector('.btn-playlist');
-          if (btn) {
-            if (isInPlaylist(beatId)) {
-              btn.innerHTML = '<i class="fas fa-check"></i> Added';
-              btn.classList.add('added');
-            } else {
-              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
-              btn.classList.remove('added');
+        const item = document.createElement('div');
+        item.className = 'playlist-item';
+        item.innerHTML = `
+          <img src="${beat.cover || 'https://picsum.photos/seed/default/100/100'}" alt="${beat.title}" class="cover">
+          <div class="info"><div class="title">${beat.title}</div><div class="sub">${beat.artist} · ${beat.genre} · ${beat.price}</div></div>
+          <div class="actions">
+            <button class="btn-play-mini" data-id="${beat.id}" data-audio="${beat.audio || ''}"><i class="fas fa-play"></i></button>
+            <div class="progress-mini"><div class="progress-mini-bar" id="playlist-progress-${beat.id}"></div></div>
+            <span class="time-mini" id="playlist-time-${beat.id}">0:00</span>
+            <button class="btn-remove" data-id="${beat.id}"><i class="fas fa-trash"></i> Remover</button>
+          </div>
+        `;
+        const removeBtn = item.querySelector('.btn-remove');
+        removeBtn.addEventListener('click', () => {
+          const newPlaylist = getPlaylist().filter(id => id !== beat.id);
+          savePlaylist(newPlaylist);
+          showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
+          openPlaylistModal();
+        });
+        const playMiniBtn = item.querySelector('.btn-play-mini');
+        const progressMini = item.querySelector('.progress-mini-bar');
+        const timeMini = document.getElementById(`playlist-time-${beat.id}`);
+        playMiniBtn.addEventListener('click', () => {
+          const audioUrl = playMiniBtn.dataset.audio;
+          if (!audioUrl) { showToast('Áudio indisponível', 'Este beat não possui áudio.', 'error'); return; }
+          if (playlistAudioId === beat.id && playlistAudio && !playlistAudio.paused) {
+            playlistAudio.pause(); playMiniBtn.innerHTML = '<i class="fas fa-play"></i>'; playMiniBtn.classList.remove('playing'); playlistAudioId = null; return;
+          }
+          if (playlistAudio) { playlistAudio.pause(); document.querySelectorAll('.btn-play-mini').forEach(b => { b.innerHTML = '<i class="fas fa-play"></i>'; b.classList.remove('playing'); }); }
+          playlistAudio = new Audio(audioUrl);
+          playlistAudio.volume = 0.7;
+          playlistAudioId = beat.id;
+          playMiniBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          playMiniBtn.classList.add('playing');
+          playlistAudio.play().catch(() => {});
+          playlistAudio.addEventListener('timeupdate', () => {
+            if (playlistAudio.duration) {
+              const percent = (playlistAudio.currentTime / playlistAudio.duration) * 100;
+              if (progressMini) progressMini.style.width = percent + '%';
+              const mins = Math.floor(playlistAudio.currentTime / 60);
+              const secs = Math.floor(playlistAudio.currentTime % 60);
+              if (timeMini) timeMini.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
             }
-          }
-        }
-      });
-    }
-
-    // ============================================================
-    // 22. PLAYLIST MODAL
-    // ============================================================
-    function openPlaylistModal() {
-      const container = document.getElementById('playlistContainer');
-      const emptyMsg = document.getElementById('emptyPlaylist');
-      const playlist = getPlaylist();
-      if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
-      if (playlist.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; }
-      else {
-        emptyMsg.style.display = 'none';
-        container.innerHTML = '';
-        playlist.forEach(id => {
-          const beat = beatsData.find(b => b.id === id);
-          if (beat) {
-            const item = document.createElement('div');
-            item.className = 'playlist-item';
-            item.innerHTML = `
-              <img src="${beat.cover || 'https://picsum.photos/seed/default/100/100'}" alt="${beat.title}" class="cover">
-              <div class="info">
-                <div class="title">${beat.title}</div>
-                <div class="sub">${beat.artist} · ${beat.genre} · ${beat.price}</div>
-              </div>
-              <div class="actions">
-                <button class="btn-play-mini" data-id="${beat.id}" data-audio="${beat.audio || ''}">
-                  <i class="fas fa-play"></i>
-                </button>
-                <div class="progress-mini"><div class="progress-mini-bar" id="playlist-progress-${beat.id}"></div></div>
-                <span class="time-mini" id="playlist-time-${beat.id}">0:00</span>
-                <button class="btn-remove" data-id="${beat.id}"><i class="fas fa-trash"></i> Remover</button>
-              </div>
-            `;
-            const removeBtn = item.querySelector('.btn-remove');
-            removeBtn.addEventListener('click', () => {
-              const newPlaylist = getPlaylist().filter(id => id !== beat.id);
-              savePlaylist(newPlaylist);
-              updatePlaylistButtons(beat.id);
-              showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
-              openPlaylistModal();
-            });
-            const playMiniBtn = item.querySelector('.btn-play-mini');
-            const progressMini = item.querySelector('.progress-mini-bar');
-            const timeMini = document.getElementById(`playlist-time-${beat.id}`);
-            playMiniBtn.addEventListener('click', () => {
-              const audioUrl = playMiniBtn.dataset.audio;
-              if (!audioUrl) { showToast('Áudio indisponível', 'Este beat não possui áudio.', 'error'); return; }
-              if (playlistAudioId === beat.id && playlistAudio && !playlistAudio.paused) {
-                playlistAudio.pause(); playMiniBtn.innerHTML = '<i class="fas fa-play"></i>'; playMiniBtn.classList.remove('playing'); playlistAudioId = null; return;
-              }
-              if (playlistAudio) { playlistAudio.pause(); document.querySelectorAll('.btn-play-mini').forEach(b => { b.innerHTML = '<i class="fas fa-play"></i>'; b.classList.remove('playing'); }); }
-              playlistAudio = new Audio(audioUrl);
-              playlistAudio.volume = 0.7;
-              playlistAudioId = beat.id;
-              playMiniBtn.innerHTML = '<i class="fas fa-pause"></i>';
-              playMiniBtn.classList.add('playing');
-              playlistAudio.play().catch(() => {});
-              playlistAudio.addEventListener('timeupdate', () => {
-                if (playlistAudio.duration) {
-                  const percent = (playlistAudio.currentTime / playlistAudio.duration) * 100;
-                  if (progressMini) progressMini.style.width = percent + '%';
-                  const mins = Math.floor(playlistAudio.currentTime / 60);
-                  const secs = Math.floor(playlistAudio.currentTime % 60);
-                  if (timeMini) timeMini.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                }
-              });
-              playlistAudio.addEventListener('ended', () => {
-                playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
-                playMiniBtn.classList.remove('playing');
-                if (progressMini) progressMini.style.width = '0%';
-                if (timeMini) timeMini.textContent = '0:00';
-                playlistAudioId = null;
-              });
-            });
-            container.appendChild(item);
-          }
-        });
-      }
-      document.getElementById('playlistModal').classList.add('active');
-      document.getElementById('mainDropdown').classList.remove('active');
-    }
-
-    // ============================================================
-    // 23. CART MODAL
-    // ============================================================
-    function openCartModal() {
-      const container = document.getElementById('cartContainer');
-      const emptyMsg = document.getElementById('emptyCart');
-      const totalDiv = document.getElementById('cartTotal');
-      const cartBeats = getCartBeats();
-      if (cartBeats.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; totalDiv.style.display = 'none'; }
-      else {
-        emptyMsg.style.display = 'none';
-        totalDiv.style.display = 'block';
-        container.innerHTML = '';
-        cartBeats.forEach(beat => {
-          const item = document.createElement('div');
-          item.className = 'cart-item';
-          item.innerHTML = `
-            <img src="${beat.cover || 'https://picsum.photos/seed/default/50/50'}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;">
-            <div class="info">
-              <div class="title">${beat.title}</div>
-              <div class="sub">${beat.artist} · ${beat.price}</div>
-            </div>
-            <button class="remove-item" data-id="${beat.id}"><i class="fas fa-times"></i></button>
-          `;
-          const removeBtn = item.querySelector('.remove-item');
-          removeBtn.addEventListener('click', () => {
-            cart = cart.filter(id => id !== beat.id);
-            updateCart();
-            openCartModal();
-            updatePlaylistButtons(beat.id);
           });
-          container.appendChild(item);
+          playlistAudio.addEventListener('ended', () => {
+            playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playMiniBtn.classList.remove('playing');
+            if (progressMini) progressMini.style.width = '0%';
+            if (timeMini) timeMini.textContent = '0:00';
+            playlistAudioId = null;
+          });
         });
-        document.getElementById('cartTotalValue').textContent = `Kz ${getCartTotal().toFixed(2)}`;
+        container.appendChild(item);
       }
-      document.getElementById('cartModal').classList.add('active');
-    }
+    });
+  }
+  document.getElementById('playlistModal').classList.add('active');
+  document.getElementById('mainDropdown').classList.remove('active');
+}
 
-    // ============================================================
-    // 24. DASHBOARD
-    // ============================================================
-    function openDashboard() {
-      const totalBeats = beatsData.length;
-      const totalPlays = beatsData.reduce((sum, b) => sum + (b.plays || 0), 0);
-      let allRatings = [];
-      Object.values(userRatings).forEach(r => { allRatings = allRatings.concat(r); });
-      const avgRating = allRatings.length > 0 ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length) : 0;
-      const genres = {};
-      beatsData.forEach(b => { genres[b.genre] = (genres[b.genre] || 0) + 1; });
-      const topGenre = Object.keys(genres).sort((a, b) => genres[b] - genres[a])[0] || '-';
-      document.getElementById('totalBeats').textContent = totalBeats;
-      document.getElementById('totalPlays').textContent = totalPlays;
-      document.getElementById('avgRating').textContent = avgRating ? avgRating.toFixed(1) : '0.0';
-      document.getElementById('topGenre').textContent = topGenre;
-      const topBeats = [...beatsData].sort((a, b) => (b.plays || 0) - (a.plays || 0)).slice(0, 5);
-      const topContainer = document.getElementById('topBeats');
-      topContainer.innerHTML = '';
-      topBeats.forEach((b, i) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;';
-        div.innerHTML = `<span>${i+1}. ${b.title}</span><span style="color:var(--gold);">${b.plays || 0} plays</span>`;
-        topContainer.appendChild(div);
+// ============================================================
+// CART MODAL
+// ============================================================
+function openCartModal() {
+  const container = document.getElementById('cartContainer');
+  const emptyMsg = document.getElementById('emptyCart');
+  const totalDiv = document.getElementById('cartTotal');
+  const cartBeats = getCartBeats();
+  if (cartBeats.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; totalDiv.style.display = 'none'; } else {
+    emptyMsg.style.display = 'none';
+    totalDiv.style.display = 'block';
+    container.innerHTML = '';
+    cartBeats.forEach(beat => {
+      const item = document.createElement('div');
+      item.className = 'cart-item';
+      item.innerHTML = `
+        <img src="${beat.cover || 'https://picsum.photos/seed/default/50/50'}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;">
+        <div class="info"><div class="title">${beat.title}</div><div class="sub">${beat.artist} · ${beat.price}</div></div>
+        <button class="remove-item" data-id="${beat.id}"><i class="fas fa-times"></i></button>
+      `;
+      const removeBtn = item.querySelector('.remove-item');
+      removeBtn.addEventListener('click', () => {
+        cart = cart.filter(id => id !== beat.id);
+        updateCart();
+        openCartModal();
       });
-      document.getElementById('dashboardModal').classList.add('active');
-    }
+      container.appendChild(item);
+    });
+    document.getElementById('cartTotalValue').textContent = `Kz ${getCartTotal().toFixed(2)}`;
+  }
+  document.getElementById('cartModal').classList.add('active');
+}
 
-    // ============================================================
-    // 25. AUTH
-    // ============================================================
-    async function doLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPass').value.trim();
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        currentUser = data.user; isLoggedIn = true;
-        document.getElementById('loginError').style.display = 'none';
-        document.getElementById('loginModal').classList.remove('active');
-        document.getElementById('mainDropdown').classList.remove('active');
-        await loadBeats();
-        updateUI();
-        showToast('Login realizado', `Bem-vindo, ${currentUser.email}.`, 'success');
-      } catch (error) {
-        document.getElementById('loginError').style.display = 'block';
-        document.getElementById('loginError').textContent = error.message || 'Email ou senha inválidos.';
-      }
-    }
-    async function doLogout() {
-      try {
-        await supabase.auth.signOut();
-        isLoggedIn = false; currentUser = null; editMode = false;
-        document.getElementById('mainDropdown').classList.remove('active');
-        if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
-        if (beatAudio) { beatAudio.pause(); beatAudio = null; }
-        await loadBeats();
-        updateUI();
-        showToast('Sessão encerrada', 'Você saiu do modo administrador.', 'info');
-      } catch (error) { console.error('Erro no logout:', error); }
-    }
-    async function checkSession() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) { currentUser = session.user; isLoggedIn = true; updateUI(); }
-      } catch (error) { console.error('Erro ao verificar sessão:', error); }
-    }
+// ============================================================
+// DASHBOARD
+// ============================================================
+function openDashboard() {
+  const totalBeats = beatsData.length;
+  const totalPlays = beatsData.reduce((sum, b) => sum + (b.plays || 0), 0);
+  let allRatings = [];
+  Object.values(userRatings).forEach(r => { allRatings = allRatings.concat(r); });
+  const avgRating = allRatings.length > 0 ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length) : 0;
+  const genres = {};
+  beatsData.forEach(b => { genres[b.genre] = (genres[b.genre] || 0) + 1; });
+  const topGenre = Object.keys(genres).sort((a, b) => genres[b] - genres[a])[0] || '-';
+  document.getElementById('totalBeats').textContent = totalBeats;
+  document.getElementById('totalPlays').textContent = totalPlays;
+  document.getElementById('avgRating').textContent = avgRating ? avgRating.toFixed(1) : '0.0';
+  document.getElementById('topGenre').textContent = topGenre;
+  const topBeats = [...beatsData].sort((a, b) => (b.plays || 0) - (a.plays || 0)).slice(0, 5);
+  const topContainer = document.getElementById('topBeats');
+  topContainer.innerHTML = '';
+  topBeats.forEach((b, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;';
+    div.innerHTML = `<span>${i+1}. ${b.title}</span><span style="color:var(--gold);">${b.plays || 0} plays</span>`;
+    topContainer.appendChild(div);
+  });
+  document.getElementById('dashboardModal').classList.add('active');
+}
 
-    // ============================================================
-    // 26. EVENTOS
-    // ============================================================
-    document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
-    document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
-    
-    document.getElementById('toggleEmailBtn').addEventListener('click', toggleEmailVisibility);
-    
-    document.getElementById('dropdownLogin').addEventListener('click', () => { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginError').style.display = 'none'; document.getElementById('mainDropdown').classList.remove('active'); });
-    document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
-    document.getElementById('loginForm').addEventListener('submit', doLogin);
-    
-    document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
-    document.getElementById('formCancel').addEventListener('click', closeFormModal);
-    
-    document.getElementById('beatForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const title = document.getElementById('fTitle').value.trim();
-      const artist = document.getElementById('fArtist').value.trim();
-      const genre = document.getElementById('fGenre').value.trim();
-      const price = document.getElementById('fPrice').value.trim();
-      const bpm = document.getElementById('fBpm').value.trim();
-      const key = document.getElementById('fKey').value.trim();
-      const cover = document.getElementById('fCoverFile').files[0];
-      const audioStream = document.getElementById('fAudioStream').value.trim();
-      const audioMp3 = document.getElementById('fAudioMp3').value.trim();
-      const audioWav = document.getElementById('fAudioWav').value.trim();
-      const password = document.getElementById('fPassword').value.trim();
-      
-      if (!title || !artist || !genre || !price) {
-        showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error');
-        return;
-      }
-      
-      if (!audioStream) {
-        showToast('Link de streaming obrigatório', 'Adicione o link do OpenDrive para streaming.', 'error');
-        return;
-      }
-      
-      let coverUrl = null;
-      if (cover) {
-        const timestamp = Date.now();
-        coverUrl = await uploadFile(cover, 'covers', `beat-cover-${timestamp}`);
-      }
-      
-      const beatData = {
-        title,
-        artist,
-        genre,
-        price,
-        bpm,
-        key,
-        cover: coverUrl,
-        audioStream,
-        audioMp3,
-        audioWav,
-        password: password || 'Thebestwork2026'
-      };
-      
-      await saveBeatToSupabase(beatData);
-    });
-    
-    document.getElementById('fCoverFile').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) { document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-      else { document.getElementById('coverStatus').textContent = 'Selecionar'; }
-    });
-    
-    document.getElementById('dropdownToggleEdit').addEventListener('click', function() {
-      if (!isLoggedIn) return;
-      editMode = !editMode;
-      this.innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
-      document.querySelectorAll('.card-edit-btn').forEach(btn => {
-        if (editMode && isLoggedIn) btn.style.display = 'flex';
-        else btn.style.display = 'none';
-      });
-      document.getElementById('mainDropdown').classList.remove('active');
-    });
-    
-    document.getElementById('dropdownLogout').addEventListener('click', doLogout);
-    document.getElementById('dropdownPlaylist').addEventListener('click', openPlaylistModal);
-    document.getElementById('playlistCancel').addEventListener('click', () => { if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; } document.getElementById('playlistModal').classList.remove('active'); });
-    
-    document.getElementById('cartBtn').addEventListener('click', openCartModal);
-    document.getElementById('cartCancel').addEventListener('click', () => document.getElementById('cartModal').classList.remove('active'));
-    document.getElementById('cartCheckout').addEventListener('click', () => {
-      const cartBeats = getCartBeats();
-      if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho.', 'error'); return; }
-      const msg = encodeURIComponent(`Olá! Gostaria de comprar os seguintes beats:\n${cartBeats.map(b => `- ${b.title} (${b.artist}) - ${b.price}`).join('\n')}\nTotal: Kz ${getCartTotal().toFixed(2)}`);
-      window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
-      document.getElementById('cartModal').classList.remove('active');
-    });
-    
-    document.getElementById('dropdownDashboard').addEventListener('click', openDashboard);
-    document.getElementById('dashboardCancel').addEventListener('click', () => document.getElementById('dashboardModal').classList.remove('active'));
-    
-    document.getElementById('dropdownProfile').addEventListener('click', () => {
-      const saved = JSON.parse(localStorage.getItem('bestBeatsProfile') || '{"name":"","bio":"","social":""}');
-      document.getElementById('profName').value = saved.name || '';
-      document.getElementById('profBio').value = saved.bio || '';
-      document.getElementById('profSocial').value = saved.social || '';
-      document.getElementById('profileModal').classList.add('active');
-      document.getElementById('mainDropdown').classList.remove('active');
-    });
-    document.getElementById('profileCancel').addEventListener('click', () => document.getElementById('profileModal').classList.remove('active'));
-    document.getElementById('profileForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const profile = {
-        name: document.getElementById('profName').value.trim(),
-        bio: document.getElementById('profBio').value.trim(),
-        social: document.getElementById('profSocial').value.trim()
-      };
-      localStorage.setItem('bestBeatsProfile', JSON.stringify(profile));
-      showToast('Perfil salvo', 'Suas informações foram atualizadas.', 'success');
-      document.getElementById('profileModal').classList.remove('active');
-    });
-    
-    document.getElementById('dropdownAbout').addEventListener('click', () => {
-      document.getElementById('aboutModal').classList.add('active');
-      document.getElementById('mainDropdown').classList.remove('active');
-    });
-    document.getElementById('aboutCancel').addEventListener('click', () => document.getElementById('aboutModal').classList.remove('active'));
-    
-    document.getElementById('ratingCancel').addEventListener('click', () => document.getElementById('ratingModal').classList.remove('active'));
-    document.getElementById('ratingSubmit').addEventListener('click', async () => {
-      const beatId = parseInt(document.getElementById('ratingBeatId').value);
-      const rating = parseInt(document.getElementById('ratingValue').value);
-      if (rating === 0) { showToast('Avaliação', 'Selecione uma nota de 1 a 5.', 'info'); return; }
-      await rateBeat(beatId, rating);
-      document.getElementById('ratingModal').classList.remove('active');
-    });
-    document.querySelectorAll('#ratingStars span').forEach(star => {
-      star.addEventListener('click', function() {
-        const val = parseInt(this.dataset.value);
-        document.getElementById('ratingValue').value = val;
-        document.querySelectorAll('#ratingStars span').forEach(s => {
-          if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)';
-          else s.style.color = 'var(--text-muted)';
-        });
-      });
-      star.addEventListener('mouseenter', function() {
-        const val = parseInt(this.dataset.value);
-        document.querySelectorAll('#ratingStars span').forEach(s => {
-          if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)';
-          else s.style.color = 'var(--text-muted)';
-        });
-      });
-      star.addEventListener('mouseleave', function() {
-        const current = parseInt(document.getElementById('ratingValue').value) || 0;
-        document.querySelectorAll('#ratingStars span').forEach(s => {
-          if (parseInt(s.dataset.value) <= current) s.style.color = 'var(--gold)';
-          else s.style.color = 'var(--text-muted)';
-        });
-      });
-    });
-    
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-    document.getElementById('filterGenre').addEventListener('change', applyFilters);
-    document.getElementById('sortBy').addEventListener('change', applyFilters);
-    document.getElementById('clearSearch').addEventListener('click', () => {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('clearSearch').classList.remove('visible');
-      applyFilters();
-    });
-    document.getElementById('searchInput').addEventListener('input', function() {
-      document.getElementById('clearSearch').classList.toggle('visible', this.value.length > 0);
-    });
-    
-    document.getElementById('logoLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = window.location.pathname;
-    });
-    
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    
-    // Botão voltar do modo beat
-    document.getElementById('btnVoltarBeat').addEventListener('click', showListMode);
-    
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-      });
-    });
+// ============================================================
+// AUTH
+// ============================================================
+async function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    currentUser = data.user; isLoggedIn = true;
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('mainDropdown').classList.remove('active');
+    await loadBeats();
+    updateUI();
+    showToast('Login realizado', `Bem-vindo, ${currentUser.email}.`, 'success');
+  } catch (error) {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginError').textContent = error.message || 'Email ou senha inválidos.';
+  }
+}
+async function doLogout() {
+  try {
+    await supabase.auth.signOut();
+    isLoggedIn = false; currentUser = null; editMode = false;
+    document.getElementById('mainDropdown').classList.remove('active');
+    if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
+    await loadBeats();
+    updateUI();
+    showToast('Sessão encerrada', 'Você saiu do modo administrador.', 'info');
+  } catch (error) { console.error('Erro no logout:', error); }
+}
+async function checkSession() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) { currentUser = session.user; isLoggedIn = true; updateUI(); }
+  } catch (error) { console.error('Erro ao verificar sessão:', error); }
+}
 
-    // ============================================================
-    // 27. INIT
-    // ============================================================
-    async function init() {
-      loadTheme();
-      await checkSession();
-      await loadBeats();
-      updateUI();
-      console.log('Best Beats v11.0 - Página Única!');
-      console.log('📱 WhatsApp: +244 926 261 011');
-      console.log('📧 Email: agtbeatsxpalha@email.com');
-    }
-    init();
+// ============================================================
+// EVENTOS
+// ============================================================
+document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
+document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
+document.getElementById('toggleEmailBtn').addEventListener('click', toggleEmailVisibility);
+document.getElementById('dropdownLogin').addEventListener('click', () => { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginError').style.display = 'none'; document.getElementById('mainDropdown').classList.remove('active'); });
+document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
+document.getElementById('loginForm').addEventListener('submit', doLogin);
+document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
+document.getElementById('formCancel').addEventListener('click', closeFormModal);
+document.getElementById('beatForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const title = document.getElementById('fTitle').value.trim();
+  const artist = document.getElementById('fArtist').value.trim();
+  const genre = document.getElementById('fGenre').value.trim();
+  const price = document.getElementById('fPrice').value.trim();
+  const bpm = document.getElementById('fBpm').value.trim();
+  const key = document.getElementById('fKey').value.trim();
+  const cover = document.getElementById('fCoverFile').files[0];
+  const audioStream = document.getElementById('fAudioStream').value.trim();
+  const audioMp3 = document.getElementById('fAudioMp3').value.trim();
+  const audioWav = document.getElementById('fAudioWav').value.trim();
+  const password = document.getElementById('fPassword').value.trim();
+  if (!title || !artist || !genre || !price) { showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error'); return; }
+  if (!audioStream) { showToast('Link de streaming obrigatório', 'Adicione o link do OpenDrive para streaming.', 'error'); return; }
+  let coverUrl = null;
+  if (cover) { const timestamp = Date.now(); coverUrl = await uploadFile(cover, 'covers', `beat-cover-${timestamp}`); }
+  const beatData = { title, artist, genre, price, bpm, key, cover: coverUrl, audioStream, audioMp3, audioWav, password: password || 'Thebestwork2026' };
+  await saveBeatToSupabase(beatData);
+});
+document.getElementById('fCoverFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) { document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; } else { document.getElementById('coverStatus').textContent = 'Selecionar'; }
+});
+document.getElementById('dropdownToggleEdit').addEventListener('click', function() {
+  if (!isLoggedIn) return;
+  editMode = !editMode;
+  this.innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
+  document.querySelectorAll('.card-edit-btn').forEach(btn => { if (editMode && isLoggedIn) btn.style.display = 'flex'; else btn.style.display = 'none'; });
+  document.getElementById('mainDropdown').classList.remove('active');
+});
+document.getElementById('dropdownLogout').addEventListener('click', doLogout);
+document.getElementById('dropdownPlaylist').addEventListener('click', openPlaylistModal);
+document.getElementById('playlistCancel').addEventListener('click', () => { if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; } document.getElementById('playlistModal').classList.remove('active'); });
+document.getElementById('cartBtn').addEventListener('click', openCartModal);
+document.getElementById('cartCancel').addEventListener('click', () => document.getElementById('cartModal').classList.remove('active'));
+document.getElementById('cartCheckout').addEventListener('click', () => {
+  const cartBeats = getCartBeats();
+  if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho.', 'error'); return; }
+  const msg = encodeURIComponent(`Olá! Gostaria de comprar os seguintes beats:\n${cartBeats.map(b => `- ${b.title} (${b.artist}) - ${b.price}`).join('\n')}\nTotal: Kz ${getCartTotal().toFixed(2)}`);
+  window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
+  document.getElementById('cartModal').classList.remove('active');
+});
+document.getElementById('dropdownDashboard').addEventListener('click', openDashboard);
+document.getElementById('dashboardCancel').addEventListener('click', () => document.getElementById('dashboardModal').classList.remove('active'));
+document.getElementById('dropdownProfile').addEventListener('click', () => {
+  const saved = JSON.parse(localStorage.getItem('bestBeatsProfile') || '{"name":"","bio":"","social":""}');
+  document.getElementById('profName').value = saved.name || '';
+  document.getElementById('profBio').value = saved.bio || '';
+  document.getElementById('profSocial').value = saved.social || '';
+  document.getElementById('profileModal').classList.add('active');
+  document.getElementById('mainDropdown').classList.remove('active');
+});
+document.getElementById('profileCancel').addEventListener('click', () => document.getElementById('profileModal').classList.remove('active'));
+document.getElementById('profileForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const profile = { name: document.getElementById('profName').value.trim(), bio: document.getElementById('profBio').value.trim(), social: document.getElementById('profSocial').value.trim() };
+  localStorage.setItem('bestBeatsProfile', JSON.stringify(profile));
+  showToast('Perfil salvo', 'Suas informações foram atualizadas.', 'success');
+  document.getElementById('profileModal').classList.remove('active');
+});
+document.getElementById('dropdownAbout').addEventListener('click', () => {
+  document.getElementById('aboutModal').classList.add('active');
+  document.getElementById('mainDropdown').classList.remove('active');
+});
+document.getElementById('aboutCancel').addEventListener('click', () => document.getElementById('aboutModal').classList.remove('active'));
+document.getElementById('ratingCancel').addEventListener('click', () => document.getElementById('ratingModal').classList.remove('active'));
+document.getElementById('ratingSubmit').addEventListener('click', async () => {
+  const beatId = parseInt(document.getElementById('ratingBeatId').value);
+  const rating = parseInt(document.getElementById('ratingValue').value);
+  if (rating === 0) { showToast('Avaliação', 'Selecione uma nota de 1 a 5.', 'info'); return; }
+  await rateBeat(beatId, rating);
+  document.getElementById('ratingModal').classList.remove('active');
+});
+document.querySelectorAll('#ratingStars span').forEach(star => {
+  star.addEventListener('click', function() {
+    const val = parseInt(this.dataset.value);
+    document.getElementById('ratingValue').value = val;
+    document.querySelectorAll('#ratingStars span').forEach(s => { if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)'; else s.style.color = 'var(--text-muted)'; });
+  });
+  star.addEventListener('mouseenter', function() {
+    const val = parseInt(this.dataset.value);
+    document.querySelectorAll('#ratingStars span').forEach(s => { if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)'; else s.style.color = 'var(--text-muted)'; });
+  });
+  star.addEventListener('mouseleave', function() {
+    const current = parseInt(document.getElementById('ratingValue').value) || 0;
+    document.querySelectorAll('#ratingStars span').forEach(s => { if (parseInt(s.dataset.value) <= current) s.style.color = 'var(--gold)'; else s.style.color = 'var(--text-muted)'; });
+  });
+});
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('filterGenre').addEventListener('change', applyFilters);
+document.getElementById('sortBy').addEventListener('change', applyFilters);
+document.getElementById('clearSearch').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('clearSearch').classList.remove('visible');
+  applyFilters();
+});
+document.getElementById('searchInput').addEventListener('input', function() {
+  document.getElementById('clearSearch').classList.toggle('visible', this.value.length > 0);
+});
+document.getElementById('logoLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.location.href = window.location.pathname;
+});
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+});
 
-  })();
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+  loadTheme();
+  await checkSession();
+  await loadBeats();
+  updateUI();
+  console.log('Best Beats v12.0 - Novo Design!');
+}
+init();
 </script>
 </body>
 </html>
