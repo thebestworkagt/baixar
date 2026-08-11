@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTE - Beat</title>
+    <link rel="icon" type="image/png" href="logo1.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #f7c94833;
+        }
+        .info { 
+            background: rgba(255,255,255,0.05); 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin: 10px 0;
+            text-align: left;
+            font-size: 14px;
+            color: #b5b5c8;
+            overflow: auto;
+            max-height: 300px;
+        }
+        .success { color: #22c55e; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+        .loading { color: #f7c948; }
+        pre { white-space: pre-wrap; word-wrap: break-word; margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔍 TESTE - beat.html</h1>
+        <div id="log" class="info">
+            <div class="loading">⏳ Iniciando teste...</div>
+        </div>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIGURAÇÃO
+        // ============================================================
+        const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZ2hmZmx0bWlxY2xqdW9rYmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NzIyODgsImV4cCI6MjEwMDI0ODI4OH0.n1mYWDG2803VEbGQ8qyWlCkthtezu-3Yuh-k58bo0xE';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================================
+        // LOG
+        // ============================================================
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('log');
+            const colors = {
+                info: '#f7c948',
+                success: '#22c55e',
+                error: '#ef4444'
+            };
+            log.innerHTML += `<div style="color:${colors[type] || '#b5b5c8'}; padding: 2px 0;">${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // ============================================================
+        // PEGAR SLUG DA URL
+        // ============================================================
+        function getBeatSlug() {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            const lastPart = parts[parts.length - 1];
+            if (lastPart && lastPart !== 'beat' && lastPart !== '') {
+                return lastPart;
+            }
+            return 'love';
+        }
+
+        const beatSlug = getBeatSlug();
+        addLog(`📌 Slug detectado: "${beatSlug}"`);
+
+        // ============================================================
+        // TESTE 1: Verificar se o Supabase está conectando
+        // ============================================================
+        async function testarSupabase() {
+            addLog('📡 Testando conexão com Supabase...');
+
+            try {
+                // Teste simples: contar beats
+                const { count, error } = await supabase
+                    .from('beats')
+                    .select('*', { count: 'exact', head: true });
+
+                if (error) {
+                    addLog(`❌ Erro na conexão: ${error.message}`, 'error');
+                    return false;
+                }
+
+                addLog(`✅ Conexão OK! ${count} beats encontrados.`, 'success');
+                return true;
+            } catch (error) {
+                addLog(`❌ Erro: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // ============================================================
+        // TESTE 2: Buscar o beat pelo slug
+        // ============================================================
+        async function buscarBeat(slug) {
+            addLog(`🔍 Buscando beat com slug: "${slug}"...`);
+
+            try {
+                const { data, error } = await supabase
+                    .from('beats')
+                    .select('*')
+                    .eq('slug', slug)
+                    .maybeSingle();
+
+                if (error) {
+                    addLog(`❌ Erro na busca: ${error.message}`, 'error');
+                    return null;
+                }
+
+                if (!data) {
+                    addLog(`⚠️ Nenhum beat encontrado com slug: "${slug}"`, 'error');
+                    return null;
+                }
+
+                addLog(`✅ Beat encontrado: ${data.title}`, 'success');
+                return data;
+            } catch (error) {
+                addLog(`❌ Erro: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // TESTE 3: Buscar por título (fallback)
+        // ============================================================
+        async function buscarPorTitulo(slug) {
+            addLog(`🔍 Tentando buscar por título: "${slug}"...`);
+
+            try {
+                const { data, error } = await supabase
+                    .from('beats')
+                    .select('*')
+                    .ilike('title', slug)
+                    .maybeSingle();
+
+                if (error) {
+                    addLog(`❌ Erro: ${error.message}`, 'error');
+                    return null;
+                }
+
+                if (!data) {
+                    addLog(`⚠️ Nenhum beat encontrado com título: "${slug}"`, 'error');
+                    return null;
+                }
+
+                addLog(`✅ Beat encontrado por título: ${data.title}`, 'success');
+                return data;
+            } catch (error) {
+                addLog(`❌ Erro: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // TESTE 4: Listar todos os beats
+        // ============================================================
+        async function listarTodosBeats() {
+            addLog('📋 Listando todos os beats...');
+
+            try {
+                const { data, error } = await supabase
+                    .from('beats')
+                    .select('id, title, slug, audio');
+
+                if (error) {
+                    addLog(`❌ Erro: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    addLog('⚠️ Nenhum beat encontrado na tabela!', 'error');
+                    return;
+                }
+
+                addLog(`📊 ${data.length} beats encontrados:`, 'success');
+                data.forEach((beat, i) => {
+                    addLog(`  ${i+1}. ID:${beat.id} | Título: "${beat.title}" | Slug: "${beat.slug || '(vazio)'}" | Áudio: ${beat.audio ? '✅' : '❌'}`);
+                });
+            } catch (error) {
+                addLog(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // EXECUTAR TESTES
+        // ============================================================
+        async function executarTestes() {
+            // Teste 1: Conexão
+            const conectado = await testarSupabase();
+            if (!conectado) return;
+
+            // Teste 2: Buscar pelo slug
+            let beat = await buscarBeat(beatSlug);
+            
+            // Teste 3: Se não encontrou, tentar por título
+            if (!beat) {
+                beat = await buscarPorTitulo(beatSlug);
+            }
+
+            // Teste 4: Listar todos os beats (sempre)
+            await listarTodosBeats();
+
+            // Mostrar resultado final
+            const resultado = document.getElementById('resultado');
+            if (beat) {
+                resultado.innerHTML = `
+                    <div style="background: rgba(34,197,94,0.1); border: 1px solid #22c55e; border-radius: 10px; padding: 15px; margin-top: 10px;">
+                        <div style="color: #22c55e; font-weight: bold;">✅ BEAT ENCONTRADO!</div>
+                        <div style="color: #b5b5c8; font-size: 13px; margin-top: 5px;">
+                            <pre>${JSON.stringify(beat, null, 2)}</pre>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultado.innerHTML = `
+                    <div style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; border-radius: 10px; padding: 15px; margin-top: 10px;">
+                        <div style="color: #ef4444; font-weight: bold;">❌ BEAT NÃO ENCONTRADO!</div>
+                        <div style="color: #b5b5c8; font-size: 13px; margin-top: 5px;">
+                            Nenhum beat encontrado para: "${beatSlug}"
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        executarTestes();
+    </script>
+</body>
+</html>
