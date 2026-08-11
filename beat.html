@@ -727,11 +727,11 @@
   }
 
   // ============================================================
-  // CARREGAR BEAT DO SUPABASE - BUSCA MAIS ROBUSTA
+  // CARREGAR BEAT DO SUPABASE - COM FALLBACK E LOGS
   // ============================================================
   async function loadBeat() {
     try {
-      console.log('📡 Buscando beat...');
+      console.log('📡 Buscando beat: slug=' + beatSlug);
       
       // Estratégia 1: Buscar por slug
       let { data, error } = await supabase
@@ -740,9 +740,9 @@
         .eq('slug', beatSlug)
         .maybeSingle();
 
-      // Estratégia 2: Se não achou, buscar por título (case insensitive)
+      // Estratégia 2: Buscar por título (case insensitive)
       if (!data) {
-        console.log('⚠️ Buscando por título:', beatSlug);
+        console.log('⚠️ Slug não encontrado, buscando por título: ' + beatSlug);
         const { data: dataByTitle, error: errorByTitle } = await supabase
           .from('beats')
           .select('*')
@@ -752,33 +752,31 @@
         if (dataByTitle) {
           data = dataByTitle;
           error = null;
-        } else {
-          error = errorByTitle || new Error('Beat não encontrado');
         }
       }
 
-      // Estratégia 3: Buscar todos os beats e encontrar manualmente
+      // Estratégia 3: Buscar todos e filtrar manualmente
       if (!data) {
-        console.log('⚠️ Buscando todos os beats e filtrando...');
+        console.log('⚠️ Buscando todos os beats...');
         const { data: allBeats, error: allError } = await supabase
           .from('beats')
           .select('*');
         
-        if (!allError && allBeats) {
-          // Tenta encontrar pelo slug ou título
+        if (!allError && allBeats && allBeats.length > 0) {
           const found = allBeats.find(b => 
             b.slug === beatSlug || 
-            b.title.toLowerCase() === beatSlug.toLowerCase() ||
-            b.title.toLowerCase().includes(beatSlug.toLowerCase())
+            (b.title && b.title.toLowerCase() === beatSlug.toLowerCase()) ||
+            (b.title && b.title.toLowerCase().includes(beatSlug.toLowerCase()))
           );
           if (found) {
             data = found;
             error = null;
+            console.log('✅ Beat encontrado na busca manual:', found.title);
           }
         }
       }
 
-      // Se ainda não encontrou, erro
+      // Se não encontrou
       if (error || !data) {
         console.error('❌ Beat não encontrado:', error);
         document.getElementById('beatContent').innerHTML = `
@@ -786,7 +784,7 @@
             <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
             <p>Beat não encontrado: "${beatSlug}"</p>
             <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
-              Verifique se o slug está correto no banco de dados.
+              Verifique se o beat existe no banco de dados.
             </p>
             <p style="font-size:0.8rem;margin-top:0.3rem;">
               <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
@@ -798,7 +796,7 @@
 
       const beat = data;
       console.log('✅ Beat encontrado:', beat.title);
-      console.log('📊 Dados:', beat);
+      console.log('📊 Dados do beat:', JSON.stringify(beat, null, 2));
       
       document.title = `${beat.title} - Beatsao`;
       renderBeat(beat);
@@ -820,34 +818,46 @@
   }
 
   // ============================================================
-  // RENDERIZAR BEAT
+  // RENDERIZAR BEAT - COM FALLBACKS PARA DADOS FALTANDO
   // ============================================================
   function renderBeat(beat) {
-    console.log('🎨 Renderizando beat:', beat.title);
+    console.log('🎨 Renderizando beat...');
+    
+    // Garantir que todos os campos existem
+    const title = beat.title || 'Beat sem nome';
+    const artist = beat.artist || 'Produtor';
+    const genre = beat.genre || 'Afro';
+    const bpm = beat.bpm || '--';
+    const key = beat.key || 'em breve';
+    const price = beat.price || 'Kz 0';
+    const cover = beat.cover || null;
+    const audio = beat.audio || null;
+
+    console.log('🎵 Áudio:', audio);
 
     const html = `
       <!-- CAPA -->
       <div class="cover-wrapper">
         <div class="cover-glow"></div>
-        ${beat.cover ? 
-          `<img src="${beat.cover}" alt="${beat.title}">` :
+        ${cover ? 
+          `<img src="${cover}" alt="${title}">` :
           `<div class="cover-placeholder">
             <div class="icon-big">♫</div>
-            <div class="title-art">${beat.title.toUpperCase()}</div>
-            <div class="sub-art">${beat.genre || 'Afro'}</div>
+            <div class="title-art">${title.toUpperCase()}</div>
+            <div class="sub-art">${genre}</div>
           </div>`
         }
       </div>
 
       <!-- INFORMAÇÕES -->
       <div class="beat-info">
-        <div class="beat-name">${beat.title}</div>
-        <div class="beat-artist"><i class="fas fa-user"></i> ${beat.artist || 'Produtor'}</div>
+        <div class="beat-name">${title}</div>
+        <div class="beat-artist"><i class="fas fa-user"></i> ${artist}</div>
         <div class="beat-tags">
-          <span class="tag"><i class="fas fa-music"></i> ${beat.genre || 'Afro'}</span>
-          <span class="tag"><i class="fas fa-tachometer-alt"></i> ${beat.bpm || '--'} BPM</span>
-          <span class="tag key-tag"><i class="fas fa-key"></i> ${beat.key || 'em breve'}</span>
-          <span class="tag"><i class="fas fa-coins"></i> ${beat.price || 'Kz 0'}</span>
+          <span class="tag"><i class="fas fa-music"></i> ${genre}</span>
+          <span class="tag"><i class="fas fa-tachometer-alt"></i> ${bpm} BPM</span>
+          <span class="tag key-tag"><i class="fas fa-key"></i> ${key}</span>
+          <span class="tag"><i class="fas fa-coins"></i> ${price}</span>
         </div>
       </div>
 
@@ -893,13 +903,21 @@
     `;
 
     document.getElementById('beatContent').innerHTML = html;
+    console.log('✅ Beat renderizado com sucesso!');
 
-    // Inicializar player
-    if (beat.audio) {
-      console.log('🎵 Inicializando player com áudio:', beat.audio);
-      initializePlayer(beat.audio);
+    // Inicializar player se tiver áudio
+    if (audio) {
+      console.log('🎵 Inicializando player com áudio:', audio);
+      initializePlayer(audio);
     } else {
-      console.warn('⚠️ Beat sem áudio');
+      console.warn('⚠️ Beat sem áudio - player não será funcional');
+      // Mostra um aviso no player
+      const playBtn = document.getElementById('playBtn');
+      if (playBtn) {
+        playBtn.style.opacity = '0.5';
+        playBtn.style.cursor = 'not-allowed';
+        playBtn.title = 'Áudio indisponível';
+      }
     }
 
     // Inicializar download
@@ -910,100 +928,124 @@
   // PLAYER
   // ============================================================
   function initializePlayer(audioUrl) {
-    const audio = new Audio(audioUrl);
-    const playBtn = document.getElementById('playBtn');
-    const progressFill = document.getElementById('progressFill');
-    const progressBar = document.getElementById('progressBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const totalTimeEl = document.getElementById('totalTime');
-    const visualizer = document.getElementById('visualizer');
-    const bars = visualizer?.querySelectorAll('.bar') || [];
+    try {
+      const audio = new Audio(audioUrl);
+      const playBtn = document.getElementById('playBtn');
+      const progressFill = document.getElementById('progressFill');
+      const progressBar = document.getElementById('progressBar');
+      const currentTimeEl = document.getElementById('currentTime');
+      const totalTimeEl = document.getElementById('totalTime');
+      const visualizer = document.getElementById('visualizer');
+      const bars = visualizer?.querySelectorAll('.bar') || [];
 
-    let isDragging = false;
+      let isDragging = false;
 
-    function formatTime(seconds) {
-      if (isNaN(seconds)) return '0:00';
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60);
-      return m + ':' + (s < 10 ? '0' : '') + s;
-    }
-
-    function updateProgress() {
-      if (!isDragging && audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 100 || 0;
-        progressFill.style.width = percent + '%';
-        currentTimeEl.textContent = formatTime(audio.currentTime);
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
       }
-    }
 
-    audio.addEventListener('loadedmetadata', () => {
-      totalTimeEl.textContent = formatTime(audio.duration);
-    });
-
-    audio.addEventListener('timeupdate', updateProgress);
-
-    playBtn?.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      } else {
-        audio.pause();
+      function updateProgress() {
+        if (!isDragging && audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100 || 0;
+          progressFill.style.width = percent + '%';
+          currentTimeEl.textContent = formatTime(audio.currentTime);
+        }
       }
-    });
 
-    audio.addEventListener('play', () => {
-      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-      playBtn.classList.add('playing');
-      visualizer?.classList.add('active');
-      bars.forEach(b => b.classList.remove('inactive'));
-    });
+      audio.addEventListener('loadedmetadata', () => {
+        totalTimeEl.textContent = formatTime(audio.duration);
+      });
 
-    audio.addEventListener('pause', () => {
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.classList.remove('playing');
-      visualizer?.classList.remove('active');
-      bars.forEach(b => b.classList.add('inactive'));
-    });
+      audio.addEventListener('timeupdate', updateProgress);
 
-    audio.addEventListener('ended', () => {
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.classList.remove('playing');
-      visualizer?.classList.remove('active');
-      bars.forEach(b => b.classList.add('inactive'));
-      progressFill.style.width = '0%';
-      currentTimeEl.textContent = '0:00';
-    });
+      if (playBtn) {
+        playBtn.addEventListener('click', () => {
+          if (audio.paused) {
+            audio.play().catch(() => console.warn('Erro ao reproduzir áudio'));
+          } else {
+            audio.pause();
+          }
+        });
+      }
 
-    progressBar?.addEventListener('click', (e) => {
-      const rect = progressBar.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = percent * audio.duration;
-    });
+      audio.addEventListener('play', () => {
+        if (playBtn) {
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          playBtn.classList.add('playing');
+        }
+        if (visualizer) {
+          visualizer.classList.add('active');
+          bars.forEach(b => b.classList.remove('inactive'));
+        }
+      });
 
-    progressBar?.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      const rect = progressBar.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = percent * audio.duration;
-      updateProgress();
+      audio.addEventListener('pause', () => {
+        if (playBtn) {
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          playBtn.classList.remove('playing');
+        }
+        if (visualizer) {
+          visualizer.classList.remove('active');
+          bars.forEach(b => b.classList.add('inactive'));
+        }
+      });
 
-      const onMove = (ev) => {
-        const r = progressBar.getBoundingClientRect();
-        let p = (ev.clientX - r.left) / r.width;
-        p = Math.max(0, Math.min(1, p));
-        audio.currentTime = p * audio.duration;
-        progressFill.style.width = (p * 100) + '%';
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-      };
+      audio.addEventListener('ended', () => {
+        if (playBtn) {
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          playBtn.classList.remove('playing');
+        }
+        if (visualizer) {
+          visualizer.classList.remove('active');
+          bars.forEach(b => b.classList.add('inactive'));
+        }
+        if (progressFill) {
+          progressFill.style.width = '0%';
+          currentTimeEl.textContent = '0:00';
+        }
+      });
 
-      const onUp = () => {
-        isDragging = false;
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      };
+      if (progressBar) {
+        progressBar.addEventListener('click', (e) => {
+          const rect = progressBar.getBoundingClientRect();
+          const percent = (e.clientX - rect.left) / rect.width;
+          audio.currentTime = percent * audio.duration;
+        });
 
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
+        progressBar.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          const rect = progressBar.getBoundingClientRect();
+          const percent = (e.clientX - rect.left) / rect.width;
+          audio.currentTime = percent * audio.duration;
+          updateProgress();
+
+          const onMove = (ev) => {
+            const r = progressBar.getBoundingClientRect();
+            let p = (ev.clientX - r.left) / r.width;
+            p = Math.max(0, Math.min(1, p));
+            audio.currentTime = p * audio.duration;
+            progressFill.style.width = (p * 100) + '%';
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+          };
+
+          const onUp = () => {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+          };
+
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      }
+
+      console.log('✅ Player inicializado com sucesso');
+    } catch (error) {
+      console.error('❌ Erro ao inicializar player:', error);
+    }
   }
 
   // ============================================================
@@ -1098,22 +1140,28 @@
       }
     }
 
-    modalConfirm.addEventListener('click', confirmPassword);
-    passwordInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') confirmPassword();
-    });
-    modalCancel.addEventListener('click', () => {
-      modal.classList.remove('active');
-      passwordInput.className = '';
-      errorMsg.classList.remove('show');
-    });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
+    if (modalConfirm) modalConfirm.addEventListener('click', confirmPassword);
+    if (passwordInput) {
+      passwordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirmPassword();
+      });
+    }
+    if (modalCancel) {
+      modalCancel.addEventListener('click', () => {
         modal.classList.remove('active');
         passwordInput.className = '';
         errorMsg.classList.remove('show');
-      }
-    });
+      });
+    }
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          passwordInput.className = '';
+          errorMsg.classList.remove('show');
+        }
+      });
+    }
   }
 
   // ============================================================
