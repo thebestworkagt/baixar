@@ -727,49 +727,78 @@
   }
 
   // ============================================================
-  // CARREGAR BEAT DO SUPABASE
+  // CARREGAR BEAT DO SUPABASE - BUSCA MAIS ROBUSTA
   // ============================================================
   async function loadBeat() {
     try {
-      console.log('📡 Buscando beat com slug:', beatSlug);
+      console.log('📡 Buscando beat...');
       
-      // Tenta buscar por slug primeiro
+      // Estratégia 1: Buscar por slug
       let { data, error } = await supabase
         .from('beats')
         .select('*')
         .eq('slug', beatSlug)
-        .single();
+        .maybeSingle();
 
-      // Se não encontrar, tenta buscar pelo título
-      if (error || !data) {
-        console.log('⚠️ Beat não encontrado por slug, tentando por título...');
+      // Estratégia 2: Se não achou, buscar por título (case insensitive)
+      if (!data) {
+        console.log('⚠️ Buscando por título:', beatSlug);
         const { data: dataByTitle, error: errorByTitle } = await supabase
           .from('beats')
           .select('*')
           .ilike('title', beatSlug)
-          .single();
+          .maybeSingle();
         
-        if (errorByTitle || !dataByTitle) {
-          console.error('❌ Beat não encontrado:', error || errorByTitle);
-          document.getElementById('beatContent').innerHTML = `
-            <div class="beat-loading">
-              <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-              <p>Beat não encontrado: "${beatSlug}"</p>
-              <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
-                Verifique se o slug está correto no banco de dados.
-              </p>
-              <p style="font-size:0.8rem;margin-top:0.3rem;">
-                <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
-              </p>
-            </div>
-          `;
-          return;
+        if (dataByTitle) {
+          data = dataByTitle;
+          error = null;
+        } else {
+          error = errorByTitle || new Error('Beat não encontrado');
         }
-        data = dataByTitle;
+      }
+
+      // Estratégia 3: Buscar todos os beats e encontrar manualmente
+      if (!data) {
+        console.log('⚠️ Buscando todos os beats e filtrando...');
+        const { data: allBeats, error: allError } = await supabase
+          .from('beats')
+          .select('*');
+        
+        if (!allError && allBeats) {
+          // Tenta encontrar pelo slug ou título
+          const found = allBeats.find(b => 
+            b.slug === beatSlug || 
+            b.title.toLowerCase() === beatSlug.toLowerCase() ||
+            b.title.toLowerCase().includes(beatSlug.toLowerCase())
+          );
+          if (found) {
+            data = found;
+            error = null;
+          }
+        }
+      }
+
+      // Se ainda não encontrou, erro
+      if (error || !data) {
+        console.error('❌ Beat não encontrado:', error);
+        document.getElementById('beatContent').innerHTML = `
+          <div class="beat-loading">
+            <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+            <p>Beat não encontrado: "${beatSlug}"</p>
+            <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
+              Verifique se o slug está correto no banco de dados.
+            </p>
+            <p style="font-size:0.8rem;margin-top:0.3rem;">
+              <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
+            </p>
+          </div>
+        `;
+        return;
       }
 
       const beat = data;
       console.log('✅ Beat encontrado:', beat.title);
+      console.log('📊 Dados:', beat);
       
       document.title = `${beat.title} - Beatsao`;
       renderBeat(beat);
@@ -795,7 +824,6 @@
   // ============================================================
   function renderBeat(beat) {
     console.log('🎨 Renderizando beat:', beat.title);
-    console.log('📁 Dados:', beat);
 
     const html = `
       <!-- CAPA -->
