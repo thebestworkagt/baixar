@@ -1637,780 +1637,418 @@
       }
     }
 
-    function loadEmailVisibility() {
-      const saved = localStorage.getItem('bestBeatsEmailVisible');
-      const userEmail = currentUser?.email || 'usuario@email.com';
-      const emailElement = document.getElementById('emailText');
-      const eyeIcon = document.getElementById('emailEyeIcon');
-      
-      emailText = userEmail;
-      
-      if (saved === 'false') {
-        emailVisible = false;
-        const hiddenText = userEmail.replace(/[^@]/g, '•');
-        emailElement.textContent = hiddenText;
-        eyeIcon.className = 'fas fa-eye-slash';
-      } else {
-        emailVisible = true;
-        emailElement.textContent = userEmail;
-        eyeIcon.className = 'fas fa-eye';
-      }
-    }
-
-    // ============================================================
-    // 5. PLAYLIST
-    // ============================================================
-    function getPlaylist() {
-      try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
-    }
-    function savePlaylist(ids) {
-      localStorage.setItem('favoriteBeats', JSON.stringify(ids));
-      updatePlaylistCount();
-    }
-    function togglePlaylist(beatId) {
-      let playlist = getPlaylist();
-      const index = playlist.indexOf(beatId);
-      if (index > -1) { playlist.splice(index, 1); savePlaylist(playlist); return false; }
-      else { playlist.push(beatId); savePlaylist(playlist); return true; }
-    }
-    function isInPlaylist(beatId) { return getPlaylist().includes(beatId); }
-    function updatePlaylistCount() {
-      const count = getPlaylist().length;
-      const el = document.getElementById('playlistCount');
-      if (el) el.textContent = count;
-    }
-
-    // ============================================================
-    // 6. CART
-    // ============================================================
-    function updateCart() {
-      localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
-      document.getElementById('cartCount').textContent = cart.length;
-    }
-    function toggleCart(beatId) {
-      const index = cart.indexOf(beatId);
-      if (index > -1) { cart.splice(index, 1); updateCart(); return false; }
-      else { cart.push(beatId); updateCart(); return true; }
-    }
-    function getCartBeats() {
-      return beatsData.filter(b => cart.includes(b.id));
-    }
-    function getCartTotal() {
-      return getCartBeats().reduce((sum, b) => {
-        const price = parseFloat(b.price.replace(/[^0-9.]/g, ''));
-        return sum + (isNaN(price) ? 0 : price);
-      }, 0);
-    }
-
-    // ============================================================
-    // 7. RATING
-    // ============================================================
-    async function loadRatings() {
-      try {
-        const { data, error } = await supabase
-          .from('ratings')
-          .select('*');
-        if (error) throw error;
-        userRatings = {};
-        if (data) {
-          data.forEach(r => {
-            if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
-            userRatings[r.beat_id].push(r.rating);
-          });
-        }
-      } catch (error) {
-        console.error('Erro ao carregar avaliações:', error);
-      }
-    }
-
-    async function rateBeat(beatId, rating) {
-      try {
-        const { error } = await supabase
-          .from('ratings')
-          .insert([{
-            beat_id: beatId,
-            rating: rating,
-            user_id: currentUser?.id || 'anonymous'
-          }]);
-        if (error) throw error;
-        await loadRatings();
-        renderBeats();
-        showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
-      } catch (error) {
-        console.error('Erro ao salvar avaliação:', error);
-        showToast('Erro', 'Não foi possível salvar sua avaliação.', 'error');
-      }
-    }
-
-    function getBeatAverageRating(beatId) {
-      const ratings = userRatings[beatId] || [];
-      if (ratings.length === 0) return 0;
-      const sum = ratings.reduce((a, b) => a + b, 0);
-      return sum / ratings.length;
-    }
-
-    function getBeatRatingCount(beatId) {
-      return (userRatings[beatId] || []).length;
-    }
-
-    // ============================================================
-    // 8. SHARE
-    // ============================================================
-    function showShareToast(message) {
-      const toast = document.getElementById('shareToast');
-      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-      toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 3000);
-    }
-    function shareBeat(beat) {
-      const baseUrl = window.location.origin + window.location.pathname;
-      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const shareUrl = `${baseUrl}?beat=${slug}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado'))
-          .catch(() => fallbackCopy(shareUrl));
-      } else { fallbackCopy(shareUrl); }
-    }
-    function fallbackCopy(text) {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      try { document.execCommand('copy'); showShareToast('Link do beat copiado'); }
-      catch (err) { showShareToast('Copie o link manualmente'); }
-      document.body.removeChild(textArea);
-    }
-
-    // ============================================================
-    // 9. THEME
-    // ============================================================
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('bestBeatsTheme', next);
-      document.getElementById('themeToggle').innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    }
-    function loadTheme() {
-      const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
-      document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    }
-
-    // ============================================================
-    // 10. PLAYS
-    // ============================================================
-    async function incrementPlays(beatId) {
-      try {
-        const { data, error } = await supabase
-          .from('beats')
-          .select('plays')
-          .eq('id', beatId)
-          .single();
-        
-        if (error) throw error;
-        
-        const currentPlays = data?.plays || 0;
-        const newPlays = currentPlays + 1;
-        
-        const { error: updateError } = await supabase
-          .from('beats')
-          .update({ plays: newPlays })
-          .eq('id', beatId);
-        
-        if (updateError) throw updateError;
-        
-        const beat = beatsData.find(b => b.id === beatId);
-        if (beat) {
-          beat.plays = newPlays;
-        }
-        
-        updateBeatPlaysDisplay(beatId, newPlays);
-        
-      } catch (error) {
-        console.error('❌ Erro ao incrementar plays:', error);
-        showToast('Erro', 'Não foi possível registrar a reprodução.', 'error');
-      }
-    }
-
-    function updateBeatPlaysDisplay(beatId, newPlays) {
-      const cards = document.querySelectorAll('.beat-card');
-      cards.forEach(card => {
-        if (parseInt(card.dataset.id) === beatId) {
-          const stats = card.querySelector('.beat-stats');
-          if (stats) {
-            const playSpan = stats.querySelector('.beat-plays');
-            if (playSpan) {
-              playSpan.innerHTML = `<i class="fas fa-headphones"></i> ${newPlays} plays`;
-              playSpan.classList.add('highlight');
-              setTimeout(() => {
-                playSpan.classList.remove('highlight');
-              }, 800);
-            }
-          }
-        }
-      });
-    }
-
-    // ============================================================
-    // 11. CRUD
-    // ============================================================
-    async function loadBeats() {
-      try {
-        document.getElementById('loading').style.display = 'flex';
-        document.getElementById('beatsContainer').innerHTML = '';
-        const { data, error } = await supabase.from('beats').select('*').order('id', { ascending: false });
-        if (error) throw error;
-        beatsData = data || [];
-        
-        await loadRatings();
-        
-        const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
-        const filterSelect = document.getElementById('filterGenre');
-        const currentVal = filterSelect.value;
-        filterSelect.innerHTML = '<option value="all">Todos os gêneros</option>';
-        genres.forEach(g => {
-          const opt = document.createElement('option');
-          opt.value = g;
-          opt.textContent = g;
-          filterSelect.appendChild(opt);
-        });
-        filterSelect.value = currentVal;
-        applyFilters();
-        updatePlaylistCount();
-        updateCart();
-      } catch (error) {
-        console.error('Erro ao carregar beats:', error);
-        showToast('Erro ao carregar', 'Não foi possível carregar os beats.', 'error');
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-      }
-    }
-
-    async function saveBeatToSupabase(beatData) {
-      try {
-        const slug = beatData.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-
-        const newBeat = {
-          title: beatData.title,
-          artist: beatData.artist,
-          genre: beatData.genre,
-          price: beatData.price,
-          bpm: beatData.bpm || null,
-          key: beatData.key || null,
-          cover: beatData.cover || null,
-          audio: beatData.audioStream,
-          audio_download_mp3: beatData.audioMp3,
-          audio_download_wav: beatData.audioWav,
-          password: beatData.password || 'Thebestwork2026',
-          slug: slug,
-          plays: 0,
-          user_id: currentUser?.id
-        };
-        
-        if (editingId) {
-          const { error } = await supabase
-            .from('beats')
-            .update(newBeat)
-            .eq('id', editingId);
-          
-          if (error) throw error;
-          showToast('Sucesso', 'O beat foi atualizado.', 'success');
-        } else {
-          const { error } = await supabase.from('beats').insert([newBeat]);
-          if (error) throw error;
-          showToast('Sucesso', 'Novo beat lançado!', 'success');
-        }
-        
-        await loadBeats();
-        closeFormModal();
-      } catch (error) {
-        console.error('Erro ao salvar beat:', error);
-        showToast('Erro ao salvar', error.message || 'Ocorreu um erro.', 'error');
-      }
-    }
-
-    async function uploadFile(file, bucket, path) {
-      if (!file) return null;
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${path}.${fileExt}`;
-      const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: true });
-      if (error) { console.error('Erro no upload:', error); throw error; }
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
-      return urlData.publicUrl;
-    }
-
-    async function deleteBeat(id) {
-      if (!confirm('Tem certeza que deseja excluir este beat?')) return;
-      
-      try {
-        const { data: beat, error: fetchError } = await supabase
-          .from('beats')
-          .select('cover')
-          .eq('id', id)
-          .single();
-        
-        if (fetchError) throw fetchError;
-        
-        const { error } = await supabase
-          .from('beats')
-          .delete()
-          .eq('id', id);
-        
-        if (error) throw error;
-        
-        if (beat?.cover) {
-          const coverPath = beat.cover.split('/').pop();
-          if (coverPath) {
-            await supabase.storage.from('covers').remove([coverPath]);
-          }
-        }
-        
-        await loadBeats();
-        showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
-      } catch (error) {
-        console.error('Erro ao excluir:', error);
-        showToast('Erro ao excluir', error.message || 'Não foi possível excluir.', 'error');
-      }
-    }
-
-    // ============================================================
-    // 12. FILTERS
-    // ============================================================
-    function applyFilters() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const genre = document.getElementById('filterGenre').value;
-      const sort = document.getElementById('sortBy').value;
-
-      filteredBeats = beatsData.filter(b => {
-        const matchSearch = b.title.toLowerCase().includes(search) || b.artist.toLowerCase().includes(search);
-        const matchGenre = genre === 'all' || b.genre === genre;
-        return matchSearch && matchGenre;
-      });
-
-      switch(sort) {
-        case 'recent': filteredBeats.sort((a, b) => b.id - a.id); break;
-        case 'popular': filteredBeats.sort((a, b) => (b.plays || 0) - (a.plays || 0)); break;
-        case 'price-low': filteredBeats.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''))); break;
-        case 'price-high': filteredBeats.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, ''))); break;
-        case 'rating': filteredBeats.sort((a, b) => getBeatAverageRating(b.id) - getBeatAverageRating(a.id)); break;
-      }
-
-      renderBeats();
-    }
-
-    // ============================================================
-    // 13. RENDER
-    // ============================================================
-    function renderBeats() {
-      const container = document.getElementById('beatsContainer');
-      const list = filteredBeats.length > 0 ? filteredBeats : beatsData;
-      
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center;padding:3rem 0;color:var(--text-muted);">
-            <i class="fas fa-search" style="font-size:2.5rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
-            <p style="font-size:1.1rem;font-weight:300;">Nenhum beat encontrado</p>
-            <p style="font-size:0.85rem;">Tente ajustar sua busca ou filtros</p>
-          </div>
-        `;
-        updateUI();
-        return;
-      }
-
-      container.innerHTML = '';
-      list.forEach(beat => {
-        const card = createBeatCard(beat);
-        container.appendChild(card);
-      });
-      updateUI();
-    }
-
     function createBeatCard(beat) {
-      const card = document.createElement('div');
-      card.className = 'beat-card';
-      card.dataset.id = beat.id;
+  const card = document.createElement('div');
+  card.className = 'beat-card';
+  card.dataset.id = beat.id;
 
-      if ((beat.plays || 0) > 3) {
-        const badge = document.createElement('div');
-        badge.className = 'popularity-badge';
-        badge.innerHTML = '<i class="fas fa-fire"></i> Popular';
-        card.appendChild(badge);
-      }
-
-      const editBtn = document.createElement('button');
-      editBtn.className = 'card-edit-btn';
-      if (isLoggedIn) editBtn.classList.add('visible');
-      editBtn.innerHTML = '<i class="fas fa-pen"></i>';
-      editBtn.addEventListener('click', (e) => { e.stopPropagation(); if (isLoggedIn) openEditModal(beat.id); });
-      card.appendChild(editBtn);
-
-      if (isLoggedIn) {
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'card-edit-btn';
-        deleteBtn.style.right = '52px';
-        deleteBtn.style.color = '#ff6b6b';
-        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteBeat(beat.id); });
-        card.appendChild(deleteBtn);
-      }
-
-      // PLAYER
-      const playerWrapper = document.createElement('div');
-      playerWrapper.className = 'player-wrapper';
-      
-      const bgImg = document.createElement('img');
-      bgImg.className = 'player-bg';
-      bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
-      bgImg.alt = `${beat.title} cover`;
-      bgImg.loading = 'lazy';
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'player-overlay';
-      
-      const artistSpan = document.createElement('div');
-      artistSpan.className = 'player-artist';
-      artistSpan.textContent = beat.artist;
-      
-      const titleSpan = document.createElement('div');
-      titleSpan.className = 'player-title';
-      titleSpan.textContent = beat.title;
-      
-      const controls = document.createElement('div');
-      controls.className = 'player-controls';
-      
-      const playBtn = document.createElement('button');
-      playBtn.className = 'btn-play';
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.setAttribute('data-playing', 'false');
-      
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn-next';
-      nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
-      
-      const playlistBtn = document.createElement('button');
-      playlistBtn.className = 'btn-playlist';
-      if (isInPlaylist(beat.id)) { 
-        playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
-        playlistBtn.classList.add('added'); 
-      } else { 
-        playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
-      }
-      playlistBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const added = togglePlaylist(beat.id);
-        if (added) { 
-          showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
-          playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
-          playlistBtn.classList.add('added'); 
-        } else { 
-          showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
-          playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
-          playlistBtn.classList.remove('added'); 
-        }
-        updatePlaylistCount();
-      });
-      
-      controls.appendChild(playBtn);
-      controls.appendChild(nextBtn);
-      controls.appendChild(playlistBtn);
-      
-      const progressArea = document.createElement('div');
-      progressArea.className = 'progress-area';
-      const progress = document.createElement('input');
-      progress.type = 'range';
-      progress.className = 'progress-bar';
-      progress.min = 0; progress.max = 100; progress.value = 0;
-      const timeDisplay = document.createElement('span');
-      timeDisplay.className = 'time-display';
-      timeDisplay.textContent = '0:00';
-      progressArea.appendChild(progress);
-      progressArea.appendChild(timeDisplay);
-      
-      const volumeWrap = document.createElement('div');
-      volumeWrap.className = 'volume-wrap';
-      const volIcon = document.createElement('i');
-      volIcon.className = 'fas fa-volume-low';
-      const volSlider = document.createElement('input');
-      volSlider.type = 'range';
-      volSlider.className = 'volume-slider';
-      volSlider.min = 0; volSlider.max = 100; volSlider.value = 70;
-      volumeWrap.appendChild(volIcon);
-      volumeWrap.appendChild(volSlider);
-      
-      const genreBadge = document.createElement('span');
-      genreBadge.className = 'badge-genre';
-      genreBadge.textContent = beat.genre;
-      
-      overlay.appendChild(artistSpan);
-      overlay.appendChild(titleSpan);
-      overlay.appendChild(controls);
-      overlay.appendChild(progressArea);
-      overlay.appendChild(volumeWrap);
-      overlay.appendChild(genreBadge);
-      
-      playerWrapper.appendChild(bgImg);
-      playerWrapper.appendChild(overlay);
-
-      // INFO
-      const infoDiv = document.createElement('div');
-      infoDiv.className = 'beat-info';
-      
-      const titleInfo = document.createElement('div');
-      titleInfo.className = 'beat-title';
-      titleInfo.innerHTML = `${beat.title} <i class="fas fa-wave-square"></i>`;
-      
-      const metaDiv = document.createElement('div');
-      metaDiv.className = 'beat-meta';
-      const genreSpan = document.createElement('span');
-      genreSpan.className = 'beat-genre';
-      genreSpan.innerHTML = `<i class="fas fa-tag"></i> ${beat.genre}`;
-      const priceSpan = document.createElement('span');
-      priceSpan.className = 'beat-price';
-      priceSpan.innerHTML = `<i class="fas fa-coins"></i> ${beat.price}`;
-      metaDiv.appendChild(genreSpan);
-      metaDiv.appendChild(priceSpan);
-      
-      const exclusivo = document.createElement('div');
-      exclusivo.className = 'beat-exclusivo';
-      exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
-      
-      const avgRating = getBeatAverageRating(beat.id);
-      const ratingCount = getBeatRatingCount(beat.id);
-      const starsFull = Math.round(avgRating);
-      const starsEmpty = 5 - starsFull;
-      
-      const statsDiv = document.createElement('div');
-      statsDiv.className = 'beat-stats';
-      statsDiv.innerHTML = `
-        <span class="beat-plays"><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
-        <span class="beat-rating">
-          <i class="fas fa-star"></i> 
-          <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span>
-          <span style="font-size:0.6rem;color:var(--text-muted);">${avgRating ? avgRating.toFixed(1) : '0.0'} (${ratingCount})</span>
-        </span>
-        ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
-        ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
-      `;
-      
-      // BOTÕES DOWNLOAD
-      const downloadDiv = document.createElement('div');
-      downloadDiv.className = 'download-buttons';
-      
-      const mp3Btn = document.createElement('button');
-      mp3Btn.className = 'btn-download btn-mp3';
-      mp3Btn.innerHTML = '<i class="fas fa-file-audio"></i> MP3';
-      mp3Btn.dataset.format = 'mp3';
-      mp3Btn.dataset.beatId = beat.id;
-      
-      const wavBtn = document.createElement('button');
-      wavBtn.className = 'btn-download btn-wav';
-      wavBtn.innerHTML = '<i class="fas fa-file-audio"></i> WAV';
-      wavBtn.dataset.format = 'wav';
-      wavBtn.dataset.beatId = beat.id;
-      
-      downloadDiv.appendChild(mp3Btn);
-      downloadDiv.appendChild(wavBtn);
-      
-      // AÇÕES
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'beat-actions';
-      
-      const shareBtn = document.createElement('button');
-      shareBtn.className = 'btn-share';
-      shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
-      shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
-      
-      const rateBtn = document.createElement('button');
-      rateBtn.className = 'btn-share';
-      rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
-      rateBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('ratingBeatId').value = beat.id;
-        document.getElementById('ratingValue').value = 0;
-        document.querySelectorAll('#ratingStars span').forEach(s => {
-          s.style.color = 'var(--text-muted)';
-        });
-        document.getElementById('ratingModal').classList.add('active');
-      });
-      
-      const cartBtn = document.createElement('button');
-      cartBtn.className = 'btn-cart';
-      if (cart.includes(beat.id)) { 
-        cartBtn.classList.add('in-cart'); 
-        cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
-      } else { 
-        cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
-      }
-      cartBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const added = toggleCart(beat.id);
-        if (added) { 
-          cartBtn.classList.add('in-cart'); 
-          cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
-          showToast('Adicionado', `${beat.title} foi adicionado ao carrinho.`, 'success'); 
-        } else { 
-          cartBtn.classList.remove('in-cart'); 
-          cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
-          showToast('Removido', `${beat.title} foi removido do carrinho.`, 'info'); 
-        }
-        updateCart();
-      });
-      
-      const negociarBtn = document.createElement('a');
-      negociarBtn.className = 'btn-negociar';
-      negociarBtn.href = '#';
-      negociarBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Negociar`;
-      negociarBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const msg = encodeURIComponent(`Olá! Gostaria de negociar o beat "${beat.title}" de ${beat.artist}.`);
-        window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
-      });
-      
-      actionsDiv.appendChild(shareBtn);
-      actionsDiv.appendChild(rateBtn);
-      actionsDiv.appendChild(cartBtn);
-      actionsDiv.appendChild(negociarBtn);
-      
-      infoDiv.appendChild(titleInfo);
-      infoDiv.appendChild(metaDiv);
-      infoDiv.appendChild(exclusivo);
-      infoDiv.appendChild(statsDiv);
-      infoDiv.appendChild(downloadDiv);
-      infoDiv.appendChild(actionsDiv);
-      
-      card.appendChild(playerWrapper);
-      card.appendChild(infoDiv);
-
-      // ÁUDIO
-      let audio = null;
-      let isPlaying = false;
-
-playBtn.addEventListener('click', function(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  
-  if (!beat.audio) { 
-    showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
-    return; 
+  if ((beat.plays || 0) > 3) {
+    const badge = document.createElement('div');
+    badge.className = 'popularity-badge';
+    badge.innerHTML = '<i class="fas fa-fire"></i> Popular';
+    card.appendChild(badge);
   }
-  
-  if (!audio) {
-    audio = new Audio(beat.audio);
-    audio.volume = 0.7;
-    
-    // ============================================================
-    // CONTROLO DE TEMPO - PARA AOS 30 SEGUNDOS
-    // ============================================================
-    let previewTime = 0;
-    const MAX_PREVIEW = 30; // 30 segundos
-    
-    audio.addEventListener('timeupdate', function() {
-      // Atualiza a barra de progresso
-      if (audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        progress.value = percent;
-        const mins = Math.floor(audio.currentTime / 60);
-        const secs = Math.floor(audio.currentTime % 60);
-        timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-      }
-      
-      // ============================================================
-      // VERIFICA SE PASSOU DOS 30 SEGUNDOS
-      // ============================================================
-      if (audio.currentTime >= MAX_PREVIEW) {
-        audio.pause();
-        isPlaying = false;
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        playBtn.classList.remove('playing');
-        
-        // Mostra a mensagem
-        mostrarMensagemPreview(beat);
-      }
-    });
-    
-    audio.addEventListener('ended', () => {
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      isPlaying = false;
-      progress.value = 0;
-      timeDisplay.textContent = '0:00';
-    });
+
+  const editBtn = document.createElement('button');
+  editBtn.className = 'card-edit-btn';
+  if (isLoggedIn) editBtn.classList.add('visible');
+  editBtn.innerHTML = '<i class="fas fa-pen"></i>';
+  editBtn.addEventListener('click', (e) => { e.stopPropagation(); if (isLoggedIn) openEditModal(beat.id); });
+  card.appendChild(editBtn);
+
+  if (isLoggedIn) {
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'card-edit-btn';
+    deleteBtn.style.right = '52px';
+    deleteBtn.style.color = '#ff6b6b';
+    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteBeat(beat.id); });
+    card.appendChild(deleteBtn);
   }
+
+  // ============================================================
+  // PLAYER
+  // ============================================================
+  const playerWrapper = document.createElement('div');
+  playerWrapper.className = 'player-wrapper';
   
-  if (isPlaying) { 
-    audio.pause(); 
-    playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
-    isPlaying = false;
+  const bgImg = document.createElement('img');
+  bgImg.className = 'player-bg';
+  bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
+  bgImg.alt = `${beat.title} cover`;
+  bgImg.loading = 'lazy';
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'player-overlay';
+  
+  const artistSpan = document.createElement('div');
+  artistSpan.className = 'player-artist';
+  artistSpan.textContent = beat.artist;
+  
+  const titleSpan = document.createElement('div');
+  titleSpan.className = 'player-title';
+  titleSpan.textContent = beat.title;
+  
+  const controls = document.createElement('div');
+  controls.className = 'player-controls';
+  
+  const playBtn = document.createElement('button');
+  playBtn.className = 'btn-play';
+  playBtn.innerHTML = '<i class="fas fa-play"></i>';
+  playBtn.setAttribute('data-playing', 'false');
+  
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn-next';
+  nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
+  
+  const playlistBtn = document.createElement('button');
+  playlistBtn.className = 'btn-playlist';
+  if (isInPlaylist(beat.id)) { 
+    playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
+    playlistBtn.classList.add('added'); 
   } else { 
-    audio.play().catch(() => {});
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    isPlaying = true;
-    incrementPlays(beat.id);
+    playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
   }
-});
-          
-          audio.addEventListener('ended', () => {
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
-            isPlaying = false;
-            progress.value = 0;
-            timeDisplay.textContent = '0:00';
-          });
+  playlistBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const added = togglePlaylist(beat.id);
+    if (added) { 
+      showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
+      playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
+      playlistBtn.classList.add('added'); 
+    } else { 
+      showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
+      playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add'; 
+      playlistBtn.classList.remove('added'); 
+    }
+    updatePlaylistCount();
+  });
+  
+  controls.appendChild(playBtn);
+  controls.appendChild(nextBtn);
+  controls.appendChild(playlistBtn);
+  
+  const progressArea = document.createElement('div');
+  progressArea.className = 'progress-area';
+  const progress = document.createElement('input');
+  progress.type = 'range';
+  progress.className = 'progress-bar';
+  progress.min = 0; progress.max = 100; progress.value = 0;
+  const timeDisplay = document.createElement('span');
+  timeDisplay.className = 'time-display';
+  timeDisplay.textContent = '0:00';
+  progressArea.appendChild(progress);
+  progressArea.appendChild(timeDisplay);
+  
+  const volumeWrap = document.createElement('div');
+  volumeWrap.className = 'volume-wrap';
+  const volIcon = document.createElement('i');
+  volIcon.className = 'fas fa-volume-low';
+  const volSlider = document.createElement('input');
+  volSlider.type = 'range';
+  volSlider.className = 'volume-slider';
+  volSlider.min = 0; volSlider.max = 100; volSlider.value = 70;
+  volumeWrap.appendChild(volIcon);
+  volumeWrap.appendChild(volSlider);
+  
+  const genreBadge = document.createElement('span');
+  genreBadge.className = 'badge-genre';
+  genreBadge.textContent = beat.genre;
+  
+  overlay.appendChild(artistSpan);
+  overlay.appendChild(titleSpan);
+  overlay.appendChild(controls);
+  overlay.appendChild(progressArea);
+  overlay.appendChild(volumeWrap);
+  overlay.appendChild(genreBadge);
+  
+  playerWrapper.appendChild(bgImg);
+  playerWrapper.appendChild(overlay);
+
+  // ============================================================
+  // INFO
+  // ============================================================
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'beat-info';
+  
+  const titleInfo = document.createElement('div');
+  titleInfo.className = 'beat-title';
+  titleInfo.innerHTML = `${beat.title} <i class="fas fa-wave-square"></i>`;
+  
+  const metaDiv = document.createElement('div');
+  metaDiv.className = 'beat-meta';
+  const genreSpan = document.createElement('span');
+  genreSpan.className = 'beat-genre';
+  genreSpan.innerHTML = `<i class="fas fa-tag"></i> ${beat.genre}`;
+  const priceSpan = document.createElement('span');
+  priceSpan.className = 'beat-price';
+  priceSpan.innerHTML = `<i class="fas fa-coins"></i> ${beat.price}`;
+  metaDiv.appendChild(genreSpan);
+  metaDiv.appendChild(priceSpan);
+  
+  const exclusivo = document.createElement('div');
+  exclusivo.className = 'beat-exclusivo';
+  exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
+  
+  const avgRating = getBeatAverageRating(beat.id);
+  const ratingCount = getBeatRatingCount(beat.id);
+  const starsFull = Math.round(avgRating);
+  const starsEmpty = 5 - starsFull;
+  
+  const statsDiv = document.createElement('div');
+  statsDiv.className = 'beat-stats';
+  statsDiv.innerHTML = `
+    <span class="beat-plays"><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
+    <span class="beat-rating">
+      <i class="fas fa-star"></i> 
+      <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span>
+      <span style="font-size:0.6rem;color:var(--text-muted);">${avgRating ? avgRating.toFixed(1) : '0.0'} (${ratingCount})</span>
+    </span>
+    ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
+    ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
+  `;
+  
+  // ============================================================
+  // DOWNLOAD BOTÕES
+  // ============================================================
+  const downloadDiv = document.createElement('div');
+  downloadDiv.className = 'download-buttons';
+  
+  const mp3Btn = document.createElement('button');
+  mp3Btn.className = 'btn-download btn-mp3';
+  mp3Btn.innerHTML = '<i class="fas fa-file-audio"></i> MP3';
+  mp3Btn.dataset.format = 'mp3';
+  mp3Btn.dataset.beatId = beat.id;
+  
+  const wavBtn = document.createElement('button');
+  wavBtn.className = 'btn-download btn-wav';
+  wavBtn.innerHTML = '<i class="fas fa-file-audio"></i> WAV';
+  wavBtn.dataset.format = 'wav';
+  wavBtn.dataset.beatId = beat.id;
+  
+  downloadDiv.appendChild(mp3Btn);
+  downloadDiv.appendChild(wavBtn);
+  
+  // ============================================================
+  // AÇÕES
+  // ============================================================
+  const actionsDiv = document.createElement('div');
+  actionsDiv.className = 'beat-actions';
+  
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'btn-share';
+  shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
+  shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
+  
+  const rateBtn = document.createElement('button');
+  rateBtn.className = 'btn-share';
+  rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
+  rateBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('ratingBeatId').value = beat.id;
+    document.getElementById('ratingValue').value = 0;
+    document.querySelectorAll('#ratingStars span').forEach(s => {
+      s.style.color = 'var(--text-muted)';
+    });
+    document.getElementById('ratingModal').classList.add('active');
+  });
+  
+  const cartBtn = document.createElement('button');
+  cartBtn.className = 'btn-cart';
+  if (cart.includes(beat.id)) { 
+    cartBtn.classList.add('in-cart'); 
+    cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
+  } else { 
+    cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
+  }
+  cartBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const added = toggleCart(beat.id);
+    if (added) { 
+      cartBtn.classList.add('in-cart'); 
+      cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; 
+      showToast('Adicionado', `${beat.title} foi adicionado ao carrinho.`, 'success'); 
+    } else { 
+      cartBtn.classList.remove('in-cart'); 
+      cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; 
+      showToast('Removido', `${beat.title} foi removido do carrinho.`, 'info'); 
+    }
+    updateCart();
+  });
+  
+  const negociarBtn = document.createElement('a');
+  negociarBtn.className = 'btn-negociar';
+  negociarBtn.href = '#';
+  negociarBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Negociar`;
+  negociarBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const msg = encodeURIComponent(`Olá! Gostaria de negociar o beat "${beat.title}" de ${beat.artist}.`);
+    window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
+  });
+  
+  actionsDiv.appendChild(shareBtn);
+  actionsDiv.appendChild(rateBtn);
+  actionsDiv.appendChild(cartBtn);
+  actionsDiv.appendChild(negociarBtn);
+  
+  infoDiv.appendChild(titleInfo);
+  infoDiv.appendChild(metaDiv);
+  infoDiv.appendChild(exclusivo);
+  infoDiv.appendChild(statsDiv);
+  infoDiv.appendChild(downloadDiv);
+  infoDiv.appendChild(actionsDiv);
+  
+  card.appendChild(playerWrapper);
+  card.appendChild(infoDiv);
+
+  // ============================================================
+  // ÁUDIO - COM CONTROLO DE 30 SEGUNDOS
+  // ============================================================
+  let audio = null;
+  let isPlaying = false;
+  let previewModal = null;
+
+  playBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!beat.audio) { 
+      showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
+      return; 
+    }
+    
+    if (!audio) {
+      audio = new Audio(beat.audio);
+      audio.volume = 0.7;
+      
+      const MAX_PREVIEW = 30; // 30 segundos
+      
+      audio.addEventListener('timeupdate', function() {
+        if (audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100;
+          progress.value = percent;
+          const mins = Math.floor(audio.currentTime / 60);
+          const secs = Math.floor(audio.currentTime % 60);
+          timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
         
-        if (isPlaying) { 
-          audio.pause(); 
-          playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+        // Verifica se passou dos 30 segundos
+        if (audio.currentTime >= MAX_PREVIEW && isPlaying) {
+          audio.pause();
           isPlaying = false;
-        } else { 
-          audio.play().catch(() => {});
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          isPlaying = true;
-          incrementPlays(beat.id);
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          playBtn.classList.remove('playing');
+          
+          // Remove visualizer
+          visualizer?.classList.remove('active');
+          bars.forEach(b => b.classList.add('inactive'));
+          
+          // Mostra mensagem de prévia
+          mostrarMensagemPreview(beat);
         }
       });
-
-      nextBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!beat.audio) return;
-        if (!audio) {
-          audio = new Audio(beat.audio);
-          audio.volume = 0.7;
-        }
+      
+      audio.addEventListener('ended', () => {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        isPlaying = false;
+        progress.value = 0;
+        timeDisplay.textContent = '0:00';
+        visualizer?.classList.remove('active');
+        bars.forEach(b => b.classList.add('inactive'));
+      });
+    }
+    
+    if (isPlaying) { 
+      audio.pause(); 
+      playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+      isPlaying = false;
+      visualizer?.classList.remove('active');
+      bars.forEach(b => b.classList.add('inactive'));
+    } else { 
+      // Se já passou dos 30 segundos, recomeça do início
+      if (audio.currentTime >= 30) {
         audio.currentTime = 0;
-        if (!isPlaying) { 
-          audio.play().catch(() => {}); 
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
-          isPlaying = true; 
-        }
-      });
+      }
+      audio.play().catch(() => {});
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      isPlaying = true;
+      visualizer?.classList.add('active');
+      bars.forEach(b => b.classList.remove('inactive'));
+      incrementPlays(beat.id);
+    }
+  });
 
-      progress.addEventListener('input', function() { 
-        if (audio && audio.duration) {
-          audio.currentTime = (progress.value / 100) * audio.duration; 
-        }
-      });
+  // ============================================================
+  // BOTÃO NEXT
+  // ============================================================
+  nextBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!beat.audio) return;
+    if (!audio) {
+      audio = new Audio(beat.audio);
+      audio.volume = 0.7;
+    }
+    audio.currentTime = 0;
+    if (!isPlaying) { 
+      audio.play().catch(() => {}); 
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
+      isPlaying = true; 
+      incrementPlays(beat.id);
+    }
+  });
 
-      volSlider.addEventListener('input', function() {
-        if (audio) {
-          audio.volume = volSlider.value / 100;
-          volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
-        }
-      });
+  // ============================================================
+  // PROGRESS BAR
+  // ============================================================
+  progress.addEventListener('input', function() { 
+    if (audio && audio.duration) {
+      // Se tentar passar dos 30 segundos, volta para 29
+      if ((progress.value / 100) * audio.duration >= 30) {
+        progress.value = (29 / audio.duration) * 100;
+      }
+      audio.currentTime = (progress.value / 100) * audio.duration; 
+    }
+  });
+
+  // ============================================================
+  // VOLUME
+  // ============================================================
+  volSlider.addEventListener('input', function() {
+    if (audio) {
+      audio.volume = volSlider.value / 100;
+      volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
+    }
+  });
+
+  // ============================================================
+  // DOWNLOAD MP3/WAV
+  // ============================================================
+  mp3Btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    openPasswordModal(beat.id, 'mp3');
+  });
+
+  wavBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    openPasswordModal(beat.id, 'wav');
+  });
+
+  return card;
+}
+
 // ============================================================
-// MOSTRAR MENSAGEM DE PRÉVIA (30 SEGUNDOS)
+// FUNÇÃO mostrarMensagemPreview (FORA do createBeatCard)
 // ============================================================
 function mostrarMensagemPreview(beat) {
-  // Criar overlay
+  // Remove modal anterior se existir
+  const oldModal = document.querySelector('.modal-overlay-preview');
+  if (oldModal) oldModal.remove();
+  
   const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay-preview';
   overlay.style.cssText = `
     position: fixed;
     inset: 0;
@@ -2424,7 +2062,6 @@ function mostrarMensagemPreview(beat) {
     animation: fadeIn 0.3s ease;
   `;
   
-  // Criar modal
   const modal = document.createElement('div');
   modal.style.cssText = `
     background: var(--bg-secondary);
@@ -2448,7 +2085,7 @@ function mostrarMensagemPreview(beat) {
       Adquira a licença completa para ter acesso ao beat sem restrições!
     </p>
     <div style="display: flex; gap: 10px; flex-direction: column;">
-      <a href="https://wa.me/244926261011?text=Olá! Gostaria de negociar o beat "${beat.title}" de ${beat.artist}." 
+      <a href="https://wa.me/244926261011?text=Olá! Gostaria de negociar o beat ${encodeURIComponent(beat.title)} de ${encodeURIComponent(beat.artist)}." 
          target="_blank"
          style="
            background: linear-gradient(135deg, #25D366, #1ebe5c);
@@ -2489,12 +2126,8 @@ function mostrarMensagemPreview(beat) {
   `;
   
   overlay.appendChild(modal);
-  overlay.className = 'modal-overlay-preview';
-  
-  // Adicionar ao body
   document.body.appendChild(overlay);
   
-  // Fechar ao clicar fora
   overlay.addEventListener('click', function(e) {
     if (e.target === this) {
       this.remove();
