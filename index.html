@@ -1312,7 +1312,7 @@
       <span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span>
     </div>
-    <div class="loading-text">Carregando beats</div>
+    <div class="loading-text">Carregando Beats</div>
     <div class="loading-progress">
       <div class="loading-progress-bar"></div>
     </div>
@@ -1475,7 +1475,7 @@
 <!-- MODAL PROFILE -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal" style="max-width: 500px;">
-    <h2><i class="fas fa-user"></i> Perfil do Produtor</h2>
+    <h2><i class="fas fa-user"></i> Perfil do Artista | Salvo localmente</h2>
     <form id="profileForm">
       <label for="profName">Nome</label>
       <input type="text" id="profName" placeholder="Seu nome">
@@ -2294,28 +2294,68 @@
       let audio = null;
       let isPlaying = false;
 
-      playBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+playBtn.addEventListener('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  if (!beat.audio) { 
+    showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
+    return; 
+  }
+  
+  if (!audio) {
+    audio = new Audio(beat.audio);
+    audio.volume = 0.7;
+    
+    // ============================================================
+    // CONTROLO DE TEMPO - PARA AOS 30 SEGUNDOS
+    // ============================================================
+    let previewTime = 0;
+    const MAX_PREVIEW = 30; // 30 segundos
+    
+    audio.addEventListener('timeupdate', function() {
+      // Atualiza a barra de progresso
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.value = percent;
+        const mins = Math.floor(audio.currentTime / 60);
+        const secs = Math.floor(audio.currentTime % 60);
+        timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+      
+      // ============================================================
+      // VERIFICA SE PASSOU DOS 30 SEGUNDOS
+      // ============================================================
+      if (audio.currentTime >= MAX_PREVIEW) {
+        audio.pause();
+        isPlaying = false;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.classList.remove('playing');
         
-        if (!beat.audio) { 
-          showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
-          return; 
-        }
-        
-        if (!audio) {
-          audio = new Audio(beat.audio);
-          audio.volume = 0.7;
-          
-          audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-              const percent = (audio.currentTime / audio.duration) * 100;
-              progress.value = percent;
-              const mins = Math.floor(audio.currentTime / 60);
-              const secs = Math.floor(audio.currentTime % 60);
-              timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            }
-          });
+        // Mostra a mensagem
+        mostrarMensagemPreview(beat);
+      }
+    });
+    
+    audio.addEventListener('ended', () => {
+      playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      isPlaying = false;
+      progress.value = 0;
+      timeDisplay.textContent = '0:00';
+    });
+  }
+  
+  if (isPlaying) { 
+    audio.pause(); 
+    playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+    isPlaying = false;
+  } else { 
+    audio.play().catch(() => {});
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    isPlaying = true;
+    incrementPlays(beat.id);
+  }
+});
           
           audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -2365,7 +2405,102 @@
           volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
         }
       });
-
+// ============================================================
+// MOSTRAR MENSAGEM DE PRÉVIA (30 SEGUNDOS)
+// ============================================================
+function mostrarMensagemPreview(beat) {
+  // Criar overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+  `;
+  
+  // Criar modal
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px 35px 35px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow);
+  `;
+  
+  modal.innerHTML = `
+    <div style="font-size: 48px; margin-bottom: 12px;">🎵</div>
+    <h3 style="color: var(--text-primary); font-size: 22px; font-weight: 700; margin-bottom: 8px;">
+      Prévia de 30 segundos
+    </h3>
+    <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+      Esta é apenas uma prévia do beat <strong>"${beat.title}"</strong>.
+      <br><br>
+      Adquira a licença completa para ter acesso ao beat sem restrições!
+    </p>
+    <div style="display: flex; gap: 10px; flex-direction: column;">
+      <a href="https://wa.me/244926261011?text=Olá! Gostaria de negociar o beat "${beat.title}" de ${beat.artist}." 
+         target="_blank"
+         style="
+           background: linear-gradient(135deg, #25D366, #1ebe5c);
+           color: white;
+           padding: 14px 20px;
+           border-radius: 60px;
+           font-weight: 700;
+           font-size: 16px;
+           text-decoration: none;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 8px;
+           transition: 0.2s;
+         "
+         onmouseover="this.style.transform='scale(1.02)'"
+         onmouseout="this.style.transform='scale(1)'">
+        <i class="fab fa-whatsapp"></i> Negociar
+      </a>
+      <button onclick="this.closest('.modal-overlay-preview').remove()"
+              style="
+                background: rgba(255,255,255,0.05);
+                color: var(--text-muted);
+                padding: 12px 20px;
+                border-radius: 60px;
+                font-weight: 600;
+                font-size: 14px;
+                border: 1px solid var(--border-color);
+                cursor: pointer;
+                transition: 0.2s;
+                font-family: 'Inter', sans-serif;
+              "
+              onmouseover="this.style.background='rgba(255,255,255,0.1)'"
+              onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+        Fechar
+      </button>
+    </div>
+  `;
+  
+  overlay.appendChild(modal);
+  overlay.className = 'modal-overlay-preview';
+  
+  // Adicionar ao body
+  document.body.appendChild(overlay);
+  
+  // Fechar ao clicar fora
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.remove();
+    }
+  });
+}
       // DOWNLOAD
       mp3Btn.addEventListener('click', function(e) {
         e.preventDefault();
