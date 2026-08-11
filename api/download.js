@@ -1,11 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
+// api/download.js
+// Usando require em vez de import (mais compatível)
+
+const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZ2hmZmx0bWlxY2xqdW9rYmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NzIyODgsImV4cCI6MjEwMDI0ODI4OH0.n1mYWDG2803VEbGQ8qyWlCkthtezu-3Yuh-k58bo0xE';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -25,13 +29,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Beat não especificado' });
     }
 
+    // Busca o beat no Supabase
     const { data: beat, error } = await supabase
       .from('beats')
       .select('password, audio_download_mp3, audio_download_wav, title')
       .eq('slug', beatSlug)
       .maybeSingle();
 
-    if (error || !beat) {
+    if (error) {
+      console.error('Erro Supabase:', error);
+      return res.status(500).json({ error: 'Erro ao buscar beat: ' + error.message });
+    }
+
+    if (!beat) {
       return res.status(404).json({ error: 'Beat não encontrado' });
     }
 
@@ -56,6 +66,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Erro:', error);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    return res.status(500).json({ error: 'Erro interno: ' + error.message });
   }
-}
+};
