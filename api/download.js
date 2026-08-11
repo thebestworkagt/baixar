@@ -6,6 +6,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default async function handler(req, res) {
+  // Só aceita POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
@@ -17,20 +18,23 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Busca o beat no Supabase
     const { data: beat, error } = await supabase
       .from('beats')
       .select('password, audio_download_mp3, audio_download_wav, title')
-      .or(`slug.eq.${beatSlug},title.ilike.${beatSlug}`)
+      .eq('slug', beatSlug)
       .single();
 
     if (error || !beat) {
       return res.status(404).json({ error: 'Beat não encontrado' });
     }
 
+    // Verifica a senha
     if (password !== beat.password) {
       return res.status(401).json({ error: 'Senha incorreta' });
     }
 
+    // Links de download
     const DOWNLOAD_LINKS = {
       mp3: beat.audio_download_mp3,
       wav: beat.audio_download_wav
