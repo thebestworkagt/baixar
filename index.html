@@ -16,7 +16,7 @@
   
   <style>
     /* ============================================================
-       CSS COMPLETO - BEST BEATS V10
+       CSS COMPLETO - BEST BEATS V11 (PÁGINA ÚNICA)
        ============================================================ */
     
     /* ----- VARIÁVEIS ----- */
@@ -66,6 +66,370 @@
       padding-top: 6rem;
     }
     .app { max-width: 1100px; width: 100%; }
+
+    /* ============================================================
+       CSS DO MODO BEAT (capa centralizada)
+       ============================================================ */
+    .beat-page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .beat-page.active { display: flex; }
+
+    .beat-page .beat-card-single {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      width: 100%;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 40px 35px 30px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .beat-page .cover-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 28px;
+      aspect-ratio: 1/1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(106, 13, 173, 0.3), 0 0 80px var(--gold-glow);
+    }
+    .beat-page .cover-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .beat-page .cover-wrapper .cover-glow {
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 50% 50%, var(--gold-glow), transparent 70%);
+      animation: pulseGlow 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .beat-page .cover-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+      display: block;
+    }
+    .beat-page .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0a2e, #2d1b4e, #1a0a2e);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      color: white;
+    }
+    .beat-page .cover-placeholder .icon-big {
+      font-size: 64px;
+      color: rgba(247, 201, 72, 0.4);
+      margin-bottom: 12px;
+    }
+    .beat-page .cover-placeholder .title-art {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 4px;
+    }
+    .beat-page .cover-placeholder .sub-art {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .beat-page .beat-name-single {
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .beat-page .beat-artist-single {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      text-align: center;
+    }
+    .beat-page .beat-artist-single i { color: var(--gold); margin-right: 0.3rem; }
+    .beat-page .beat-tags-single {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .beat-page .beat-tags-single .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: rgba(247, 201, 72, 0.08);
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+    }
+    .beat-page .beat-tags-single .tag i { font-size: 11px; color: var(--gold); }
+    .beat-page .beat-tags-single .tag.key-tag { background: rgba(251, 191, 36, 0.08); border-color: rgba(251, 191, 36, 0.15); color: rgba(251, 191, 36, 0.6); }
+    .beat-page .beat-tags-single .tag.key-tag i { color: #fbbf24; }
+
+    .beat-page .btn-voltar {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .beat-page .btn-voltar:hover { color: var(--gold-dark); }
+    .beat-page .btn-voltar i { font-size: 0.8rem; }
+
+    /* ---- PLAYER DO MODO BEAT ---- */
+    .beat-page .player-wrapper-single {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 18px 20px 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-color);
+    }
+    .beat-page .player-controls-single {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .beat-page .play-btn-single {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0a0a0f;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px var(--gold-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .beat-page .play-btn-single:hover { transform: scale(1.05); box-shadow: 0 6px 30px var(--gold-glow); }
+    .beat-page .play-btn-single.playing {
+      background: linear-gradient(135deg, #f472b6, #ec4899);
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+    }
+    .beat-page .player-info-single { flex: 1; min-width: 0; }
+    .beat-page .player-time-single {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    .beat-page .progress-bar-single {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: height 0.2s ease;
+    }
+    .beat-page .progress-bar-single:hover { height: 6px; }
+    .beat-page .progress-fill-single {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      transition: width 0.1s linear;
+      position: relative;
+    }
+    .beat-page .progress-fill-single::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: -4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+    .beat-page .progress-bar-single:hover .progress-fill-single::after { opacity: 1; }
+
+    .beat-page .visualizer-single {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 30px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+    .beat-page .visualizer-single .bar {
+      width: 4px;
+      height: 8px;
+      background: rgba(247, 201, 72, 0.15);
+      border-radius: 2px;
+      transition: height 0.15s ease;
+    }
+    .beat-page .visualizer-single.active .bar {
+      background: linear-gradient(to top, var(--gold), var(--gold-dark));
+      animation: visualizeSingle 0.6s ease-in-out infinite alternate;
+    }
+    .beat-page .visualizer-single .bar:nth-child(1) { animation-delay: 0.0s; }
+    .beat-page .visualizer-single .bar:nth-child(2) { animation-delay: 0.1s; }
+    .beat-page .visualizer-single .bar:nth-child(3) { animation-delay: 0.2s; }
+    .beat-page .visualizer-single .bar:nth-child(4) { animation-delay: 0.3s; }
+    .beat-page .visualizer-single .bar:nth-child(5) { animation-delay: 0.15s; }
+    .beat-page .visualizer-single .bar:nth-child(6) { animation-delay: 0.05s; }
+    .beat-page .visualizer-single .bar:nth-child(7) { animation-delay: 0.25s; }
+    .beat-page .visualizer-single .bar:nth-child(8) { animation-delay: 0.35s; }
+    .beat-page .visualizer-single .bar:nth-child(9) { animation-delay: 0.1s; }
+    .beat-page .visualizer-single .bar:nth-child(10) { animation-delay: 0.2s; }
+    .beat-page .visualizer-single .bar:nth-child(11) { animation-delay: 0.3s; }
+    .beat-page .visualizer-single .bar:nth-child(12) { animation-delay: 0.05s; }
+    .beat-page .visualizer-single .bar:nth-child(13) { animation-delay: 0.15s; }
+    .beat-page .visualizer-single .bar:nth-child(14) { animation-delay: 0.25s; }
+    .beat-page .visualizer-single .bar:nth-child(15) { animation-delay: 0.35s; }
+    @keyframes visualizeSingle {
+      0% { height: 6px; }
+      100% { height: 28px; }
+    }
+    .beat-page .visualizer-single .bar.inactive {
+      height: 6px !important;
+      animation: none !important;
+    }
+
+    .beat-page .download-section-single {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .beat-page .download-btn-single {
+      flex: 1;
+      padding: 14px 8px;
+      border: none;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .beat-page .download-btn-single::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .beat-page .btn-mp3-single {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.25);
+    }
+    .beat-page .btn-mp3-single:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
+    }
+    .beat-page .btn-wav-single {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
+    }
+    .beat-page .btn-wav-single:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.35);
+    }
+
+    .beat-page .footer-single {
+      text-align: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 4px;
+    }
+    .beat-page .footer-single a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+    .beat-page .footer-single a:hover { color: var(--gold); }
+    .beat-page .footer-single a i { margin-right: 6px; font-size: 12px; }
+
+    .beat-page .beat-loading-single {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+    }
+    .beat-page .beat-loading-single i {
+      font-size: 2.5rem;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 1rem;
+    }
 
     /* ----- MENU FIXO ----- */
     .menu-fixed {
@@ -443,7 +807,7 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ----- BEATS LIST ----- */
+    /* ----- BEATS LIST (MODO LISTA) ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
@@ -502,7 +866,7 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* ----- PLAYER ----- */
+    /* ----- PLAYER (MODO LISTA) ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -670,7 +1034,7 @@
       text-transform: uppercase;
     }
 
-    /* ----- BEAT INFO ----- */
+    /* ----- BEAT INFO (MODO LISTA) ----- */
     .beat-info {
       flex: 1;
       display: flex;
@@ -829,6 +1193,8 @@
       font-family: 'Inter', sans-serif;
       text-decoration: none;
       backdrop-filter: blur(4px);
+      border: none;
+      background: none;
     }
     .btn-ver-beat:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-ver-beat i { font-size: 0.7rem; }
@@ -1148,6 +1514,15 @@
       .hamburger-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
       .hamburger-btn .btn-label { display: none; }
       .beat-card .popularity-badge { top: -0.2rem; left: 1rem; font-size: 0.5rem; padding: 0.1rem 0.6rem; }
+      .beat-page .beat-card-single { padding: 24px 18px 20px; border-radius: 24px; }
+      .beat-page .beat-name-single { font-size: 30px; }
+      .beat-page .cover-wrapper { max-width: 240px; }
+      .beat-page .download-section-single { flex-direction: column; gap: 8px; }
+      .beat-page .download-btn-single { padding: 16px; }
+      .beat-page .player-controls-single { gap: 12px; }
+      .beat-page .play-btn-single { width: 42px; height: 42px; min-width: 42px; font-size: 17px; }
+      .beat-page .beat-tags-single .tag { font-size: 10px; padding: 3px 10px; }
+      .beat-page .visualizer-single .bar { width: 3px; }
     }
     @media (max-width: 480px) {
       body { padding-top: 4.5rem; }
@@ -1160,7 +1535,17 @@
       .menu-fixed { top: 0.5rem; right: 0.5rem; }
       .hamburger-btn { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
       .beat-card .popularity-badge { top: -0.15rem; left: 0.8rem; font-size: 0.45rem; padding: 0.05rem 0.5rem; }
+      .beat-page .beat-card-single { padding: 18px 12px 16px; }
+      .beat-page .beat-name-single { font-size: 26px; }
+      .beat-page .cover-wrapper { max-width: 180px; }
+      .beat-page .beat-tags-single .tag { font-size: 9px; padding: 2px 8px; }
     }
+
+    /* ----- OCULTAR/MOSTRAR MODOS ----- */
+    .mode-list { display: block; }
+    .mode-list.hidden { display: none; }
+    .mode-beat { display: none; }
+    .mode-beat.active { display: block; }
   </style>
 </head>
 <body>
@@ -1228,7 +1613,7 @@
       </button>
       
       <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
-        Best Beats v10.0
+        Best Beats v11.0
       </div>
     </div>
   </div>
@@ -1249,67 +1634,90 @@
 
 <div class="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <a href="?" class="logo-wrapper" id="logoLink">
-      <img src="logo.png" alt="Best Beats" class="logo">
-      <span class="brand">Best Beats</span>
-    </a>
-    <div class="subtitle">ouça e compre</div>
-  </header>
+  <!-- ============================================================
+       MODO LISTA (PÁGINA PRINCIPAL)
+       ============================================================ -->
+  <div id="modeList" class="mode-list">
+    <!-- HEADER -->
+    <header class="header">
+      <a href="?" class="logo-wrapper" id="logoLink">
+        <img src="logo.png" alt="Best Beats" class="logo">
+        <span class="brand">Best Beats</span>
+      </a>
+      <div class="subtitle">ouça e compre</div>
+    </header>
 
-  <!-- ADMIN TOOLBAR -->
-  <div class="admin-toolbar">
-    <div class="admin-toolbar-left">
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
-        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+    <!-- ADMIN TOOLBAR -->
+    <div class="admin-toolbar">
+      <div class="admin-toolbar-left">
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
+          <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+        </div>
+        <select class="filter-select" id="filterGenre">
+          <option value="all">Todos os gêneros</option>
+        </select>
+        <select class="sort-select" id="sortBy">
+          <option value="recent">Mais recentes</option>
+          <option value="popular">Mais populares</option>
+          <option value="price-low">Menor preço</option>
+          <option value="price-high">Maior preço</option>
+          <option value="rating">Melhor avaliação</option>
+        </select>
       </div>
-      <select class="filter-select" id="filterGenre">
-        <option value="all">Todos os gêneros</option>
-      </select>
-      <select class="sort-select" id="sortBy">
-        <option value="recent">Mais recentes</option>
-        <option value="popular">Mais populares</option>
-        <option value="price-low">Menor preço</option>
-        <option value="price-high">Maior preço</option>
-        <option value="rating">Melhor avaliação</option>
-      </select>
+      <div class="admin-toolbar-right">
+        <button class="cart-btn" id="cartBtn">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
     </div>
-    <div class="admin-toolbar-right">
-      <button class="cart-btn" id="cartBtn">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" id="cartCount">0</span>
+
+    <!-- LOADING -->
+    <div id="loading" class="loading-wrapper">
+      <div class="loading-wave">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="loading-text">Carregando beats</div>
+      <div class="loading-progress">
+        <div class="loading-progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- BEATS LIST -->
+    <div class="beats-list" id="beatsContainer"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="social-icons">
+        <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
+        <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" aria-label="Instagram"><i class="fab fa-instagram"></i></button>
+        <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
+        <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+      </div>
+      <div>© 2026 Best Beats · todos os direitos reservados</div>
+    </footer>
+  </div>
+
+  <!-- ============================================================
+       MODO BEAT (PÁGINA INDIVIDUAL)
+       ============================================================ -->
+  <div id="modeBeat" class="mode-beat">
+    <div class="beat-page">
+      <button class="btn-voltar" id="btnVoltarBeat">
+        <i class="fas fa-arrow-left"></i> Voltar para lista
       </button>
+      <div id="beatContent" class="beat-card-single">
+        <div class="beat-loading-single">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Carregando beat...</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- LOADING -->
-  <div id="loading" class="loading-wrapper">
-    <div class="loading-wave">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-    <div class="loading-text">Carregando beats</div>
-    <div class="loading-progress">
-      <div class="loading-progress-bar"></div>
-    </div>
-  </div>
-
-  <!-- BEATS LIST -->
-  <div class="beats-list" id="beatsContainer"></div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="social-icons">
-      <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
-      <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" aria-label="Instagram"><i class="fab fa-instagram"></i></button>
-      <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
-      <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-    </div>
-    <div>© 2026 Best Beats · todos os direitos reservados</div>
-  </footer>
 </div>
 
 <!-- MODAL LOGIN -->
@@ -1330,7 +1738,7 @@
   </div>
 </div>
 
-<!-- MODAL BEAT FORM - CORRIGIDO COM CAMPOS OPEND -->
+<!-- MODAL BEAT FORM -->
 <div class="modal-overlay" id="formModal">
   <div class="modal">
     <h2 id="modalTitle"><i class="fas fa-wave-square"></i> <span>Novo Beat</span></h2>
@@ -1357,7 +1765,6 @@
       <input type="file" id="fCoverFile" accept="image/*">
       <div class="file-status" id="coverStatus">Selecionar</div>
 
-      <!-- ===== NOVOS CAMPOS OPEND RIVE ===== -->
       <label for="fAudioStream">Link de Streaming (MP3 - OpenDrive) *</label>
       <input type="url" id="fAudioStream" placeholder="https://od.lk/s/..." required>
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para ouvir no player</div>
@@ -1373,7 +1780,6 @@
       <label for="fPassword">Senha de Download</label>
       <input type="text" id="fPassword" placeholder="Ex: Love2026">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Senha para liberar o download (deixe em branco para padrão)</div>
-      <!-- ===== FIM CAMPOS OPEND RIVE ===== -->
 
       <div class="preview-container" id="previewContainer"></div>
       <div class="modal-actions">
@@ -1540,6 +1946,8 @@
     let selectedCoverFile = null;
     let playlistAudio = null;
     let playlistAudioId = null;
+    let currentBeatSlug = null;
+    let beatAudio = null; // Para o player do modo beat
     
     // Cart
     let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
@@ -1726,7 +2134,7 @@
     }
     function shareBeat(beat) {
       const baseUrl = window.location.origin + window.location.pathname;
-      const slug = beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       const shareUrl = `${baseUrl}?beat=${slug}`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado'))
@@ -1818,7 +2226,7 @@
     }
 
     // ============================================================
-    // 11. CRUD - CORRIGIDO PARA OPEND RIVE
+    // 11. CRUD
     // ============================================================
     async function loadBeats() {
       try {
@@ -1853,12 +2261,8 @@
       }
     }
 
-    // ============================================================
-    // SALVAR BEAT COM OPEND RIVE - CORRIGIDO
-    // ============================================================
     async function saveBeatToSupabase(beatData) {
       try {
-        // Gerar slug automaticamente
         const slug = beatData.title
           .toLowerCase()
           .normalize('NFD')
@@ -1874,9 +2278,9 @@
           bpm: beatData.bpm || null,
           key: beatData.key || null,
           cover: beatData.cover || null,
-          audio: beatData.audioStream,        // Link de streaming (ouvir)
-          audio_download_mp3: beatData.audioMp3,  // Link download MP3
-          audio_download_wav: beatData.audioWav,  // Link download WAV
+          audio: beatData.audioStream,
+          audio_download_mp3: beatData.audioMp3,
+          audio_download_wav: beatData.audioWav,
           password: beatData.password || 'Thebestwork2026',
           slug: slug,
           plays: 0,
@@ -1975,7 +2379,7 @@
     }
 
     // ============================================================
-    // 13. RENDER - COM PLAYER EMBUTIDO E BOTÃO VER BEAT
+    // 13. RENDER - MODO LISTA
     // ============================================================
     function renderBeats() {
       const container = document.getElementById('beatsContainer');
@@ -2006,7 +2410,6 @@
       card.className = 'beat-card';
       card.dataset.id = beat.id;
 
-      // Badge Popular
       if ((beat.plays || 0) > 3) {
         const badge = document.createElement('div');
         badge.className = 'popularity-badge';
@@ -2014,7 +2417,6 @@
         card.appendChild(badge);
       }
 
-      // Botões de edição (admin)
       const editBtn = document.createElement('button');
       editBtn.className = 'card-edit-btn';
       if (isLoggedIn) editBtn.classList.add('visible');
@@ -2032,9 +2434,7 @@
         card.appendChild(deleteBtn);
       }
 
-      // ============================================================
-      // PLAYER EMBUTIDO
-      // ============================================================
+      // PLAYER
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
@@ -2131,9 +2531,7 @@
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
-      // ============================================================
-      // INFO DO BEAT
-      // ============================================================
+      // INFO
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -2174,26 +2572,24 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
-      // ============================================================
-      // AÇÕES - COM BOTÃO "VER BEAT"
-      // ============================================================
+      // AÇÕES
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
       
-      // Botão Ver Beat (link para página individual)
-      const verBeatBtn = document.createElement('a');
+      // Botão Ver Beat - AGORA CHAMA O MODO BEAT
+      const verBeatBtn = document.createElement('button');
       verBeatBtn.className = 'btn-ver-beat';
       const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      <a href="/beat.html?slug=${slug}" class="btn-ver-beat">
       verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
+      verBeatBtn.addEventListener('click', () => {
+        showBeatMode(slug);
+      });
       
-      // Compartilhar
       const shareBtn = document.createElement('button');
       shareBtn.className = 'btn-share';
       shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
       shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
       
-      // Avaliar
       const rateBtn = document.createElement('button');
       rateBtn.className = 'btn-share';
       rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
@@ -2207,7 +2603,6 @@
         document.getElementById('ratingModal').classList.add('active');
       });
       
-      // Carrinho
       const cartBtn = document.createElement('button');
       cartBtn.className = 'btn-cart';
       if (cart.includes(beat.id)) { 
@@ -2231,7 +2626,6 @@
         updateCart();
       });
       
-      // WhatsApp
       const buyBtn = document.createElement('a');
       buyBtn.className = 'btn-whatsapp';
       buyBtn.href = '#';
@@ -2257,9 +2651,7 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // ============================================================
-      // ÁUDIO DO PLAYER - USANDO beat.audio (streaming)
-      // ============================================================
+      // ÁUDIO
       let audio = null;
       let isPlaying = false;
 
@@ -2339,17 +2731,421 @@
     }
 
     // ============================================================
-    // 14. MODALS
+    // 14. MODO BEAT - MOSTRAR BEAT INDIVIDUAL
+    // ============================================================
+    async function showBeatMode(slug) {
+      currentBeatSlug = slug;
+      
+      // Esconder modo lista, mostrar modo beat
+      document.getElementById('modeList').classList.add('hidden');
+      document.getElementById('modeBeat').classList.add('active');
+      
+      // Atualizar URL sem recarregar
+      const url = new URL(window.location);
+      url.searchParams.set('beat', slug);
+      window.history.pushState({ beat: slug }, '', url);
+      
+      // Carregar o beat
+      document.getElementById('beatContent').innerHTML = `
+        <div class="beat-loading-single">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Carregando beat...</p>
+        </div>
+      `;
+      
+      try {
+        const { data, error } = await supabase
+          .from('beats')
+          .select('*')
+          .eq('slug', slug)
+          .maybeSingle();
+        
+        if (error || !data) {
+          document.getElementById('beatContent').innerHTML = `
+            <div class="beat-loading-single">
+              <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+              <p>Beat não encontrado: "${slug}"</p>
+              <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
+                <i class="fas fa-arrow-left"></i> Voltar para lista
+              </button>
+            </div>
+          `;
+          return;
+        }
+        
+        renderBeatSingle(data);
+      } catch (error) {
+        console.error('Erro ao carregar beat:', error);
+        document.getElementById('beatContent').innerHTML = `
+          <div class="beat-loading-single">
+            <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+            <p>Erro ao carregar o beat</p>
+            <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
+              <i class="fas fa-arrow-left"></i> Voltar para lista
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================================
+    // 15. MODO BEAT - RENDERIZAR
+    // ============================================================
+    function renderBeatSingle(beat) {
+      // Parar áudio anterior se estiver tocando
+      if (beatAudio) {
+        beatAudio.pause();
+        beatAudio = null;
+      }
+      
+      const html = `
+        <!-- CAPA -->
+        <div class="cover-wrapper">
+          <div class="cover-glow"></div>
+          ${beat.cover ? 
+            `<img src="${beat.cover}" alt="${beat.title}">` :
+            `<div class="cover-placeholder">
+              <div class="icon-big">♫</div>
+              <div class="title-art">${beat.title.toUpperCase()}</div>
+              <div class="sub-art">${beat.genre || 'Afro'}</div>
+            </div>`
+          }
+        </div>
+
+        <!-- INFORMAÇÕES -->
+        <div class="beat-info" style="text-align:center;margin-bottom:24px;">
+          <div class="beat-name-single">${beat.title}</div>
+          <div class="beat-artist-single"><i class="fas fa-user"></i> ${beat.artist || 'Produtor'}</div>
+          <div class="beat-tags-single">
+            <span class="tag"><i class="fas fa-music"></i> ${beat.genre || 'Afro'}</span>
+            <span class="tag"><i class="fas fa-tachometer-alt"></i> ${beat.bpm || '--'} BPM</span>
+            <span class="tag key-tag"><i class="fas fa-key"></i> ${beat.key || 'em breve'}</span>
+            <span class="tag"><i class="fas fa-coins"></i> ${beat.price || 'Kz 0'}</span>
+          </div>
+        </div>
+
+        <!-- PLAYER -->
+        <div class="player-wrapper-single">
+          <div class="player-controls-single">
+            <button class="play-btn-single" id="playBtnSingle" aria-label="Play/Pause">
+              <i class="fas fa-play"></i>
+            </button>
+            <div class="player-info-single">
+              <div class="progress-bar-single" id="progressBarSingle">
+                <div class="progress-fill-single" id="progressFillSingle"></div>
+              </div>
+              <div class="player-time-single">
+                <span id="currentTimeSingle">0:00</span>
+                <span id="totalTimeSingle">0:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- VISUALIZER -->
+          <div class="visualizer-single" id="visualizerSingle">
+            ${Array(15).fill(0).map(() => `<div class="bar inactive"></div>`).join('')}
+          </div>
+        </div>
+
+        <!-- DOWNLOADS -->
+        <div class="download-section-single">
+          <button class="download-btn-single btn-mp3-single" data-format="mp3" data-beat-id="${beat.id}">
+            <i class="fas fa-file-audio"></i> MP3
+          </button>
+          <button class="download-btn-single btn-wav-single" data-format="wav" data-beat-id="${beat.id}">
+            <i class="fas fa-file-audio"></i> WAV
+          </button>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer-single">
+          <a href="https://beatsao.site" target="_blank">
+            <i class="fas fa-globe"></i> beatsao.site
+          </a>
+        </div>
+      `;
+
+      document.getElementById('beatContent').innerHTML = html;
+
+      // Inicializar player se tiver áudio
+      if (beat.audio) {
+        initializePlayerSingle(beat.audio, beat.id);
+      } else {
+        console.warn('⚠️ Beat sem áudio');
+        const playBtn = document.getElementById('playBtnSingle');
+        if (playBtn) {
+          playBtn.style.opacity = '0.5';
+          playBtn.style.cursor = 'not-allowed';
+        }
+      }
+
+      // Inicializar download
+      initializeDownloadSingle(beat);
+    }
+
+    // ============================================================
+    // 16. PLAYER DO MODO BEAT
+    // ============================================================
+    function initializePlayerSingle(audioUrl, beatId) {
+      if (beatAudio) {
+        beatAudio.pause();
+        beatAudio = null;
+      }
+      
+      beatAudio = new Audio(audioUrl);
+      const playBtn = document.getElementById('playBtnSingle');
+      const progressFill = document.getElementById('progressFillSingle');
+      const progressBar = document.getElementById('progressBarSingle');
+      const currentTimeEl = document.getElementById('currentTimeSingle');
+      const totalTimeEl = document.getElementById('totalTimeSingle');
+      const visualizer = document.getElementById('visualizerSingle');
+      const bars = visualizer?.querySelectorAll('.bar') || [];
+
+      let isDragging = false;
+
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+      }
+
+      function updateProgress() {
+        if (!isDragging && beatAudio.duration) {
+          const percent = (beatAudio.currentTime / beatAudio.duration) * 100 || 0;
+          progressFill.style.width = percent + '%';
+          currentTimeEl.textContent = formatTime(beatAudio.currentTime);
+        }
+      }
+
+      beatAudio.addEventListener('loadedmetadata', () => {
+        totalTimeEl.textContent = formatTime(beatAudio.duration);
+      });
+
+      beatAudio.addEventListener('timeupdate', updateProgress);
+
+      playBtn?.addEventListener('click', () => {
+        if (beatAudio.paused) {
+          beatAudio.play().catch(() => console.warn('Erro ao reproduzir'));
+          if (beatId) incrementPlays(beatId);
+        } else {
+          beatAudio.pause();
+        }
+      });
+
+      beatAudio.addEventListener('play', () => {
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.classList.add('playing');
+        visualizer?.classList.add('active');
+        bars.forEach(b => b.classList.remove('inactive'));
+      });
+
+      beatAudio.addEventListener('pause', () => {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.classList.remove('playing');
+        visualizer?.classList.remove('active');
+        bars.forEach(b => b.classList.add('inactive'));
+      });
+
+      beatAudio.addEventListener('ended', () => {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.classList.remove('playing');
+        visualizer?.classList.remove('active');
+        bars.forEach(b => b.classList.add('inactive'));
+        progressFill.style.width = '0%';
+        currentTimeEl.textContent = '0:00';
+      });
+
+      progressBar?.addEventListener('click', (e) => {
+        const rect = progressBar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        beatAudio.currentTime = percent * beatAudio.duration;
+      });
+
+      progressBar?.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        const rect = progressBar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        beatAudio.currentTime = percent * beatAudio.duration;
+        updateProgress();
+
+        const onMove = (ev) => {
+          const r = progressBar.getBoundingClientRect();
+          let p = (ev.clientX - r.left) / r.width;
+          p = Math.max(0, Math.min(1, p));
+          beatAudio.currentTime = p * beatAudio.duration;
+          progressFill.style.width = (p * 100) + '%';
+          currentTimeEl.textContent = formatTime(beatAudio.currentTime);
+        };
+
+        const onUp = () => {
+          isDragging = false;
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+
+    // ============================================================
+    // 17. DOWNLOAD DO MODO BEAT
+    // ============================================================
+    function initializeDownloadSingle(beat) {
+      let selectedFormat = null;
+
+      const modal = document.getElementById('passwordModal');
+      const passwordInput = document.getElementById('passwordInput');
+      const errorMsg = document.getElementById('errorMsg');
+      const modalConfirm = document.getElementById('modalConfirm');
+      const modalCancel = document.getElementById('modalCancel');
+
+      document.querySelectorAll('.download-btn-single').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedFormat = btn.dataset.format;
+          passwordInput.value = '';
+          passwordInput.className = '';
+          errorMsg.classList.remove('show');
+          modal.classList.add('active');
+          setTimeout(() => passwordInput.focus(), 100);
+        });
+      });
+
+      async function confirmPassword() {
+        const password = passwordInput.value.trim();
+
+        if (!password) {
+          errorMsg.textContent = 'Digite a senha primeiro';
+          errorMsg.classList.add('show');
+          passwordInput.className = 'error';
+          setTimeout(() => {
+            passwordInput.className = '';
+            errorMsg.classList.remove('show');
+          }, 2000);
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              password: password,
+              format: selectedFormat,
+              beatSlug: currentBeatSlug
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            passwordInput.className = 'success';
+            errorMsg.classList.remove('show');
+
+            const link = document.createElement('a');
+            link.href = data.url;
+            link.download = data.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+              modal.classList.remove('active');
+              passwordInput.className = '';
+            }, 500);
+
+          } else {
+            passwordInput.className = 'error';
+            errorMsg.textContent = data.error || 'Senha incorreta';
+            errorMsg.classList.add('show');
+            passwordInput.value = '';
+            setTimeout(() => passwordInput.focus(), 100);
+
+            setTimeout(() => {
+              passwordInput.className = '';
+            }, 2000);
+          }
+        } catch (error) {
+          errorMsg.textContent = 'Erro de conexão. Tente novamente.';
+          errorMsg.classList.add('show');
+          passwordInput.className = 'error';
+          setTimeout(() => {
+            passwordInput.className = '';
+            errorMsg.classList.remove('show');
+          }, 3000);
+        }
+      }
+
+      modalConfirm.addEventListener('click', confirmPassword);
+      passwordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirmPassword();
+      });
+      modalCancel.addEventListener('click', () => {
+        modal.classList.remove('active');
+        passwordInput.className = '';
+        errorMsg.classList.remove('show');
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          passwordInput.className = '';
+          errorMsg.classList.remove('show');
+        }
+      });
+    }
+
+    // ============================================================
+    // 18. VOLTAR PARA LISTA
+    // ============================================================
+    function showListMode() {
+      // Parar áudio
+      if (beatAudio) {
+        beatAudio.pause();
+        beatAudio = null;
+      }
+      
+      document.getElementById('modeBeat').classList.remove('active');
+      document.getElementById('modeList').classList.remove('hidden');
+      
+      // Remover parâmetro da URL
+      const url = new URL(window.location);
+      url.searchParams.delete('beat');
+      window.history.pushState({}, '', url);
+      
+      // Scroll para o topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============================================================
+    // 19. DETECTAR BEAT NA URL
+    // ============================================================
+    function detectBeatFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('beat');
+      
+      if (slug) {
+        // Verificar se o beat existe
+        setTimeout(() => {
+          showBeatMode(slug);
+        }, 500);
+        return;
+      }
+      
+      // Se não tiver beat na URL, mostrar lista
+      document.getElementById('modeList').classList.remove('hidden');
+      document.getElementById('modeBeat').classList.remove('active');
+    }
+
+    // ============================================================
+    // 20. MODALS
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
       
-      // Limpar campos
       document.getElementById('fCoverFile').value = '';
       document.getElementById('coverStatus').textContent = 'Selecionar';
       document.getElementById('previewContainer').innerHTML = '';
-      
-      // Limpar campos OpenDrive
       document.getElementById('fAudioStream').value = '';
       document.getElementById('fAudioMp3').value = '';
       document.getElementById('fAudioWav').value = '';
@@ -2388,7 +3184,7 @@
     function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
     // ============================================================
-    // 15. UI UPDATE
+    // 21. UI UPDATE
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
@@ -2444,7 +3240,7 @@
     }
 
     // ============================================================
-    // 16. PLAYLIST MODAL
+    // 22. PLAYLIST MODAL
     // ============================================================
     function openPlaylistModal() {
       const container = document.getElementById('playlistContainer');
@@ -2525,7 +3321,7 @@
     }
 
     // ============================================================
-    // 17. CART MODAL
+    // 23. CART MODAL
     // ============================================================
     function openCartModal() {
       const container = document.getElementById('cartContainer');
@@ -2563,7 +3359,7 @@
     }
 
     // ============================================================
-    // 18. DASHBOARD
+    // 24. DASHBOARD
     // ============================================================
     function openDashboard() {
       const totalBeats = beatsData.length;
@@ -2591,31 +3387,7 @@
     }
 
     // ============================================================
-    // 19. URL DETECT
-    // ============================================================
-    function detectBeatFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('beat');
-      if (slug) {
-        setTimeout(() => {
-          document.querySelectorAll('.beat-card').forEach(card => {
-            const title = card.querySelector('.beat-title')?.textContent?.trim();
-            if (title) {
-              const cardSlug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-              if (cardSlug === slug) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                card.style.borderColor = 'var(--gold)';
-                card.style.boxShadow = '0 0 40px var(--gold-glow)';
-                setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 3000);
-              }
-            }
-          });
-        }, 800);
-      }
-    }
-
-    // ============================================================
-    // 20. AUTH
+    // 25. AUTH
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -2642,6 +3414,7 @@
         isLoggedIn = false; currentUser = null; editMode = false;
         document.getElementById('mainDropdown').classList.remove('active');
         if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
+        if (beatAudio) { beatAudio.pause(); beatAudio = null; }
         await loadBeats();
         updateUI();
         showToast('Sessão encerrada', 'Você saiu do modo administrador.', 'info');
@@ -2655,7 +3428,7 @@
     }
 
     // ============================================================
-    // 21. EVENTOS
+    // 26. EVENTOS
     // ============================================================
     document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
     document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
@@ -2669,9 +3442,6 @@
     document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
     
-    // ============================================================
-    // SUBMIT DO FORMULÁRIO - CORRIGIDO COM OPEND RIVE
-    // ============================================================
     document.getElementById('beatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -2833,6 +3603,9 @@
     
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
+    // Botão voltar do modo beat
+    document.getElementById('btnVoltarBeat').addEventListener('click', showListMode);
+    
     document.querySelectorAll('.modal-overlay').forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
@@ -2840,14 +3613,14 @@
     });
 
     // ============================================================
-    // 22. INIT
+    // 27. INIT
     // ============================================================
     async function init() {
       loadTheme();
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Best Beats v10.0 - OpenDrive integrado!');
+      console.log('Best Beats v11.0 - Página Única!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
