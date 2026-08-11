@@ -2184,7 +2184,7 @@
       const verBeatBtn = document.createElement('a');
       verBeatBtn.className = 'btn-ver-beat';
       const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      verBeatBtn.href = `/beat/${slug}`;
+      <a href="/beat.html?slug=${slug}" class="btn-ver-beat">
       verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
       
       // Compartilhar
