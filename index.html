@@ -193,9 +193,6 @@
       font-size: 0.6rem;
     }
 
-    /* ============================================================
-       O RESTO DO CSS CONTINUA IGUAL
-       ============================================================ */
     /* ----- HEADER ----- */
     .header {
       display: flex;
@@ -446,9 +443,6 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ============================================================
-       O RESTO DO CSS CONTINUA IGUAL (BEATS, PLAYER, MODALS, ETC)
-       ============================================================ */
     /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
@@ -818,7 +812,7 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* BOTÃO VER BEAT - NOVO */
+    /* BOTÃO VER BEAT */
     .btn-ver-beat {
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
@@ -883,7 +877,7 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
       padding: 1.8rem 2rem;
-      max-width: 520px;
+      max-width: 550px;
       width: 100%;
       backdrop-filter: blur(20px);
       box-shadow: var(--shadow);
@@ -891,6 +885,9 @@
       max-height: 90vh;
       overflow-y: auto;
     }
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+    .modal::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
     .modal h2 {
       font-weight: 700;
       margin-bottom: 1.2rem;
@@ -940,7 +937,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 0.8rem;
     }
-    .modal .file-status { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+    .modal .file-status { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.1rem; }
     .modal .modal-actions {
       display: flex;
       gap: 0.6rem;
@@ -1333,29 +1330,51 @@
   </div>
 </div>
 
-<!-- MODAL BEAT FORM -->
+<!-- MODAL BEAT FORM - CORRIGIDO COM CAMPOS OPEND -->
 <div class="modal-overlay" id="formModal">
   <div class="modal">
     <h2 id="modalTitle"><i class="fas fa-wave-square"></i> <span>Novo Beat</span></h2>
     <form id="beatForm" enctype="multipart/form-data">
       <label for="fTitle">Título *</label>
       <input type="text" id="fTitle" placeholder="Ex: Aurora" required>
+      
       <label for="fArtist">Artista *</label>
       <input type="text" id="fArtist" placeholder="Ex: Pedro" required>
+      
       <label for="fGenre">Gênero *</label>
       <input type="text" id="fGenre" placeholder="Ex: Trap" required>
+      
       <label for="fPrice">Preço *</label>
       <input type="text" id="fPrice" placeholder="Kz 3.500" required>
+      
       <label for="fBpm">BPM</label>
       <input type="text" id="fBpm" placeholder="Ex: 140">
+      
       <label for="fKey">Tom</label>
       <input type="text" id="fKey" placeholder="Ex: A Minor">
+      
       <label for="fCoverFile">Imagem de Capa</label>
       <input type="file" id="fCoverFile" accept="image/*">
       <div class="file-status" id="coverStatus">Selecionar</div>
-      <label for="fAudioFile">Áudio (MP3)</label>
-      <input type="file" id="fAudioFile" accept="audio/*">
-      <div class="file-status" id="audioStatus">Selecionar</div>
+
+      <!-- ===== NOVOS CAMPOS OPEND RIVE ===== -->
+      <label for="fAudioStream">Link de Streaming (MP3 - OpenDrive) *</label>
+      <input type="url" id="fAudioStream" placeholder="https://od.lk/s/..." required>
+      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para ouvir no player</div>
+
+      <label for="fAudioMp3">Link Download MP3 (OpenDrive)</label>
+      <input type="url" id="fAudioMp3" placeholder="https://od.lk/d/...">
+      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar MP3</div>
+
+      <label for="fAudioWav">Link Download WAV (OpenDrive)</label>
+      <input type="url" id="fAudioWav" placeholder="https://od.lk/d/...">
+      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar WAV</div>
+
+      <label for="fPassword">Senha de Download</label>
+      <input type="text" id="fPassword" placeholder="Ex: Love2026">
+      <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Senha para liberar o download (deixe em branco para padrão)</div>
+      <!-- ===== FIM CAMPOS OPEND RIVE ===== -->
+
       <div class="preview-container" id="previewContainer"></div>
       <div class="modal-actions">
         <button type="button" class="btn-cancel" id="formCancel">Cancelar</button>
@@ -1519,7 +1538,6 @@
     let isLoggedIn = false;
     let currentUser = null;
     let selectedCoverFile = null;
-    let selectedAudioFile = null;
     let playlistAudio = null;
     let playlistAudioId = null;
     
@@ -1800,7 +1818,7 @@
     }
 
     // ============================================================
-    // 11. CRUD
+    // 11. CRUD - CORRIGIDO PARA OPEND RIVE
     // ============================================================
     async function loadBeats() {
       try {
@@ -1835,21 +1853,19 @@
       }
     }
 
-    async function saveBeatToSupabase(beatData, coverFile, audioFile) {
+    // ============================================================
+    // SALVAR BEAT COM OPEND RIVE - CORRIGIDO
+    // ============================================================
+    async function saveBeatToSupabase(beatData) {
       try {
-        let coverUrl = beatData.cover || null;
-        let audioUrl = beatData.audio || null;
-        
-        if (coverFile) {
-          const timestamp = Date.now();
-          coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${timestamp}`);
-        }
-        
-        if (audioFile) {
-          const timestamp = Date.now();
-          audioUrl = await uploadFile(audioFile, 'audios', `beat-audio-${timestamp}`);
-        }
-        
+        // Gerar slug automaticamente
+        const slug = beatData.title
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
         const newBeat = {
           title: beatData.title,
           artist: beatData.artist,
@@ -1857,11 +1873,14 @@
           price: beatData.price,
           bpm: beatData.bpm || null,
           key: beatData.key || null,
-          cover: coverUrl,
-          audio: audioUrl,
-          plays: beatData.plays || 0,
-          user_id: currentUser?.id,
-          slug: beatData.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+          cover: beatData.cover || null,
+          audio: beatData.audioStream,        // Link de streaming (ouvir)
+          audio_download_mp3: beatData.audioMp3,  // Link download MP3
+          audio_download_wav: beatData.audioWav,  // Link download WAV
+          password: beatData.password || 'Thebestwork2026',
+          slug: slug,
+          plays: 0,
+          user_id: currentUser?.id
         };
         
         if (editingId) {
@@ -1873,10 +1892,6 @@
           if (error) throw error;
           showToast('Sucesso', 'O beat foi atualizado.', 'success');
         } else {
-          if (!selectedAudioFile) {
-            showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
-            return;
-          }
           const { error } = await supabase.from('beats').insert([newBeat]);
           if (error) throw error;
           showToast('Sucesso', 'Novo beat lançado!', 'success');
@@ -1906,7 +1921,7 @@
       try {
         const { data: beat, error: fetchError } = await supabase
           .from('beats')
-          .select('cover, audio')
+          .select('cover')
           .eq('id', id)
           .single();
         
@@ -1923,13 +1938,6 @@
           const coverPath = beat.cover.split('/').pop();
           if (coverPath) {
             await supabase.storage.from('covers').remove([coverPath]);
-          }
-        }
-        
-        if (beat?.audio) {
-          const audioPath = beat.audio.split('/').pop();
-          if (audioPath) {
-            await supabase.storage.from('audios').remove([audioPath]);
           }
         }
         
@@ -2250,7 +2258,7 @@
       card.appendChild(infoDiv);
 
       // ============================================================
-      // ÁUDIO DO PLAYER
+      // ÁUDIO DO PLAYER - USANDO beat.audio (streaming)
       // ============================================================
       let audio = null;
       let isPlaying = false;
@@ -2335,12 +2343,18 @@
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
-      selectedCoverFile = null; selectedAudioFile = null;
+      
+      // Limpar campos
       document.getElementById('fCoverFile').value = '';
-      document.getElementById('fAudioFile').value = '';
       document.getElementById('coverStatus').textContent = 'Selecionar';
-      document.getElementById('audioStatus').textContent = 'Selecionar';
       document.getElementById('previewContainer').innerHTML = '';
+      
+      // Limpar campos OpenDrive
+      document.getElementById('fAudioStream').value = '';
+      document.getElementById('fAudioMp3').value = '';
+      document.getElementById('fAudioWav').value = '';
+      document.getElementById('fPassword').value = '';
+      
       if (beat) {
         document.getElementById('modalTitle').querySelector('span').textContent = 'Editar Beat';
         document.getElementById('fTitle').value = beat.title;
@@ -2349,9 +2363,17 @@
         document.getElementById('fPrice').value = beat.price;
         document.getElementById('fBpm').value = beat.bpm || '';
         document.getElementById('fKey').value = beat.key || '';
+        document.getElementById('fAudioStream').value = beat.audio || '';
+        document.getElementById('fAudioMp3').value = beat.audio_download_mp3 || '';
+        document.getElementById('fAudioWav').value = beat.audio_download_wav || '';
+        document.getElementById('fPassword').value = beat.password || '';
         editingId = beat.id;
-        if (beat.cover) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; document.getElementById('previewContainer').appendChild(div); }
-        if (beat.audio) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<i class="fas fa-music"></i> <span>Áudio atual</span>`; document.getElementById('previewContainer').appendChild(div); }
+        if (beat.cover) { 
+          const div = document.createElement('div'); 
+          div.className = 'preview-item'; 
+          div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; 
+          document.getElementById('previewContainer').appendChild(div); 
+        }
       } else {
         document.getElementById('modalTitle').querySelector('span').textContent = 'Novo Beat';
         document.getElementById('beatForm').reset();
@@ -2362,7 +2384,7 @@
       document.getElementById('formModal').classList.add('active');
       document.getElementById('mainDropdown').classList.remove('active');
     }
-    function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; selectedCoverFile = null; selectedAudioFile = null; }
+    function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; }
     function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
     // ============================================================
@@ -2646,6 +2668,10 @@
     
     document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
+    
+    // ============================================================
+    // SUBMIT DO FORMULÁRIO - CORRIGIDO COM OPEND RIVE
+    // ============================================================
     document.getElementById('beatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -2655,29 +2681,49 @@
       const price = document.getElementById('fPrice').value.trim();
       const bpm = document.getElementById('fBpm').value.trim();
       const key = document.getElementById('fKey').value.trim();
+      const cover = document.getElementById('fCoverFile').files[0];
+      const audioStream = document.getElementById('fAudioStream').value.trim();
+      const audioMp3 = document.getElementById('fAudioMp3').value.trim();
+      const audioWav = document.getElementById('fAudioWav').value.trim();
+      const password = document.getElementById('fPassword').value.trim();
       
       if (!title || !artist || !genre || !price) {
         showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error');
         return;
       }
       
-      if (!editingId && !selectedAudioFile) {
-        showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
+      if (!audioStream) {
+        showToast('Link de streaming obrigatório', 'Adicione o link do OpenDrive para streaming.', 'error');
         return;
       }
       
-      const beatData = { title, artist, genre, price, bpm, key, plays: 0 };
-      await saveBeatToSupabase(beatData, selectedCoverFile, selectedAudioFile);
+      let coverUrl = null;
+      if (cover) {
+        const timestamp = Date.now();
+        coverUrl = await uploadFile(cover, 'covers', `beat-cover-${timestamp}`);
+      }
+      
+      const beatData = {
+        title,
+        artist,
+        genre,
+        price,
+        bpm,
+        key,
+        cover: coverUrl,
+        audioStream,
+        audioMp3,
+        audioWav,
+        password: password || 'Thebestwork2026'
+      };
+      
+      await saveBeatToSupabase(beatData);
     });
+    
     document.getElementById('fCoverFile').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file) { selectedCoverFile = file; document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-      else { selectedCoverFile = null; document.getElementById('coverStatus').textContent = 'Selecionar'; }
-    });
-    document.getElementById('fAudioFile').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) { selectedAudioFile = file; document.getElementById('audioStatus').textContent = `🎵 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-      else { selectedAudioFile = null; document.getElementById('audioStatus').textContent = 'Selecionar'; }
+      if (file) { document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
+      else { document.getElementById('coverStatus').textContent = 'Selecionar'; }
     });
     
     document.getElementById('dropdownToggleEdit').addEventListener('click', function() {
@@ -2801,7 +2847,7 @@
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Best Beats v10.0 - Email ocultado com asteriscos!');
+      console.log('Best Beats v10.0 - OpenDrive integrado!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
