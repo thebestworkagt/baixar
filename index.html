@@ -957,9 +957,8 @@
         });
 
         // =====================================================
-        // 3. SISTEMA DE DOWNLOAD COM SENHA
+        // 3. SISTEMA DE DOWNLOAD COM SENHA (VIA API)
         // =====================================================
-        const CORRECT_PASSWORD = 'Thebestwork2026';
         let selectedFormat = null;
 
         const modal = document.getElementById('passwordModal');
@@ -967,12 +966,6 @@
         const errorMsg = document.getElementById('errorMsg');
         const modalConfirm = document.getElementById('modalConfirm');
         const modalCancel = document.getElementById('modalCancel');
-
-        // Links de download
-        const DOWNLOAD_LINKS = {
-            mp3: 'https://od.lk/d/MzhfMzQ5NDYwNTJfODM3SXI/Play%20By%20-%20Beat%20Master.mp3',
-            wav: 'https://od.lk/d/MzhfMzQ5NDYwNjVfZHNCOU0/Play%20By%20-%20Beat%20Master.wav'
-        };
 
         // Abre modal
         document.querySelectorAll('.download-btn').forEach(btn => {
@@ -986,40 +979,72 @@
             });
         });
 
-        // Confirma senha
-        function confirmPassword() {
-            const pass = passwordInput.value.trim();
+        // Função para confirmar senha via API
+        async function confirmPassword() {
+            const password = passwordInput.value.trim();
 
-            if (pass === CORRECT_PASSWORD) {
-                // Sucesso
-                passwordInput.className = 'success';
-                errorMsg.classList.remove('show');
-
-                // Libera download
-                const link = document.createElement('a');
-                link.href = DOWNLOAD_LINKS[selectedFormat];
-                link.download = `Love_Beat.${selectedFormat}`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                // Fecha modal após breve delay
-                setTimeout(() => {
-                    modal.classList.remove('active');
-                    passwordInput.className = '';
-                }, 500);
-
-            } else {
-                // Erro
-                passwordInput.className = 'error';
+            if (!password) {
+                errorMsg.textContent = 'Digite a senha primeiro';
                 errorMsg.classList.add('show');
-                passwordInput.value = '';
-                setTimeout(() => passwordInput.focus(), 100);
-
-                // Remove erro após 2s
+                passwordInput.className = 'error';
                 setTimeout(() => {
                     passwordInput.className = '';
+                    errorMsg.classList.remove('show');
                 }, 2000);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        password: password,
+                        format: selectedFormat
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Senha correta - libera download
+                    passwordInput.className = 'success';
+                    errorMsg.classList.remove('show');
+
+                    const link = document.createElement('a');
+                    link.href = data.url;
+                    link.download = data.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    setTimeout(() => {
+                        modal.classList.remove('active');
+                        passwordInput.className = '';
+                    }, 500);
+
+                } else {
+                    // Senha incorreta
+                    passwordInput.className = 'error';
+                    errorMsg.textContent = data.error || 'Senha incorreta';
+                    errorMsg.classList.add('show');
+                    passwordInput.value = '';
+                    setTimeout(() => passwordInput.focus(), 100);
+
+                    setTimeout(() => {
+                        passwordInput.className = '';
+                    }, 2000);
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Erro de conexão. Tente novamente.';
+                errorMsg.classList.add('show');
+                passwordInput.className = 'error';
+                setTimeout(() => {
+                    passwordInput.className = '';
+                    errorMsg.classList.remove('show');
+                }, 3000);
             }
         }
 
@@ -1038,7 +1063,6 @@
             errorMsg.classList.remove('show');
         });
 
-        // Fecha modal ao clicar fora
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.remove('active');
@@ -1046,12 +1070,6 @@
                 errorMsg.classList.remove('show');
             }
         });
-
-        // =====================================================
-        // 4. PREVENÇÃO: não exibe nada do OpenDrive
-        // =====================================================
-        console.log('%c🎵 Love - Afro Zouk Beat', 'font-size:20px; font-weight:bold; color:#a78bfa;');
-        console.log('%cSite: https://bestbeats.vercel.app', 'font-size:14px; color:#888;');
     </script>
 
 </body>
