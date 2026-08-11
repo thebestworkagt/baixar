@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/beat/:slug", "destination": "/beat.html" },
-    { "source": "/beat", "destination": "/beat.html" }
-  ]
-}
