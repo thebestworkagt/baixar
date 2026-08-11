@@ -1,9 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt" data-theme="dark">
 <head>
+
+
+<!-- 
+  ============================================================
+  SCRIPT DE ANALYTICS
+  Provedor: ACLIB (acscdn.com)
+  Função: Monitorizar visitas, cliques e comportamento dos utilizadores
+  Data de implementação: 2026
+  ============================================================
+-->
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: 'v8jr0vnuut',
+    });
+</script>
+
+  
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Beats</title>
+  <title>Beats Ao</title>
   
   <link rel="icon" type="image/png" href="logo1.png">
   <link rel="apple-touch-icon" href="logo1.png">
@@ -16,7 +35,7 @@
   
   <style>
     /* ============================================================
-       CSS COMPLETO - BEST BEATS V12 (APENAS LISTA)
+       CSS COMPLETO - BEATS AO V1.0
        ============================================================ */
     
     /* ----- VARIÁVEIS ----- */
@@ -501,7 +520,7 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* ----- PLAYER (NOVO DESIGN - PRIMEIRA PÁGINA) ----- */
+    /* ----- PLAYER ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -669,7 +688,7 @@
       text-transform: uppercase;
     }
 
-    /* ----- BOTÕES DOWNLOAD MP3 E WAV (NOVOS) ----- */
+    /* ----- BOTÕES DOWNLOAD ----- */
     .download-buttons {
       display: flex;
       gap: 0.5rem;
@@ -1174,13 +1193,6 @@
 </head>
 <body>
 
-<!-- ANALYTICS -->
-<script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: '5oy6a7uemm',
-    });
-</script>
-
 <!-- MENU FIXO -->
 <div class="menu-fixed">
   <div class="hamburger-menu">
@@ -1237,7 +1249,7 @@
       </button>
       
       <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
-        Best Beats v12.0
+        Beats Ao v1.0
       </div>
     </div>
   </div>
@@ -1261,8 +1273,8 @@
   <!-- HEADER -->
   <header class="header">
     <a href="?" class="logo-wrapper" id="logoLink">
-      <img src="logo.png" alt="Best Beats" class="logo">
-      <span class="brand">Best Beats</span>
+      <img src="logo.png" alt="Beats Ao" class="logo">
+      <span class="brand">Beats Ao</span>
     </a>
     <div class="subtitle">ouça e compre</div>
   </header>
@@ -1309,7 +1321,7 @@
   <!-- BEATS LIST -->
   <div class="beats-list" id="beatsContainer"></div>
 
-  <!-- FOOTER (SEM LINK DO SITE) -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="social-icons">
       <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
@@ -1317,7 +1329,7 @@
       <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
       <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
     </div>
-    <div>© 2026 Best Beats · todos os direitos reservados</div>
+    <div>© 2026 Beats Ao · todos os direitos reservados</div>
   </footer>
 </div>
 
@@ -1484,7 +1496,7 @@
   <div class="modal" style="max-width: 500px;">
     <h2><i class="fas fa-info-circle"></i> Sobre</h2>
     <div style="color:var(--text-secondary);line-height:1.8;font-size:0.9rem;">
-      <p><strong style="color:var(--gold);">Best Beats</strong> é uma plataforma dedicada a cantores, produtores musicais e artistas que buscam beats exclusivos e de alta qualidade para impulsionar suas carreiras e projetos musicais.</p>
+      <p><strong style="color:var(--gold);">Beats Ao</strong> é uma plataforma dedicada a cantores, produtores musicais e artistas que buscam beats exclusivos e de alta qualidade para impulsionar suas carreiras e projetos musicais.</p>
       <p style="margin-top:0.8rem;">Nossa missão é conectar criadores a instrumentais únicos, oferecendo uma experiência simples, rápida e segura para adquirir beats prontos para uso profissional.</p>
       <p style="margin-top:0.8rem;">Compre beats exclusivos diretamente via WhatsApp e impulsione sua carreira musical com sons que vão destacar seu trabalho.</p>
       <hr style="border-color:var(--border-color);margin:0.8rem 0;">
@@ -2051,9 +2063,7 @@
         card.appendChild(deleteBtn);
       }
 
-      // ============================================================
-      // PLAYER - DESIGN DA PRIMEIRA PÁGINA
-      // ============================================================
+      // PLAYER
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
@@ -2150,9 +2160,7 @@
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
-      // ============================================================
-      // INFO DO BEAT
-      // ============================================================
+      // INFO
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -2193,9 +2201,7 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
-      // ============================================================
-      // BOTÕES DOWNLOAD MP3 E WAV
-      // ============================================================
+      // BOTÕES DOWNLOAD
       const downloadDiv = document.createElement('div');
       downloadDiv.className = 'download-buttons';
       
@@ -2214,9 +2220,7 @@
       downloadDiv.appendChild(mp3Btn);
       downloadDiv.appendChild(wavBtn);
       
-      // ============================================================
       // AÇÕES
-      // ============================================================
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
       
@@ -2286,9 +2290,7 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // ============================================================
-      // ÁUDIO DO PLAYER
-      // ============================================================
+      // ÁUDIO
       let audio = null;
       let isPlaying = false;
 
@@ -2364,9 +2366,7 @@
         }
       });
 
-      // ============================================================
-      // DOWNLOAD - MP3 e WAV
-      // ============================================================
+      // DOWNLOAD
       mp3Btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2383,7 +2383,7 @@
     }
 
     // ============================================================
-    // 14. MODAL DE SENHA (DOWNLOAD)
+    // 14. MODAL DE SENHA
     // ============================================================
     function openPasswordModal(beatId, format) {
       currentBeatId = beatId;
@@ -2401,7 +2401,7 @@
     }
 
     // ============================================================
-    // 15. CONFIRMAR SENHA (DOWNLOAD)
+    // 15. CONFIRMAR SENHA
     // ============================================================
     document.getElementById('modalConfirm').addEventListener('click', async function() {
       const passwordInput = document.getElementById('passwordInput');
@@ -2420,7 +2420,6 @@
       }
       
       try {
-        // Buscar o beat para obter o slug
         const beat = beatsData.find(b => b.id === currentBeatId);
         if (!beat) {
           errorMsg.textContent = 'Beat não encontrado';
@@ -2979,7 +2978,7 @@
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Best Beats v12.0 - Apenas Lista com Design da Primeira Página');
+      console.log('Beats Ao v1.0');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
