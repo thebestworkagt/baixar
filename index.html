@@ -1,25 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt" data-theme="dark">
 <head>
-
-
-<!-- 
-  ============================================================
-  SCRIPT DE ANALYTICS
-  Provedor: ACLIB (acscdn.com)
-  Função: Monitorizar visitas, cliques e comportamento dos utilizadores
-  Data de implementação: 2026
-  ============================================================
--->
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-<script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: 'v8jr0vnuut',
-    });
-</script>
-
-  
-  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beats Ao</title>
@@ -69,7 +50,6 @@
       --shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
-    /* ----- RESET ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg-primary);
@@ -86,7 +66,6 @@
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* ----- MENU FIXO ----- */
     .menu-fixed {
       position: fixed;
       top: 1rem;
@@ -135,8 +114,7 @@
       box-shadow: var(--shadow);
       z-index: 100;
     }
-    .hamburger-dropdown.active { display: block; animation: dropdownIn 0.2s ease forwards; }
-    @keyframes dropdownIn { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .hamburger-dropdown.active { display: block; }
     .hamburger-dropdown .dropdown-item {
       display: flex;
       align-items: center;
@@ -158,7 +136,6 @@
     .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
-    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
     .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
@@ -174,44 +151,12 @@
     .user-info-display .user-email { 
       font-size: 0.7rem; 
       color: var(--text-muted);
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 0.3rem;
       font-family: 'Inter', sans-serif;
-      letter-spacing: 1px;
-    }
-    .user-info-display .user-email .email-text {
-      transition: all 0.3s ease;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 1px;
-    }
-    .user-info-display .user-email .email-text.hidden {
-      color: var(--text-muted);
-      opacity: 0.5;
-      letter-spacing: 2px;
-    }
-    .user-info-display .user-email .email-toggle-btn {
-      background: none;
-      border: none;
-      color: var(--gold);
-      cursor: pointer;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.3rem;
-      border-radius: 4px;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.2rem;
-    }
-    .user-info-display .user-email .email-toggle-btn:hover {
-      background: var(--gold-glow);
-    }
-    .user-info-display .user-email .email-toggle-btn i {
-      font-size: 0.6rem;
     }
 
-    /* ----- HEADER ----- */
     .header {
       display: flex;
       flex-direction: column;
@@ -255,7 +200,6 @@
       display: inline-block;
     }
 
-    /* ----- ADMIN TOOLBAR ----- */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
@@ -332,7 +276,6 @@
       min-width: 100px;
     }
     .filter-select:focus, .sort-select:focus { border-color: var(--gold); }
-    .filter-select option, .sort-select option { background: var(--bg-secondary); }
 
     .cart-btn {
       background: var(--bg-card);
@@ -362,7 +305,6 @@
       text-align: center;
     }
 
-    /* ----- TOAST ----- */
     .toast-container {
       position: fixed;
       top: 5rem;
@@ -412,7 +354,6 @@
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
-    /* ----- LOADING ----- */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -439,7 +380,7 @@
     .loading-wave span:nth-child(7) { animation-delay: 0.9s; }
     .loading-wave span:nth-child(8) { animation-delay: 1.05s; }
     @keyframes wave {
-      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; background: var(--gold); }
+      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; }
       20% { transform: scale(1.2); opacity: 1; background: var(--gold-dark); box-shadow: 0 0 20px var(--gold-glow); }
     }
     .loading-text {
@@ -461,7 +402,6 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
@@ -477,7 +417,7 @@
       flex-wrap: wrap;
       position: relative;
     }
-    .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--border-hover); }
+    .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
     
     .beat-card .popularity-badge {
       position: absolute;
@@ -494,10 +434,7 @@
       box-shadow: 0 4px 20px var(--gold-glow);
       z-index: 2;
     }
-    .beat-card .popularity-badge i {
-      margin-right: 0.3rem;
-      font-size: 0.5rem;
-    }
+    .beat-card .popularity-badge i { margin-right: 0.3rem; font-size: 0.5rem; }
     
     .card-edit-btn {
       position: absolute;
@@ -518,9 +455,8 @@
       font-size: 0.7rem;
     }
     .card-edit-btn.visible { display: flex; }
-    .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+    .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); }
 
-    /* ----- PLAYER ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -630,7 +566,6 @@
     }
     .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
     .btn-playlist.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-    .btn-playlist.added:hover { background: rgba(37, 211, 102, 0.15); }
     .progress-area {
       width: 100%;
       display: flex;
@@ -657,7 +592,6 @@
       cursor: pointer;
       box-shadow: 0 0 12px var(--gold-glow);
     }
-    .progress-bar::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
     .time-display { font-size: 0.5rem; font-weight: 300; color: #bfbfd0; min-width: 28px; }
     .volume-wrap { display: flex; align-items: center; gap: 0.15rem; margin-top: 0.05rem; }
     .volume-wrap i { font-size: 0.55rem; color: #b0b0c0; }
@@ -671,7 +605,6 @@
       outline: none;
     }
     .volume-slider::-webkit-slider-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-    .volume-slider::-moz-range-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); border: none; }
     .badge-genre {
       position: absolute;
       top: 6px;
@@ -688,7 +621,6 @@
       text-transform: uppercase;
     }
 
-    /* ----- BOTÕES DOWNLOAD ----- */
     .download-buttons {
       display: flex;
       gap: 0.5rem;
@@ -718,7 +650,6 @@
     .btn-wav:hover { box-shadow: 0 6px 25px rgba(59, 130, 246, 0.35); }
     .btn-download i { margin-right: 0.2rem; font-size: 0.6rem; }
 
-    /* ----- BEAT INFO ----- */
     .beat-info {
       flex: 1;
       display: flex;
@@ -746,7 +677,6 @@
       font-size: 0.75rem;
       color: var(--text-secondary);
       font-weight: 300;
-      letter-spacing: 0.2px;
       background: rgba(255,255,255,0.04);
       padding: 0.05rem 0.6rem;
       border-radius: 30px;
@@ -781,22 +711,10 @@
       flex-wrap: wrap;
     }
     .beat-stats i { color: var(--gold); margin-right: 2px; }
-    .beat-plays {
-      transition: color 0.3s;
-    }
-    .beat-plays.highlight {
-      color: var(--gold);
-    }
-    .beat-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-    }
-    .beat-rating .stars {
-      color: var(--gold);
-      font-size: 0.7rem;
-      letter-spacing: 1px;
-    }
+    .beat-plays { transition: color 0.3s; }
+    .beat-plays.highlight { color: var(--gold); }
+    .beat-rating { display: flex; align-items: center; gap: 0.2rem; }
+    .beat-rating .stars { color: var(--gold); font-size: 0.7rem; letter-spacing: 1px; }
     .beat-actions {
       display: flex;
       gap: 0.5rem;
@@ -841,7 +759,7 @@
       font-family: 'Inter', sans-serif;
     }
     .btn-negociar i { font-size: 0.9rem; }
-    .btn-negociar:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); background: linear-gradient(135deg, #2fd16e, #1ebe5c); }
+    .btn-negociar:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); }
     .btn-cart {
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
@@ -860,7 +778,6 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* ----- FOOTER ----- */
     .footer {
       margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
@@ -886,7 +803,6 @@
     }
     .social-icons .social-link:hover { color: var(--gold); transform: translateY(-2px); }
 
-    /* ----- MODALS ----- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1008,7 +924,6 @@
     .modal .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
     .modal .login-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 0.5rem; display: none; }
 
-    /* ----- PLAYLIST MODAL ----- */
     #playlistContainer {
       max-height: 400px;
       overflow-y: auto;
@@ -1062,16 +977,14 @@
       font-size: 0.7rem;
       transition: 0.2s;
     }
-    .playlist-item .btn-remove:hover { background: rgba(255, 70, 70, 0.15); border-color: rgba(255, 70, 70, 0.2); }
+    .playlist-item .btn-remove:hover { background: rgba(255, 70, 70, 0.15); }
     .playlist-item .progress-mini { width: 60px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
     .playlist-item .progress-mini-bar { height: 100%; width: 0%; background: var(--gold); border-radius: 10px; transition: width 0.1s; }
     .playlist-item .time-mini { font-size: 0.65rem; color: var(--text-muted); min-width: 30px; }
     .empty-playlist { text-align: center; padding: 2rem 0; color: var(--text-muted); }
     .empty-playlist i { font-size: 2.5rem; display: block; opacity: 0.3; margin-bottom: 0.8rem; }
     .empty-playlist p { font-weight: 300; font-size: 0.9rem; }
-    .empty-playlist .sub { font-size: 0.75rem; margin-top: 0.2rem; }
 
-    /* ----- CART MODAL ----- */
     .cart-item {
       display: flex;
       align-items: center;
@@ -1083,24 +996,10 @@
     .cart-item .info { flex: 1; }
     .cart-item .info .title { font-weight: 600; font-size: 0.9rem; }
     .cart-item .info .sub { font-size: 0.75rem; color: var(--text-secondary); }
-    .cart-item .remove-item {
-      background: none;
-      border: none;
-      color: #ff6b6b;
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 0.2rem 0.4rem;
-    }
-    .cart-total {
-      text-align: right;
-      padding-top: 0.8rem;
-      border-top: 2px solid var(--border-color);
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
+    .cart-item .remove-item { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 0.9rem; padding: 0.2rem 0.4rem; }
+    .cart-total { text-align: right; padding-top: 0.8rem; border-top: 2px solid var(--border-color); font-size: 1.1rem; font-weight: 700; }
     .cart-total span { color: var(--gold); }
 
-    /* ----- SHARE TOAST ----- */
     .share-toast {
       position: fixed;
       bottom: 2rem;
@@ -1122,13 +1021,11 @@
     .share-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
     .share-toast i { color: var(--gold); margin-right: 0.5rem; }
 
-    /* ----- PREVIEW ----- */
     .preview-container { display: flex; gap: 0.8rem; margin: 0.3rem 0; flex-wrap: wrap; }
     .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.4rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.4rem; }
     .preview-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
     .preview-item i { font-size: 1.5rem; color: var(--gold); }
 
-    /* ----- THEME TOGGLE ----- */
     .theme-toggle {
       position: fixed;
       bottom: 80px;
@@ -1151,7 +1048,6 @@
     }
     .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
 
-    /* ----- RESPONSIVE ----- */
     @media (max-width: 850px) {
       body { padding-top: 5rem; }
       .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.5rem; }
@@ -1193,7 +1089,13 @@
 </head>
 <body>
 
-<!-- MENU FIXO -->
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: 'v8jr0vnuut',
+    });
+</script>
+
 <div class="menu-fixed">
   <div class="hamburger-menu">
     <button class="hamburger-btn" id="menuBtn">
@@ -1255,22 +1157,13 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
+<div class="share-toast" id="shareToast"><i class="fas fa-check-circle"></i> Link copiado</div>
 
-<!-- SHARE TOAST -->
-<div class="share-toast" id="shareToast">
-  <i class="fas fa-check-circle"></i> Link copiado para a área de transferência
-</div>
-
-<!-- THEME TOGGLE -->
-<button class="theme-toggle" id="themeToggle" title="Alternar tema">
-  <i class="fas fa-moon"></i>
-</button>
+<button class="theme-toggle" id="themeToggle" title="Alternar tema"><i class="fas fa-moon"></i></button>
 
 <div class="app">
 
-  <!-- HEADER -->
   <header class="header">
     <a href="?" class="logo-wrapper" id="logoLink">
       <img src="logo.png" alt="Beats Ao" class="logo">
@@ -1279,7 +1172,6 @@
     <div class="subtitle">ouça e compre</div>
   </header>
 
-  <!-- ADMIN TOOLBAR -->
   <div class="admin-toolbar">
     <div class="admin-toolbar-left">
       <div class="search-container">
@@ -1287,9 +1179,7 @@
         <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
         <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
       </div>
-      <select class="filter-select" id="filterGenre">
-        <option value="all">Todos os gêneros</option>
-      </select>
+      <select class="filter-select" id="filterGenre"><option value="all">Todos os gêneros</option></select>
       <select class="sort-select" id="sortBy">
         <option value="recent">Mais recentes</option>
         <option value="popular">Mais populares</option>
@@ -1299,41 +1189,29 @@
       </select>
     </div>
     <div class="admin-toolbar-right">
-      <button class="cart-btn" id="cartBtn">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
+      <button class="cart-btn" id="cartBtn"><i class="fas fa-shopping-cart"></i> <span class="cart-count" id="cartCount">0</span></button>
     </div>
   </div>
 
-  <!-- LOADING -->
   <div id="loading" class="loading-wrapper">
-    <div class="loading-wave">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
+    <div class="loading-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="loading-text">Carregando Beats</div>
-    <div class="loading-progress">
-      <div class="loading-progress-bar"></div>
-    </div>
+    <div class="loading-progress"><div class="loading-progress-bar"></div></div>
   </div>
 
-  <!-- BEATS LIST -->
   <div class="beats-list" id="beatsContainer"></div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="social-icons">
-      <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
-      <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" aria-label="Instagram"><i class="fab fa-instagram"></i></button>
-      <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
-      <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+      <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')"><i class="fab fa-youtube"></i></button>
+      <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')"><i class="fab fa-instagram"></i></button>
+      <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')"><i class="fab fa-facebook-f"></i></button>
+      <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')"><i class="fab fa-whatsapp"></i></button>
     </div>
     <div>© 2026 Beats Ao · todos os direitos reservados</div>
   </footer>
 </div>
 
-<!-- MODAL LOGIN -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
     <h2><i class="fas fa-lock"></i> Administrador</h2>
@@ -1351,49 +1229,37 @@
   </div>
 </div>
 
-<!-- MODAL BEAT FORM -->
 <div class="modal-overlay" id="formModal">
   <div class="modal">
     <h2 id="modalTitle"><i class="fas fa-wave-square"></i> <span>Novo Beat</span></h2>
     <form id="beatForm" enctype="multipart/form-data">
       <label for="fTitle">Título *</label>
       <input type="text" id="fTitle" placeholder="Ex: Aurora" required>
-      
       <label for="fArtist">Artista *</label>
       <input type="text" id="fArtist" placeholder="Ex: Pedro" required>
-      
       <label for="fGenre">Gênero *</label>
       <input type="text" id="fGenre" placeholder="Ex: Trap" required>
-      
       <label for="fPrice">Preço *</label>
       <input type="text" id="fPrice" placeholder="Kz 3.500" required>
-      
       <label for="fBpm">BPM</label>
       <input type="text" id="fBpm" placeholder="Ex: 140">
-      
       <label for="fKey">Tom</label>
       <input type="text" id="fKey" placeholder="Ex: A Minor">
-      
       <label for="fCoverFile">Imagem de Capa</label>
       <input type="file" id="fCoverFile" accept="image/*">
       <div class="file-status" id="coverStatus">Selecionar</div>
-
       <label for="fAudioStream">Link de Streaming (MP3 - OpenDrive) *</label>
       <input type="url" id="fAudioStream" placeholder="https://od.lk/s/..." required>
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para ouvir no player</div>
-
       <label for="fAudioMp3">Link Download MP3 (OpenDrive)</label>
       <input type="url" id="fAudioMp3" placeholder="https://od.lk/d/...">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar MP3</div>
-
       <label for="fAudioWav">Link Download WAV (OpenDrive)</label>
       <input type="url" id="fAudioWav" placeholder="https://od.lk/d/...">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Link para baixar WAV</div>
-
       <label for="fPassword">Senha de Download</label>
       <input type="text" id="fPassword" placeholder="Ex: Love2026">
       <div class="file-status" style="font-size:0.65rem;color:var(--text-muted);">Senha para liberar o download</div>
-
       <div class="preview-container" id="previewContainer"></div>
       <div class="modal-actions">
         <button type="button" class="btn-cancel" id="formCancel">Cancelar</button>
@@ -1403,7 +1269,6 @@
   </div>
 </div>
 
-<!-- MODAL PLAYLIST -->
 <div class="modal-overlay" id="playlistModal">
   <div class="modal" style="max-width: 700px;">
     <h2><i class="fas fa-music"></i> Minha Playlist</h2>
@@ -1413,13 +1278,10 @@
       <p>Sua playlist está vazia</p>
       <p class="sub">Adicione beats clicando em "Add" nos cards</p>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="playlistCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="playlistCancel">Fechar</button></div>
   </div>
 </div>
 
-<!-- MODAL CART -->
 <div class="modal-overlay" id="cartModal">
   <div class="modal" style="max-width: 600px;">
     <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
@@ -1428,19 +1290,14 @@
       <i class="fas fa-shopping-bag" style="font-size:2rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
       <p>Seu carrinho está vazio</p>
     </div>
-    <div class="cart-total" id="cartTotal" style="display:none;">
-      Total: <span id="cartTotalValue">Kz 0</span>
-    </div>
+    <div class="cart-total" id="cartTotal" style="display:none;">Total: <span id="cartTotalValue">Kz 0</span></div>
     <div class="modal-actions">
       <button type="button" class="btn-cancel" id="cartCancel">Fechar</button>
-      <button type="button" class="btn-save" id="cartCheckout">
-        <i class="fab fa-whatsapp"></i> Finalizar Compra
-      </button>
+      <button type="button" class="btn-save" id="cartCheckout"><i class="fab fa-whatsapp"></i> Finalizar Compra</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL DASHBOARD -->
 <div class="modal-overlay" id="dashboardModal">
   <div class="modal" style="max-width: 600px;">
     <h2><i class="fas fa-chart-bar"></i> Dashboard</h2>
@@ -1466,16 +1323,13 @@
       <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem;">Beats Mais Ouvidos</div>
       <div id="topBeats"></div>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="dashboardCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="dashboardCancel">Fechar</button></div>
   </div>
 </div>
 
-<!-- MODAL PROFILE -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal" style="max-width: 500px;">
-    <h2><i class="fas fa-user"></i> Perfil do Artista | Salvo localmente</h2>
+    <h2><i class="fas fa-user"></i> Perfil do Produtor</h2>
     <form id="profileForm">
       <label for="profName">Nome</label>
       <input type="text" id="profName" placeholder="Seu nome">
@@ -1491,7 +1345,6 @@
   </div>
 </div>
 
-<!-- MODAL ABOUT -->
 <div class="modal-overlay" id="aboutModal">
   <div class="modal" style="max-width: 500px;">
     <h2><i class="fas fa-info-circle"></i> Sobre</h2>
@@ -1510,13 +1363,10 @@
         <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-whatsapp"></i></button>
       </div>
     </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" id="aboutCancel">Fechar</button>
-    </div>
+    <div class="modal-actions"><button type="button" class="btn-cancel" id="aboutCancel">Fechar</button></div>
   </div>
 </div>
 
-<!-- MODAL RATING -->
 <div class="modal-overlay" id="ratingModal">
   <div class="modal" style="max-width: 380px;">
     <h2><i class="fas fa-star"></i> Avaliar Beat</h2>
@@ -1537,7 +1387,6 @@
   </div>
 </div>
 
-<!-- MODAL SENHA (DOWNLOAD) -->
 <div class="modal-overlay" id="passwordModal">
   <div class="modal" style="max-width: 400px;">
     <h2><i class="fas fa-lock"></i> Download Protegido</h2>
@@ -1556,7 +1405,6 @@
 
 <script>
   (function() {
-      (function() {
     // ============================================================
     // 1. CONFIGURAÇÃO DO SUPABASE
     // ============================================================
@@ -1798,7 +1646,7 @@
     function loadTheme() {
       const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun</i>';
     }
 
     // ============================================================
@@ -1832,7 +1680,7 @@
         updateBeatPlaysDisplay(beatId, newPlays);
         
       } catch (error) {
-        console.error('❌ Erro ao incrementar plays:', error);
+        console.error('Erro ao incrementar plays:', error);
         showToast('Erro', 'Não foi possível registrar a reprodução.', 'error');
       }
     }
@@ -2009,7 +1857,7 @@
     }
 
     // ============================================================
-    // 13. RENDER - VERSÃO SIMPLIFICADA (SEM 30 SEGUNDOS)
+    // 13. RENDER
     // ============================================================
     function renderBeats() {
       const container = document.getElementById('beatsContainer');
@@ -2036,7 +1884,7 @@
     }
 
     // ============================================================
-    // 14. createBeatCard - VERSÃO SIMPLIFICADA (SEM 30 SEGUNDOS)
+    // 14. CREATE BEAT CARD
     // ============================================================
     function createBeatCard(beat) {
       const card = document.createElement('div');
@@ -2094,7 +1942,6 @@
       const playBtn = document.createElement('button');
       playBtn.className = 'btn-play';
       playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.setAttribute('data-playing', 'false');
       
       const nextBtn = document.createElement('button');
       nextBtn.className = 'btn-next';
@@ -2295,7 +2142,7 @@
       card.appendChild(infoDiv);
 
       // ============================================================
-      // ÁUDIO - VERSÃO SIMPLES (SEM 30 SEGUNDOS)
+      // ÁUDIO
       // ============================================================
       let audio = null;
       let isPlaying = false;
