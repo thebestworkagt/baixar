@@ -699,44 +699,90 @@
   }
 
   const beatSlug = getBeatSlug();
+  console.log('🔍 Slug detectado:', beatSlug);
+
+  // ============================================================
+  // TOAST
+  // ============================================================
+  function showToast(title, message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+    toast.innerHTML = `
+      <div class="toast-icon ${type}"><i class="fas ${icons[type] || icons.info}"></i></div>
+      <div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>
+      <button class="toast-close"><i class="fas fa-times"></i></button>
+    `;
+    container.appendChild(toast);
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => removeToast(toast));
+    if (duration > 0) setTimeout(() => removeToast(toast), duration);
+    return toast;
+  }
+  function removeToast(toast) {
+    if (toast.classList.contains('removing')) return;
+    toast.classList.add('removing');
+    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 350);
+  }
 
   // ============================================================
   // CARREGAR BEAT DO SUPABASE
   // ============================================================
   async function loadBeat() {
     try {
-      const { data, error } = await supabase
+      console.log('📡 Buscando beat com slug:', beatSlug);
+      
+      // Tenta buscar por slug primeiro
+      let { data, error } = await supabase
         .from('beats')
         .select('*')
-        .or(`slug.eq.${beatSlug},title.ilike.${beatSlug}`)
-        .order('id', { ascending: false })
-        .limit(1);
+        .eq('slug', beatSlug)
+        .single();
 
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        document.getElementById('beatContent').innerHTML = `
-          <div class="beat-loading">
-            <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-            <p>Beat não encontrado</p>
-            <p style="font-size:0.8rem;margin-top:0.5rem;">
-              <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
-            </p>
-          </div>
-        `;
-        return;
+      // Se não encontrar, tenta buscar pelo título
+      if (error || !data) {
+        console.log('⚠️ Beat não encontrado por slug, tentando por título...');
+        const { data: dataByTitle, error: errorByTitle } = await supabase
+          .from('beats')
+          .select('*')
+          .ilike('title', beatSlug)
+          .single();
+        
+        if (errorByTitle || !dataByTitle) {
+          console.error('❌ Beat não encontrado:', error || errorByTitle);
+          document.getElementById('beatContent').innerHTML = `
+            <div class="beat-loading">
+              <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+              <p>Beat não encontrado: "${beatSlug}"</p>
+              <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
+                Verifique se o slug está correto no banco de dados.
+              </p>
+              <p style="font-size:0.8rem;margin-top:0.3rem;">
+                <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
+              </p>
+            </div>
+          `;
+          return;
+        }
+        data = dataByTitle;
       }
 
-      const beat = data[0];
+      const beat = data;
+      console.log('✅ Beat encontrado:', beat.title);
+      
       document.title = `${beat.title} - Beatsao`;
       renderBeat(beat);
     } catch (error) {
-      console.error('Erro:', error);
+      console.error('❌ Erro ao carregar beat:', error);
       document.getElementById('beatContent').innerHTML = `
         <div class="beat-loading">
           <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
           <p>Erro ao carregar o beat</p>
-          <p style="font-size:0.8rem;margin-top:0.5rem;">
+          <p style="font-size:0.8rem;margin-top:0.5rem;color:var(--text-muted);">
+            ${error.message || 'Erro desconhecido'}
+          </p>
+          <p style="font-size:0.8rem;margin-top:0.3rem;">
             <a href="/" style="color:var(--gold);text-decoration:none;">Voltar para a lista</a>
           </p>
         </div>
@@ -748,6 +794,9 @@
   // RENDERIZAR BEAT
   // ============================================================
   function renderBeat(beat) {
+    console.log('🎨 Renderizando beat:', beat.title);
+    console.log('📁 Dados:', beat);
+
     const html = `
       <!-- CAPA -->
       <div class="cover-wrapper">
@@ -819,7 +868,10 @@
 
     // Inicializar player
     if (beat.audio) {
+      console.log('🎵 Inicializando player com áudio:', beat.audio);
       initializePlayer(beat.audio);
+    } else {
+      console.warn('⚠️ Beat sem áudio');
     }
 
     // Inicializar download
@@ -964,6 +1016,8 @@
       }
 
       try {
+        console.log('🔐 Verificando senha para:', beatSlug);
+        
         const response = await fetch('/api/download', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -975,6 +1029,7 @@
         });
 
         const data = await response.json();
+        console.log('📦 Resposta da API:', data);
 
         if (data.success) {
           passwordInput.className = 'success';
@@ -1004,6 +1059,7 @@
           }, 2000);
         }
       } catch (error) {
+        console.error('❌ Erro na requisição:', error);
         errorMsg.textContent = 'Erro de conexão. Tente novamente.';
         errorMsg.classList.add('show');
         passwordInput.className = 'error';
@@ -1035,6 +1091,7 @@
   // ============================================================
   // INICIAR
   // ============================================================
+  console.log('🚀 Iniciando beat.html...');
   loadBeat();
 </script>
 </body>
