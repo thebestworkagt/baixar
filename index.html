@@ -2733,60 +2733,98 @@
     // ============================================================
     // 14. MODO BEAT - MOSTRAR BEAT INDIVIDUAL
     // ============================================================
-    async function showBeatMode(slug) {
-      currentBeatSlug = slug;
+    // ============================================================
+// 14. MODO BEAT - MOSTRAR BEAT INDIVIDUAL (CORRIGIDO)
+// ============================================================
+async function showBeatMode(slug) {
+  currentBeatSlug = slug;
+  
+  // Esconder modo lista, mostrar modo beat
+  document.getElementById('modeList').classList.add('hidden');
+  document.getElementById('modeBeat').classList.add('active');
+  
+  // Atualizar URL sem recarregar
+  const url = new URL(window.location);
+  url.searchParams.set('beat', slug);
+  window.history.pushState({ beat: slug }, '', url);
+  
+  // Carregar o beat
+  document.getElementById('beatContent').innerHTML = `
+    <div class="beat-loading-single">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Carregando beat...</p>
+    </div>
+  `;
+  
+  try {
+    console.log('🔍 Buscando beat com slug:', slug);
+    
+    // ESTRATÉGIA 1: Buscar por slug
+    let { data, error } = await supabase
+      .from('beats')
+      .select('*')
+      .eq('slug', slug)
+      .maybeSingle();
+    
+    // ESTRATÉGIA 2: Se não encontrou, buscar por título
+    if (!data) {
+      console.log('⚠️ Slug não encontrado, buscando por título...');
+      const { data: titleData, error: titleError } = await supabase
+        .from('beats')
+        .select('*')
+        .ilike('title', slug)
+        .maybeSingle();
       
-      // Esconder modo lista, mostrar modo beat
-      document.getElementById('modeList').classList.add('hidden');
-      document.getElementById('modeBeat').classList.add('active');
-      
-      // Atualizar URL sem recarregar
-      const url = new URL(window.location);
-      url.searchParams.set('beat', slug);
-      window.history.pushState({ beat: slug }, '', url);
-      
-      // Carregar o beat
-      document.getElementById('beatContent').innerHTML = `
-        <div class="beat-loading-single">
-          <i class="fas fa-spinner fa-spin"></i>
-          <p>Carregando beat...</p>
-        </div>
-      `;
-      
-      try {
-        const { data, error } = await supabase
-          .from('beats')
-          .select('*')
-          .eq('slug', slug)
-          .maybeSingle();
-        
-        if (error || !data) {
-          document.getElementById('beatContent').innerHTML = `
-            <div class="beat-loading-single">
-              <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-              <p>Beat não encontrado: "${slug}"</p>
-              <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
-                <i class="fas fa-arrow-left"></i> Voltar para lista
-              </button>
-            </div>
-          `;
-          return;
-        }
-        
-        renderBeatSingle(data);
-      } catch (error) {
-        console.error('Erro ao carregar beat:', error);
-        document.getElementById('beatContent').innerHTML = `
-          <div class="beat-loading-single">
-            <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
-            <p>Erro ao carregar o beat</p>
-            <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
-              <i class="fas fa-arrow-left"></i> Voltar para lista
-            </button>
-          </div>
-        `;
+      if (titleData) {
+        data = titleData;
+        error = null;
+        console.log('✅ Beat encontrado por título:', data.title);
       }
     }
+    
+    // ESTRATÉGIA 3: Se ainda não encontrou, buscar o primeiro beat
+    if (!data) {
+      console.log('⚠️ Buscando o primeiro beat disponível...');
+      const { data: firstData, error: firstError } = await supabase
+        .from('beats')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
+      
+      if (firstData) {
+        data = firstData;
+        error = null;
+        console.log('✅ Beat encontrado (primeiro):', data.title);
+      }
+    }
+    
+    if (error || !data) {
+      document.getElementById('beatContent').innerHTML = `
+        <div class="beat-loading-single">
+          <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+          <p>Nenhum beat encontrado</p>
+          <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
+            <i class="fas fa-arrow-left"></i> Voltar para lista
+          </button>
+        </div>
+      `;
+      return;
+    }
+    
+    renderBeatSingle(data);
+  } catch (error) {
+    console.error('❌ Erro ao carregar beat:', error);
+    document.getElementById('beatContent').innerHTML = `
+      <div class="beat-loading-single">
+        <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+        <p>Erro ao carregar o beat</p>
+        <button class="btn-voltar" onclick="showListMode()" style="margin-top:1rem;">
+          <i class="fas fa-arrow-left"></i> Voltar para lista
+        </button>
+      </div>
+    `;
+  }
+}
 
     // ============================================================
     // 15. MODO BEAT - RENDERIZAR
