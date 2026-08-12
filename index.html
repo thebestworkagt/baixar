@@ -521,7 +521,9 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* ----- PLAYER ----- */
+       /* ============================================================
+       PLAYER - CAPA CENTRALIZADA (PRIMEIRA PÁGINA)
+       ============================================================ */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -533,6 +535,20 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.7);
       margin-top: 0.5rem;
       cursor: pointer;
+      border: 1px solid var(--border-color);
+    }
+    .player-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 10;
     }
     .player-bg {
       position: absolute;
@@ -552,45 +568,61 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0.6rem;
+      padding: 0.4rem;
       color: white;
+      z-index: 2;
     }
-    .player-artist {
-      font-size: 0.5rem;
-      font-weight: 400;
+    .player-overlay .cover-icon {
+      font-size: 2rem;
+      color: rgba(247, 201, 72, 0.3);
+      margin-bottom: 0.1rem;
+      text-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
+    }
+    .player-overlay .cover-title {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      letter-spacing: 1px;
+    }
+    .player-overlay .cover-sub {
+      font-size: 0.45rem;
+      font-weight: 300;
       text-transform: uppercase;
       letter-spacing: 2px;
-      color: #d4d4e0;
-      background: rgba(0,0,0,0.3);
-      padding: 0.1rem 0.5rem;
-      border-radius: 30px;
-      backdrop-filter: blur(4px);
-      margin-bottom: 0.1rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.05rem;
     }
-    .player-title {
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-align: center;
-      line-height: 1.2;
-      margin: 0.1rem 0 0.1rem;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    .player-overlay .cover-glow {
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 50% 50%, rgba(247, 201, 72, 0.15), transparent 70%);
+      animation: pulseGlow 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
     }
-    .player-controls {
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .player-overlay .controls-row {
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      margin-top: 0.1rem;
+      margin-top: 0.15rem;
+      z-index: 2;
       flex-wrap: wrap;
       justify-content: center;
     }
-    .btn-play {
+    .player-overlay .btn-play-small {
       background: var(--gold);
       border: none;
       color: #0a0a0f;
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 1rem;
+      font-size: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -598,15 +630,19 @@
       transition: 0.2s;
       cursor: pointer;
     }
-    .btn-play:hover { transform: scale(1.04); background: var(--gold-dark); }
-    .btn-next {
+    .player-overlay .btn-play-small:hover { transform: scale(1.04); background: var(--gold-dark); }
+    .player-overlay .btn-play-small.playing {
+      background: linear-gradient(135deg, #f472b6, #ec4899);
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+    }
+    .player-overlay .btn-next-small {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
       color: #eee;
-      width: 26px;
-      height: 26px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      font-size: 0.7rem;
+      font-size: 0.55rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -614,14 +650,14 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .btn-next:hover { background: rgba(255,255,255,0.2); }
-    .btn-playlist {
+    .player-overlay .btn-next-small:hover { background: rgba(255,255,255,0.2); }
+    .player-overlay .btn-playlist-small {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       color: #d0d0dd;
-      padding: 0.1rem 0.5rem;
+      padding: 0.05rem 0.4rem;
       border-radius: 40px;
-      font-size: 0.55rem;
+      font-size: 0.45rem;
       font-weight: 400;
       backdrop-filter: blur(4px);
       cursor: pointer;
@@ -629,18 +665,18 @@
       white-space: nowrap;
       transition: 0.2s;
     }
-    .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .btn-playlist.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-    .btn-playlist.added:hover { background: rgba(37, 211, 102, 0.15); }
-    .progress-area {
+    .player-overlay .btn-playlist-small:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .player-overlay .btn-playlist-small.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
+    .player-overlay .progress-area-small {
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      margin: 0.05rem 0 0.05rem;
+      gap: 0.2rem;
+      margin: 0.05rem 0;
       padding: 0 0.1rem;
+      z-index: 2;
     }
-    .progress-bar {
+    .player-overlay .progress-bar-small {
       flex: 1;
       height: 2px;
       background: rgba(255,255,255,0.15);
@@ -649,21 +685,20 @@
       -webkit-appearance: none;
       outline: none;
     }
-    .progress-bar::-webkit-slider-thumb {
+    .player-overlay .progress-bar-small::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--gold);
       cursor: pointer;
       box-shadow: 0 0 12px var(--gold-glow);
     }
-    .progress-bar::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
-    .time-display { font-size: 0.5rem; font-weight: 300; color: #bfbfd0; min-width: 28px; }
-    .volume-wrap { display: flex; align-items: center; gap: 0.15rem; margin-top: 0.05rem; }
-    .volume-wrap i { font-size: 0.55rem; color: #b0b0c0; }
-    .volume-slider {
-      width: 30px;
+    .player-overlay .time-display-small { font-size: 0.4rem; font-weight: 300; color: #bfbfd0; min-width: 22px; }
+    .player-overlay .volume-wrap-small { display: flex; align-items: center; gap: 0.1rem; z-index: 2; }
+    .player-overlay .volume-wrap-small i { font-size: 0.45rem; color: #b0b0c0; }
+    .player-overlay .volume-slider-small {
+      width: 20px;
       height: 2px;
       background: rgba(255,255,255,0.15);
       border-radius: 10px;
@@ -671,22 +706,22 @@
       -webkit-appearance: none;
       outline: none;
     }
-    .volume-slider::-webkit-slider-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-    .volume-slider::-moz-range-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); border: none; }
-    .badge-genre {
+    .player-overlay .volume-slider-small::-webkit-slider-thumb { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+    .player-overlay .badge-genre-small {
       position: absolute;
-      top: 6px;
-      right: 8px;
+      top: 4px;
+      right: 6px;
       background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
-      padding: 0.05rem 0.5rem;
+      padding: 0.05rem 0.4rem;
       border-radius: 30px;
-      font-size: 0.45rem;
+      font-size: 0.4rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       color: var(--gold);
       border: 1px solid var(--border-color);
       text-transform: uppercase;
+      z-index: 3;
     }
 
     /* ----- BOTÕES DOWNLOAD ----- */
@@ -2036,7 +2071,7 @@
     }
 
     // ============================================================
-    // 14. CREATE BEAT CARD
+    // 14. CREATE BEAT CARD - COM DESIGN DA PRIMEIRA PÁGINA
     // ============================================================
     function createBeatCard(beat) {
       const card = document.createElement('div');
@@ -2067,7 +2102,9 @@
         card.appendChild(deleteBtn);
       }
 
-      // PLAYER
+      // ============================================================
+      // PLAYER - CAPA CENTRALIZADA (PRIMEIRA PÁGINA)
+      // ============================================================
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
@@ -2080,27 +2117,43 @@
       const overlay = document.createElement('div');
       overlay.className = 'player-overlay';
       
-      const artistSpan = document.createElement('div');
-      artistSpan.className = 'player-artist';
-      artistSpan.textContent = beat.artist;
+      // Glow
+      const glow = document.createElement('div');
+      glow.className = 'cover-glow';
+      overlay.appendChild(glow);
       
+      // Ícone (placeholder da capa)
+      const icon = document.createElement('div');
+      icon.className = 'cover-icon';
+      icon.innerHTML = '♫';
+      overlay.appendChild(icon);
+      
+      // Título
       const titleSpan = document.createElement('div');
-      titleSpan.className = 'player-title';
-      titleSpan.textContent = beat.title;
+      titleSpan.className = 'cover-title';
+      titleSpan.textContent = beat.title.toUpperCase();
+      overlay.appendChild(titleSpan);
       
+      // Subtítulo (gênero)
+      const subSpan = document.createElement('div');
+      subSpan.className = 'cover-sub';
+      subSpan.textContent = beat.genre || 'AFRO';
+      overlay.appendChild(subSpan);
+      
+      // Controles
       const controls = document.createElement('div');
-      controls.className = 'player-controls';
+      controls.className = 'controls-row';
       
       const playBtn = document.createElement('button');
-      playBtn.className = 'btn-play';
+      playBtn.className = 'btn-play-small';
       playBtn.innerHTML = '<i class="fas fa-play"></i>';
       
       const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn-next';
+      nextBtn.className = 'btn-next-small';
       nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
       
       const playlistBtn = document.createElement('button');
-      playlistBtn.className = 'btn-playlist';
+      playlistBtn.className = 'btn-playlist-small';
       if (isInPlaylist(beat.id)) { 
         playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
         playlistBtn.classList.add('added'); 
@@ -2125,45 +2178,47 @@
       controls.appendChild(playBtn);
       controls.appendChild(nextBtn);
       controls.appendChild(playlistBtn);
+      overlay.appendChild(controls);
       
+      // Progresso
       const progressArea = document.createElement('div');
-      progressArea.className = 'progress-area';
+      progressArea.className = 'progress-area-small';
       const progress = document.createElement('input');
       progress.type = 'range';
-      progress.className = 'progress-bar';
+      progress.className = 'progress-bar-small';
       progress.min = 0; progress.max = 100; progress.value = 0;
       const timeDisplay = document.createElement('span');
-      timeDisplay.className = 'time-display';
+      timeDisplay.className = 'time-display-small';
       timeDisplay.textContent = '0:00';
       progressArea.appendChild(progress);
       progressArea.appendChild(timeDisplay);
+      overlay.appendChild(progressArea);
       
+      // Volume
       const volumeWrap = document.createElement('div');
-      volumeWrap.className = 'volume-wrap';
+      volumeWrap.className = 'volume-wrap-small';
       const volIcon = document.createElement('i');
       volIcon.className = 'fas fa-volume-low';
       const volSlider = document.createElement('input');
       volSlider.type = 'range';
-      volSlider.className = 'volume-slider';
+      volSlider.className = 'volume-slider-small';
       volSlider.min = 0; volSlider.max = 100; volSlider.value = 70;
       volumeWrap.appendChild(volIcon);
       volumeWrap.appendChild(volSlider);
-      
-      const genreBadge = document.createElement('span');
-      genreBadge.className = 'badge-genre';
-      genreBadge.textContent = beat.genre;
-      
-      overlay.appendChild(artistSpan);
-      overlay.appendChild(titleSpan);
-      overlay.appendChild(controls);
-      overlay.appendChild(progressArea);
       overlay.appendChild(volumeWrap);
+      
+      // Badge de gênero
+      const genreBadge = document.createElement('span');
+      genreBadge.className = 'badge-genre-small';
+      genreBadge.textContent = beat.genre || 'AFRO';
       overlay.appendChild(genreBadge);
       
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
+      // ============================================================
       // INFO
+      // ============================================================
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -2324,6 +2379,7 @@
           
           audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.classList.remove('playing');
             isPlaying = false;
             progress.value = 0;
             timeDisplay.textContent = '0:00';
@@ -2333,10 +2389,12 @@
         if (isPlaying) { 
           audio.pause(); 
           playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+          playBtn.classList.remove('playing');
           isPlaying = false;
         } else { 
           audio.play().catch(() => {});
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          playBtn.classList.add('playing');
           isPlaying = true;
           incrementPlays(beat.id);
         }
@@ -2354,6 +2412,7 @@
         if (!isPlaying) { 
           audio.play().catch(() => {}); 
           playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
+          playBtn.classList.add('playing');
           isPlaying = true; 
         }
       });
