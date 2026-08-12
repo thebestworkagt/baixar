@@ -2,7 +2,6 @@
 <html lang="pt" data-theme="dark">
 <head>
 
-
 <!-- 
   ============================================================
   SCRIPT DE ANALYTICS
@@ -18,15 +17,15 @@
     });
 </script>
 
-  
-  
+
   <meta charset="UTF-8">
-<meta name="description" content="Beats Ao - Beats exclusivos para artistas e produtores musicais. Ouça e compre beats de alta qualidade.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beats Ao</title>
   
-<link rel="icon" type="image/png" href="logo1.png">
-<!-- Ou para .ico -->
-<link rel="icon" type="image/x-icon" href="logo.png">
+  <meta name="description" content="Beats Ao - Beats exclusivos para artistas e produtores musicais. Ouça e compre beats de alta qualidade.">
+  
+  <link rel="icon" type="image/png" href="logo1.png">
+  <link rel="icon" type="image/x-icon" href="logo.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +35,7 @@
   
   <style>
     /* ============================================================
-       CSS COMPLETO - BEATS AO V1.0
+       CSS COMPLETO - BEATS AO (APENAS LISTA)
        ============================================================ */
     
     /* ----- VARIÁVEIS ----- */
@@ -70,7 +69,6 @@
       --shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
-    /* ----- RESET ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg-primary);
@@ -159,7 +157,6 @@
     .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
-    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
     .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
@@ -521,9 +518,7 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-       /* ============================================================
-       PLAYER - CAPA CENTRALIZADA (PRIMEIRA PÁGINA)
-       ============================================================ */
+    /* ----- PLAYER - CAPA CENTRALIZADA ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -896,6 +891,27 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
+    /* BOTÃO VER BEAT */
+    .btn-ver-beat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.25rem 1rem;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      backdrop-filter: blur(4px);
+    }
+    .btn-ver-beat:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
+    .btn-ver-beat i { font-size: 0.7rem; }
+
     /* ----- FOOTER ----- */
     .footer {
       margin-top: 3rem;
@@ -1228,6 +1244,13 @@
   </style>
 </head>
 <body>
+
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: 'v8jr0vnuut',
+    });
+</script>
 
 <!-- MENU FIXO -->
 <div class="menu-fixed">
@@ -1746,7 +1769,11 @@
         const { data, error } = await supabase
           .from('ratings')
           .select('*');
-        if (error) throw error;
+        if (error) {
+          console.warn('⚠️ Tabela ratings não encontrada:', error.message);
+          userRatings = {};
+          return;
+        }
         userRatings = {};
         if (data) {
           data.forEach(r => {
@@ -1755,7 +1782,8 @@
           });
         }
       } catch (error) {
-        console.error('Erro ao carregar avaliações:', error);
+        console.warn('⚠️ Erro ao carregar avaliações:', error.message);
+        userRatings = {};
       }
     }
 
@@ -1779,14 +1807,22 @@
     }
 
     function getBeatAverageRating(beatId) {
-      const ratings = userRatings[beatId] || [];
-      if (ratings.length === 0) return 0;
-      const sum = ratings.reduce((a, b) => a + b, 0);
-      return sum / ratings.length;
+      try {
+        const ratings = userRatings[beatId] || [];
+        if (ratings.length === 0) return 0;
+        const sum = ratings.reduce((a, b) => a + b, 0);
+        return sum / ratings.length;
+      } catch (error) {
+        return 0;
+      }
     }
 
     function getBeatRatingCount(beatId) {
-      return (userRatings[beatId] || []).length;
+      try {
+        return (userRatings[beatId] || []).length;
+      } catch (error) {
+        return 0;
+      }
     }
 
     // ============================================================
@@ -1833,7 +1869,7 @@
     function loadTheme() {
       const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun</i>';
+      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     }
 
     // ============================================================
@@ -2117,30 +2153,25 @@
       const overlay = document.createElement('div');
       overlay.className = 'player-overlay';
       
-      // Glow
       const glow = document.createElement('div');
       glow.className = 'cover-glow';
       overlay.appendChild(glow);
       
-      // Ícone (placeholder da capa)
       const icon = document.createElement('div');
       icon.className = 'cover-icon';
       icon.innerHTML = '♫';
       overlay.appendChild(icon);
       
-      // Título
       const titleSpan = document.createElement('div');
       titleSpan.className = 'cover-title';
       titleSpan.textContent = beat.title.toUpperCase();
       overlay.appendChild(titleSpan);
       
-      // Subtítulo (gênero)
       const subSpan = document.createElement('div');
       subSpan.className = 'cover-sub';
       subSpan.textContent = beat.genre || 'AFRO';
       overlay.appendChild(subSpan);
       
-      // Controles
       const controls = document.createElement('div');
       controls.className = 'controls-row';
       
@@ -2180,7 +2211,6 @@
       controls.appendChild(playlistBtn);
       overlay.appendChild(controls);
       
-      // Progresso
       const progressArea = document.createElement('div');
       progressArea.className = 'progress-area-small';
       const progress = document.createElement('input');
@@ -2194,7 +2224,6 @@
       progressArea.appendChild(timeDisplay);
       overlay.appendChild(progressArea);
       
-      // Volume
       const volumeWrap = document.createElement('div');
       volumeWrap.className = 'volume-wrap-small';
       const volIcon = document.createElement('i');
@@ -2207,7 +2236,6 @@
       volumeWrap.appendChild(volSlider);
       overlay.appendChild(volumeWrap);
       
-      // Badge de gênero
       const genreBadge = document.createElement('span');
       genreBadge.className = 'badge-genre-small';
       genreBadge.textContent = beat.genre || 'AFRO';
@@ -2259,7 +2287,9 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
+      // ============================================================
       // DOWNLOAD BOTÕES
+      // ============================================================
       const downloadDiv = document.createElement('div');
       downloadDiv.className = 'download-buttons';
       
@@ -2278,54 +2308,20 @@
       downloadDiv.appendChild(mp3Btn);
       downloadDiv.appendChild(wavBtn);
       
-      // AÇÕES
+      // ============================================================
+      // AÇÕES - COM BOTÃO "VER BEAT"
+      // ============================================================
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
-
-
-
-// ============================================================
-// BOTÃO VER BEAT (link para página individual)
-// ============================================================
-const verBeatBtn = document.createElement('a');
-verBeatBtn.className = 'btn-ver-beat';
-const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-verBeatBtn.href = `/beat/${slug}`;
-verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
-verBeatBtn.style.cssText = `
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 0.25rem 1rem;
-  border-radius: 60px;
-  font-size: 0.7rem;
-  font-weight: 400;
-  cursor: pointer;
-  transition: 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: 'Inter', sans-serif;
-  text-decoration: none;
-  backdrop-filter: blur(4px);
-`;
-verBeatBtn.onmouseover = function() { 
-  this.style.background = 'var(--gold-glow)'; 
-  this.style.borderColor = 'var(--gold)'; 
-  this.style.color = 'var(--gold)'; 
-};
-verBeatBtn.onmouseout = function() { 
-  this.style.background = 'rgba(255,255,255,0.04)'; 
-  this.style.borderColor = 'var(--border-color)'; 
-  this.style.color = 'var(--text-secondary)'; 
-};
-
-// Adicionar à actionsDiv (antes do shareBtn)
-actionsDiv.appendChild(verBeatBtn);
-
-
       
-      const shareBtn = document.createElement('button');      
+      // Botão Ver Beat (link para página individual)
+      const verBeatBtn = document.createElement('a');
+      verBeatBtn.className = 'btn-ver-beat';
+      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      verBeatBtn.href = `/beat/${slug}`;
+      verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
+      
+      const shareBtn = document.createElement('button');
       shareBtn.className = 'btn-share';
       shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
       shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
@@ -2376,6 +2372,7 @@ actionsDiv.appendChild(verBeatBtn);
         window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
       });
       
+      actionsDiv.appendChild(verBeatBtn);
       actionsDiv.appendChild(shareBtn);
       actionsDiv.appendChild(rateBtn);
       actionsDiv.appendChild(cartBtn);
@@ -3085,7 +3082,7 @@ actionsDiv.appendChild(verBeatBtn);
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Beats Ao v1.0');
+      console.log('Beats Ao v1.0 - Lista de Beats');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
@@ -3093,6 +3090,5 @@ actionsDiv.appendChild(verBeatBtn);
 
   })();
 </script>
-
 </body>
 </html>
