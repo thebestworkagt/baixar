@@ -12,6 +12,10 @@ exports.handler = async function(event, context) {
     'Access-Control-Allow-Headers': 'Content-Type'
   };
 
+  // LOG PARA DIAGNÓSTICO - Ver o que está a chegar
+  console.log('🔍 Path:', event.path);
+  console.log('🔍 HTTP Method:', event.httpMethod);
+
   // Responder preflight (OPTIONS)
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
@@ -261,11 +265,16 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA PADRÃO (404)
+  // ROTA PADRÃO (404) - COM DIAGNÓSTICO
   // ============================================================
   return {
     statusCode: 404,
     headers,
-    body: JSON.stringify({ error: 'Rota não encontrada' })
+    body: JSON.stringify({
+      error: 'Rota não encontrada',
+      path: event.path,
+      method: event.httpMethod,
+      message: 'Verifique se o caminho está correto'
+    })
   };
 };
