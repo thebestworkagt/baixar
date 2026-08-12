@@ -12,19 +12,27 @@ exports.handler = async function(event, context) {
     'Access-Control-Allow-Headers': 'Content-Type'
   };
 
-  // LOG PARA DIAGNÓSTICO - Ver o que está a chegar
-  console.log('🔍 Path:', event.path);
-  console.log('🔍 HTTP Method:', event.httpMethod);
-
-  // Responder preflight (OPTIONS)
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
+  // Extrair a rota real do path
+  // Exemplo: "/.netlify/functions/api/beats" → "/api/beats"
+  let path = event.path;
+  if (path.includes('/.netlify/functions/api/')) {
+    path = path.replace('/.netlify/functions/api/', '/api/');
+  } else if (path.includes('/api/')) {
+    path = path;
+  } else {
+    path = '/' + path.split('/').pop();
+  }
+
+  console.log('🔍 Rota processada:', path);
+
   // ============================================================
   // ROTA: /api/beats (GET)
   // ============================================================
-  if (event.path === '/api/beats' && event.httpMethod === 'GET') {
+  if (path === '/api/beats' && event.httpMethod === 'GET') {
     try {
       const { data, error } = await supabase
         .from('beats')
@@ -56,7 +64,7 @@ exports.handler = async function(event, context) {
   // ============================================================
   // ROTA: /api/play (POST)
   // ============================================================
-  if (event.path === '/api/play' && event.httpMethod === 'POST') {
+  if (path === '/api/play' && event.httpMethod === 'POST') {
     try {
       const { beatId } = JSON.parse(event.body);
 
@@ -115,7 +123,7 @@ exports.handler = async function(event, context) {
   // ============================================================
   // ROTA: /api/ratings (GET)
   // ============================================================
-  if (event.path === '/api/ratings' && event.httpMethod === 'GET') {
+  if (path === '/api/ratings' && event.httpMethod === 'GET') {
     try {
       const { data, error } = await supabase
         .from('ratings')
@@ -146,7 +154,7 @@ exports.handler = async function(event, context) {
   // ============================================================
   // ROTA: /api/rate (POST)
   // ============================================================
-  if (event.path === '/api/rate' && event.httpMethod === 'POST') {
+  if (path === '/api/rate' && event.httpMethod === 'POST') {
     try {
       const { beatId, rating, userId } = JSON.parse(event.body);
 
@@ -199,7 +207,7 @@ exports.handler = async function(event, context) {
   // ============================================================
   // ROTA: /api/download (POST)
   // ============================================================
-  if (event.path === '/api/download' && event.httpMethod === 'POST') {
+  if (path === '/api/download' && event.httpMethod === 'POST') {
     try {
       const { password, format, beatSlug } = JSON.parse(event.body);
 
@@ -265,16 +273,15 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA PADRÃO (404) - COM DIAGNÓSTICO
+  // ROTA PADRÃO (404)
   // ============================================================
   return {
     statusCode: 404,
     headers,
     body: JSON.stringify({
       error: 'Rota não encontrada',
-      path: event.path,
-      method: event.httpMethod,
-      message: 'Verifique se o caminho está correto'
+      path: path,
+      method: event.httpMethod
     })
   };
 };
