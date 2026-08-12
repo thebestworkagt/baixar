@@ -1699,13 +1699,23 @@
     // ============================================================
     // 7. RATING
     // ============================================================
-    async function loadRatings() {
-      try {
-        const { data, error } = await supabase
-          .from('ratings')
-          .select('*');
-        if (error) throw error;
-        userRatings = {};
+async function loadRatings() {
+  try {
+    const response = await fetch('/api/ratings');
+    if (!response.ok) throw new Error('Erro ao buscar avaliações');
+    const data = await response.json();
+    userRatings = {};
+    if (data && data.length > 0) {
+      data.forEach(r => {
+        if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
+        userRatings[r.beat_id].push(r.rating);
+      });
+    }
+  } catch (error) {
+    console.warn('Erro ao carregar avaliações:', error);
+    userRatings = {};
+  }
+}        userRatings = {};
         if (data) {
           data.forEach(r => {
             if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
@@ -1717,16 +1727,26 @@
       }
     }
 
-    async function rateBeat(beatId, rating) {
-      try {
-        const { error } = await supabase
-          .from('ratings')
-          .insert([{
-            beat_id: beatId,
-            rating: rating,
-            user_id: currentUser?.id || 'anonymous'
-          }]);
-        if (error) throw error;
+async function rateBeat(beatId, rating) {
+  try {
+    const response = await fetch('/api/rate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        beatId: beatId,
+        rating: rating,
+        userId: currentUser?.id || 'anonymous'
+      })
+    });
+    if (!response.ok) throw new Error('Erro ao enviar avaliação');
+    await loadRatings();
+    renderBeats();
+    showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
+  } catch (error) {
+    console.error('Erro ao salvar avaliação:', error);
+    showToast('Erro', 'Não foi possível salvar sua avaliação.', 'error');
+  }
+}        if (error) throw error;
         await loadRatings();
         renderBeats();
         showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
@@ -1797,14 +1817,24 @@
     // ============================================================
     // 10. PLAYS
     // ============================================================
-    async function incrementPlays(beatId) {
-      try {
-        const { data, error } = await supabase
-          .from('beats')
-          .select('plays')
-          .eq('id', beatId)
-          .single();
-        
+async function incrementPlays(beatId) {
+  try {
+    const response = await fetch('/api/play', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ beatId: beatId })
+    });
+    if (!response.ok) throw new Error('Erro ao atualizar plays');
+    const data = await response.json();
+    const newPlays = data.plays;
+    
+    const beat = beatsData.find(b => b.id === beatId);
+    if (beat) beat.plays = newPlays;
+    updateBeatPlaysDisplay(beatId, newPlays);
+  } catch (error) {
+    console.error('Erro ao incrementar plays:', error);
+  }
+}        
         if (error) throw error;
         
         const currentPlays = data?.plays || 0;
@@ -1856,11 +1886,10 @@
       try {
         document.getElementById('loading').style.display = 'flex';
         document.getElementById('beatsContainer').innerHTML = '';
-        const response = await fetch('/api/beats'); 
-        const data = await response.json();
-        if (error) throw error;
-        beatsData = data || [];
-        
+const response = await fetch('/api/beats');
+if (!response.ok) throw new Error('Erro ao buscar beats');
+const data = await response.json();
+beatsData = data || [];        
         await loadRatings();
         
         const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
