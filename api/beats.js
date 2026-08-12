@@ -1,4 +1,3 @@
-// api/beats.js - VERSÃO COM require
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
@@ -7,7 +6,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 module.exports = async function handler(req, res) {
-  // Permitir CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
