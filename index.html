@@ -2,6 +2,7 @@
 <html lang="pt" data-theme="dark">
 <head>
 
+
 <!-- 
   ============================================================
   SCRIPT DE ANALYTICS
@@ -17,15 +18,15 @@
     });
 </script>
 
-
+  
+  
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Beats Ao - Beats exclusivos para artistas e produtores musicais. Ouça e compre beats de alta qualidade.">
   <title>Beats Ao</title>
   
-  <meta name="description" content="Beats Ao - Beats exclusivos para artistas e produtores musicais. Ouça e compre beats de alta qualidade.">
-  
-  <link rel="icon" type="image/png" href="logo1.png">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+<link rel="icon" type="image/png" href="logo1.png">
+<!-- Ou para .ico -->
+<link rel="icon" type="image/x-icon" href="logo.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +36,7 @@
   
   <style>
     /* ============================================================
-       CSS COMPLETO - BEATS AO (APENAS LISTA)
+       CSS COMPLETO - BEATS AO V1.0
        ============================================================ */
     
     /* ----- VARIÁVEIS ----- */
@@ -69,6 +70,7 @@
       --shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
+    /* ----- RESET ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg-primary);
@@ -157,6 +159,7 @@
     .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
+    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
     .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
@@ -518,7 +521,7 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* ----- PLAYER - CAPA CENTRALIZADA ----- */
+    /* ----- PLAYER ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -530,20 +533,6 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.7);
       margin-top: 0.5rem;
       cursor: pointer;
-      border: 1px solid var(--border-color);
-    }
-    .player-wrapper::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 22px;
-      padding: 2px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      z-index: 10;
     }
     .player-bg {
       position: absolute;
@@ -563,61 +552,45 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0.4rem;
+      padding: 0.6rem;
       color: white;
-      z-index: 2;
     }
-    .player-overlay .cover-icon {
-      font-size: 2rem;
-      color: rgba(247, 201, 72, 0.3);
-      margin-bottom: 0.1rem;
-      text-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
-    }
-    .player-overlay .cover-title {
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-align: center;
-      line-height: 1.1;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      letter-spacing: 1px;
-    }
-    .player-overlay .cover-sub {
-      font-size: 0.45rem;
-      font-weight: 300;
+    .player-artist {
+      font-size: 0.5rem;
+      font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 0.05rem;
+      color: #d4d4e0;
+      background: rgba(0,0,0,0.3);
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+      margin-bottom: 0.1rem;
     }
-    .player-overlay .cover-glow {
-      position: absolute;
-      inset: -30%;
-      background: radial-gradient(circle at 50% 50%, rgba(247, 201, 72, 0.15), transparent 70%);
-      animation: pulseGlow 3s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
+    .player-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+      line-height: 1.2;
+      margin: 0.1rem 0 0.1rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.05); }
-    }
-    .player-overlay .controls-row {
+    .player-controls {
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      margin-top: 0.15rem;
-      z-index: 2;
+      margin-top: 0.1rem;
       flex-wrap: wrap;
       justify-content: center;
     }
-    .player-overlay .btn-play-small {
+    .btn-play {
       background: var(--gold);
       border: none;
       color: #0a0a0f;
-      width: 28px;
-      height: 28px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      font-size: 0.7rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -625,19 +598,15 @@
       transition: 0.2s;
       cursor: pointer;
     }
-    .player-overlay .btn-play-small:hover { transform: scale(1.04); background: var(--gold-dark); }
-    .player-overlay .btn-play-small.playing {
-      background: linear-gradient(135deg, #f472b6, #ec4899);
-      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
-    }
-    .player-overlay .btn-next-small {
+    .btn-play:hover { transform: scale(1.04); background: var(--gold-dark); }
+    .btn-next {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
       color: #eee;
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -645,14 +614,14 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .player-overlay .btn-next-small:hover { background: rgba(255,255,255,0.2); }
-    .player-overlay .btn-playlist-small {
+    .btn-next:hover { background: rgba(255,255,255,0.2); }
+    .btn-playlist {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       color: #d0d0dd;
-      padding: 0.05rem 0.4rem;
+      padding: 0.1rem 0.5rem;
       border-radius: 40px;
-      font-size: 0.45rem;
+      font-size: 0.55rem;
       font-weight: 400;
       backdrop-filter: blur(4px);
       cursor: pointer;
@@ -660,18 +629,18 @@
       white-space: nowrap;
       transition: 0.2s;
     }
-    .player-overlay .btn-playlist-small:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .player-overlay .btn-playlist-small.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-    .player-overlay .progress-area-small {
+    .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .btn-playlist.added { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
+    .btn-playlist.added:hover { background: rgba(37, 211, 102, 0.15); }
+    .progress-area {
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 0.2rem;
-      margin: 0.05rem 0;
+      gap: 0.3rem;
+      margin: 0.05rem 0 0.05rem;
       padding: 0 0.1rem;
-      z-index: 2;
     }
-    .player-overlay .progress-bar-small {
+    .progress-bar {
       flex: 1;
       height: 2px;
       background: rgba(255,255,255,0.15);
@@ -680,20 +649,21 @@
       -webkit-appearance: none;
       outline: none;
     }
-    .player-overlay .progress-bar-small::-webkit-slider-thumb {
+    .progress-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: var(--gold);
       cursor: pointer;
       box-shadow: 0 0 12px var(--gold-glow);
     }
-    .player-overlay .time-display-small { font-size: 0.4rem; font-weight: 300; color: #bfbfd0; min-width: 22px; }
-    .player-overlay .volume-wrap-small { display: flex; align-items: center; gap: 0.1rem; z-index: 2; }
-    .player-overlay .volume-wrap-small i { font-size: 0.45rem; color: #b0b0c0; }
-    .player-overlay .volume-slider-small {
-      width: 20px;
+    .progress-bar::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
+    .time-display { font-size: 0.5rem; font-weight: 300; color: #bfbfd0; min-width: 28px; }
+    .volume-wrap { display: flex; align-items: center; gap: 0.15rem; margin-top: 0.05rem; }
+    .volume-wrap i { font-size: 0.55rem; color: #b0b0c0; }
+    .volume-slider {
+      width: 30px;
       height: 2px;
       background: rgba(255,255,255,0.15);
       border-radius: 10px;
@@ -701,22 +671,22 @@
       -webkit-appearance: none;
       outline: none;
     }
-    .player-overlay .volume-slider-small::-webkit-slider-thumb { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-    .player-overlay .badge-genre-small {
+    .volume-slider::-webkit-slider-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+    .volume-slider::-moz-range-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); border: none; }
+    .badge-genre {
       position: absolute;
-      top: 4px;
-      right: 6px;
+      top: 6px;
+      right: 8px;
       background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
-      padding: 0.05rem 0.4rem;
+      padding: 0.05rem 0.5rem;
       border-radius: 30px;
-      font-size: 0.4rem;
+      font-size: 0.45rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       color: var(--gold);
       border: 1px solid var(--border-color);
       text-transform: uppercase;
-      z-index: 3;
     }
 
     /* ----- BOTÕES DOWNLOAD ----- */
@@ -890,27 +860,6 @@
     }
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
-
-    /* BOTÃO VER BEAT */
-    .btn-ver-beat {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      padding: 0.25rem 1rem;
-      border-radius: 60px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: 'Inter', sans-serif;
-      text-decoration: none;
-      backdrop-filter: blur(4px);
-    }
-    .btn-ver-beat:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
-    .btn-ver-beat i { font-size: 0.7rem; }
 
     /* ----- FOOTER ----- */
     .footer {
@@ -1244,13 +1193,6 @@
   </style>
 </head>
 <body>
-
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-<script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: 'v8jr0vnuut',
-    });
-</script>
 
 <!-- MENU FIXO -->
 <div class="menu-fixed">
@@ -1769,11 +1711,7 @@
         const { data, error } = await supabase
           .from('ratings')
           .select('*');
-        if (error) {
-          console.warn('⚠️ Tabela ratings não encontrada:', error.message);
-          userRatings = {};
-          return;
-        }
+        if (error) throw error;
         userRatings = {};
         if (data) {
           data.forEach(r => {
@@ -1782,8 +1720,7 @@
           });
         }
       } catch (error) {
-        console.warn('⚠️ Erro ao carregar avaliações:', error.message);
-        userRatings = {};
+        console.error('Erro ao carregar avaliações:', error);
       }
     }
 
@@ -1807,22 +1744,14 @@
     }
 
     function getBeatAverageRating(beatId) {
-      try {
-        const ratings = userRatings[beatId] || [];
-        if (ratings.length === 0) return 0;
-        const sum = ratings.reduce((a, b) => a + b, 0);
-        return sum / ratings.length;
-      } catch (error) {
-        return 0;
-      }
+      const ratings = userRatings[beatId] || [];
+      if (ratings.length === 0) return 0;
+      const sum = ratings.reduce((a, b) => a + b, 0);
+      return sum / ratings.length;
     }
 
     function getBeatRatingCount(beatId) {
-      try {
-        return (userRatings[beatId] || []).length;
-      } catch (error) {
-        return 0;
-      }
+      return (userRatings[beatId] || []).length;
     }
 
     // ============================================================
@@ -1869,7 +1798,7 @@
     function loadTheme() {
       const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun</i>';
     }
 
     // ============================================================
@@ -2107,7 +2036,7 @@
     }
 
     // ============================================================
-    // 14. CREATE BEAT CARD - COM DESIGN DA PRIMEIRA PÁGINA
+    // 14. CREATE BEAT CARD
     // ============================================================
     function createBeatCard(beat) {
       const card = document.createElement('div');
@@ -2138,9 +2067,7 @@
         card.appendChild(deleteBtn);
       }
 
-      // ============================================================
-      // PLAYER - CAPA CENTRALIZADA (PRIMEIRA PÁGINA)
-      // ============================================================
+      // PLAYER
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
@@ -2153,38 +2080,27 @@
       const overlay = document.createElement('div');
       overlay.className = 'player-overlay';
       
-      const glow = document.createElement('div');
-      glow.className = 'cover-glow';
-      overlay.appendChild(glow);
-      
-      const icon = document.createElement('div');
-      icon.className = 'cover-icon';
-      icon.innerHTML = '♫';
-      overlay.appendChild(icon);
+      const artistSpan = document.createElement('div');
+      artistSpan.className = 'player-artist';
+      artistSpan.textContent = beat.artist;
       
       const titleSpan = document.createElement('div');
-      titleSpan.className = 'cover-title';
-      titleSpan.textContent = beat.title.toUpperCase();
-      overlay.appendChild(titleSpan);
-      
-      const subSpan = document.createElement('div');
-      subSpan.className = 'cover-sub';
-      subSpan.textContent = beat.genre || 'AFRO';
-      overlay.appendChild(subSpan);
+      titleSpan.className = 'player-title';
+      titleSpan.textContent = beat.title;
       
       const controls = document.createElement('div');
-      controls.className = 'controls-row';
+      controls.className = 'player-controls';
       
       const playBtn = document.createElement('button');
-      playBtn.className = 'btn-play-small';
+      playBtn.className = 'btn-play';
       playBtn.innerHTML = '<i class="fas fa-play"></i>';
       
       const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn-next-small';
+      nextBtn.className = 'btn-next';
       nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
       
       const playlistBtn = document.createElement('button');
-      playlistBtn.className = 'btn-playlist-small';
+      playlistBtn.className = 'btn-playlist';
       if (isInPlaylist(beat.id)) { 
         playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added'; 
         playlistBtn.classList.add('added'); 
@@ -2209,44 +2125,45 @@
       controls.appendChild(playBtn);
       controls.appendChild(nextBtn);
       controls.appendChild(playlistBtn);
-      overlay.appendChild(controls);
       
       const progressArea = document.createElement('div');
-      progressArea.className = 'progress-area-small';
+      progressArea.className = 'progress-area';
       const progress = document.createElement('input');
       progress.type = 'range';
-      progress.className = 'progress-bar-small';
+      progress.className = 'progress-bar';
       progress.min = 0; progress.max = 100; progress.value = 0;
       const timeDisplay = document.createElement('span');
-      timeDisplay.className = 'time-display-small';
+      timeDisplay.className = 'time-display';
       timeDisplay.textContent = '0:00';
       progressArea.appendChild(progress);
       progressArea.appendChild(timeDisplay);
-      overlay.appendChild(progressArea);
       
       const volumeWrap = document.createElement('div');
-      volumeWrap.className = 'volume-wrap-small';
+      volumeWrap.className = 'volume-wrap';
       const volIcon = document.createElement('i');
       volIcon.className = 'fas fa-volume-low';
       const volSlider = document.createElement('input');
       volSlider.type = 'range';
-      volSlider.className = 'volume-slider-small';
+      volSlider.className = 'volume-slider';
       volSlider.min = 0; volSlider.max = 100; volSlider.value = 70;
       volumeWrap.appendChild(volIcon);
       volumeWrap.appendChild(volSlider);
-      overlay.appendChild(volumeWrap);
       
       const genreBadge = document.createElement('span');
-      genreBadge.className = 'badge-genre-small';
-      genreBadge.textContent = beat.genre || 'AFRO';
+      genreBadge.className = 'badge-genre';
+      genreBadge.textContent = beat.genre;
+      
+      overlay.appendChild(artistSpan);
+      overlay.appendChild(titleSpan);
+      overlay.appendChild(controls);
+      overlay.appendChild(progressArea);
+      overlay.appendChild(volumeWrap);
       overlay.appendChild(genreBadge);
       
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
-      // ============================================================
       // INFO
-      // ============================================================
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -2287,9 +2204,7 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
-      // ============================================================
       // DOWNLOAD BOTÕES
-      // ============================================================
       const downloadDiv = document.createElement('div');
       downloadDiv.className = 'download-buttons';
       
@@ -2308,18 +2223,9 @@
       downloadDiv.appendChild(mp3Btn);
       downloadDiv.appendChild(wavBtn);
       
-      // ============================================================
-      // AÇÕES - COM BOTÃO "VER BEAT"
-      // ============================================================
+      // AÇÕES
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
-      
-      // Botão Ver Beat (link para página individual)
-      const verBeatBtn = document.createElement('a');
-      verBeatBtn.className = 'btn-ver-beat';
-      const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      verBeatBtn.href = `/beat/${slug}`;
-      verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
       
       const shareBtn = document.createElement('button');
       shareBtn.className = 'btn-share';
@@ -2372,7 +2278,6 @@
         window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
       });
       
-      actionsDiv.appendChild(verBeatBtn);
       actionsDiv.appendChild(shareBtn);
       actionsDiv.appendChild(rateBtn);
       actionsDiv.appendChild(cartBtn);
@@ -2419,7 +2324,6 @@
           
           audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
-            playBtn.classList.remove('playing');
             isPlaying = false;
             progress.value = 0;
             timeDisplay.textContent = '0:00';
@@ -2429,12 +2333,10 @@
         if (isPlaying) { 
           audio.pause(); 
           playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
-          playBtn.classList.remove('playing');
           isPlaying = false;
         } else { 
           audio.play().catch(() => {});
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          playBtn.classList.add('playing');
           isPlaying = true;
           incrementPlays(beat.id);
         }
@@ -2452,7 +2354,6 @@
         if (!isPlaying) { 
           audio.play().catch(() => {}); 
           playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
-          playBtn.classList.add('playing');
           isPlaying = true; 
         }
       });
@@ -3082,7 +2983,7 @@
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Beats Ao v1.0 - Lista de Beats');
+      console.log('Beats Ao v1.0');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
@@ -3090,5 +2991,6 @@
 
   })();
 </script>
+
 </body>
 </html>
