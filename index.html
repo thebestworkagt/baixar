@@ -2281,8 +2281,51 @@
       // AÇÕES
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
+
+
+
+// ============================================================
+// BOTÃO VER BEAT (link para página individual)
+// ============================================================
+const verBeatBtn = document.createElement('a');
+verBeatBtn.className = 'btn-ver-beat';
+const slug = beat.slug || beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+verBeatBtn.href = `/beat/${slug}`;
+verBeatBtn.innerHTML = '<i class="fas fa-eye"></i> Ver Beat';
+verBeatBtn.style.cssText = `
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.25rem 1rem;
+  border-radius: 60px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Inter', sans-serif;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+`;
+verBeatBtn.onmouseover = function() { 
+  this.style.background = 'var(--gold-glow)'; 
+  this.style.borderColor = 'var(--gold)'; 
+  this.style.color = 'var(--gold)'; 
+};
+verBeatBtn.onmouseout = function() { 
+  this.style.background = 'rgba(255,255,255,0.04)'; 
+  this.style.borderColor = 'var(--border-color)'; 
+  this.style.color = 'var(--text-secondary)'; 
+};
+
+// Adicionar à actionsDiv (antes do shareBtn)
+actionsDiv.appendChild(verBeatBtn);
+
+
       
-      const shareBtn = document.createElement('button');
+      const shareBtn = document.createElement('button');      
       shareBtn.className = 'btn-share';
       shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
       shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
