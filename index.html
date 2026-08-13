@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  
+  <style>
     /* ============================================================
        CSS COMPLETO - BEATS AO V1.0
        ============================================================ */
@@ -75,6 +75,7 @@
     }
     .app { max-width: 1100px; width: 100%; }
 
+    /* ----- MENU FIXO ----- */
     .menu-fixed {
       position: fixed;
       top: 1rem;
@@ -146,6 +147,7 @@
     .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
+    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
     .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
@@ -194,7 +196,11 @@
     .user-info-display .user-email .email-toggle-btn:hover {
       background: var(--gold-glow);
     }
+    .user-info-display .user-email .email-toggle-btn i {
+      font-size: 0.6rem;
+    }
 
+    /* ----- HEADER ----- */
     .header {
       display: flex;
       flex-direction: column;
@@ -238,6 +244,7 @@
       display: inline-block;
     }
 
+    /* ----- ADMIN TOOLBAR ----- */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
@@ -344,6 +351,7 @@
       text-align: center;
     }
 
+    /* ----- TOAST ----- */
     .toast-container {
       position: fixed;
       top: 5rem;
@@ -389,9 +397,11 @@
     .toast-title { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.1rem; }
     .toast-message { font-weight: 300; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
     .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; padding: 0.2rem; transition: 0.2s; flex-shrink: 0; }
+    .toast-close:hover { color: var(--text-primary); }
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
+    /* ----- LOADING ----- */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -440,6 +450,7 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
+    /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
@@ -472,7 +483,10 @@
       box-shadow: 0 4px 20px var(--gold-glow);
       z-index: 2;
     }
-    .beat-card .popularity-badge i { margin-right: 0.3rem; font-size: 0.5rem; }
+    .beat-card .popularity-badge i {
+      margin-right: 0.3rem;
+      font-size: 0.5rem;
+    }
     
     .card-edit-btn {
       position: absolute;
@@ -495,6 +509,7 @@
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
+    /* ----- PLAYER ----- */
     .player-wrapper {
       flex: 0 0 160px;
       width: 160px;
@@ -662,6 +677,7 @@
       text-transform: uppercase;
     }
 
+    /* ----- BOTÕES DOWNLOAD ----- */
     .download-buttons {
       display: flex;
       gap: 0.5rem;
@@ -691,6 +707,7 @@
     .btn-wav:hover { box-shadow: 0 6px 25px rgba(59, 130, 246, 0.35); }
     .btn-download i { margin-right: 0.2rem; font-size: 0.6rem; }
 
+    /* ----- BEAT INFO ----- */
     .beat-info {
       flex: 1;
       display: flex;
@@ -753,10 +770,22 @@
       flex-wrap: wrap;
     }
     .beat-stats i { color: var(--gold); margin-right: 2px; }
-    .beat-plays { transition: color 0.3s; }
-    .beat-plays.highlight { color: var(--gold); }
-    .beat-rating { display: flex; align-items: center; gap: 0.2rem; }
-    .beat-rating .stars { color: var(--gold); font-size: 0.7rem; letter-spacing: 1px; }
+    .beat-plays {
+      transition: color 0.3s;
+    }
+    .beat-plays.highlight {
+      color: var(--gold);
+    }
+    .beat-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .beat-rating .stars {
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+    }
     .beat-actions {
       display: flex;
       gap: 0.5rem;
@@ -801,7 +830,7 @@
       font-family: 'Inter', sans-serif;
     }
     .btn-negociar i { font-size: 0.9rem; }
-    .btn-negociar:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); }
+    .btn-negociar:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); background: linear-gradient(135deg, #2fd16e, #1ebe5c); }
     .btn-cart {
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
@@ -820,6 +849,7 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
+    /* ----- FOOTER ----- */
     .footer {
       margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
@@ -845,6 +875,7 @@
     }
     .social-icons .social-link:hover { color: var(--gold); transform: translateY(-2px); }
 
+    /* ----- MODALS ----- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -966,6 +997,7 @@
     .modal .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
     .modal .login-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 0.5rem; display: none; }
 
+    /* ----- PLAYLIST MODAL ----- */
     #playlistContainer {
       max-height: 400px;
       overflow-y: auto;
@@ -1025,7 +1057,10 @@
     .playlist-item .time-mini { font-size: 0.65rem; color: var(--text-muted); min-width: 30px; }
     .empty-playlist { text-align: center; padding: 2rem 0; color: var(--text-muted); }
     .empty-playlist i { font-size: 2.5rem; display: block; opacity: 0.3; margin-bottom: 0.8rem; }
+    .empty-playlist p { font-weight: 300; font-size: 0.9rem; }
+    .empty-playlist .sub { font-size: 0.75rem; margin-top: 0.2rem; }
 
+    /* ----- CART MODAL ----- */
     .cart-item {
       display: flex;
       align-items: center;
@@ -1037,10 +1072,24 @@
     .cart-item .info { flex: 1; }
     .cart-item .info .title { font-weight: 600; font-size: 0.9rem; }
     .cart-item .info .sub { font-size: 0.75rem; color: var(--text-secondary); }
-    .cart-item .remove-item { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 0.9rem; padding: 0.2rem 0.4rem; }
-    .cart-total { text-align: right; padding-top: 0.8rem; border-top: 2px solid var(--border-color); font-size: 1.1rem; font-weight: 700; }
+    .cart-item .remove-item {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
+    }
+    .cart-total {
+      text-align: right;
+      padding-top: 0.8rem;
+      border-top: 2px solid var(--border-color);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
     .cart-total span { color: var(--gold); }
 
+    /* ----- SHARE TOAST ----- */
     .share-toast {
       position: fixed;
       bottom: 2rem;
@@ -1062,11 +1111,13 @@
     .share-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
     .share-toast i { color: var(--gold); margin-right: 0.5rem; }
 
+    /* ----- PREVIEW ----- */
     .preview-container { display: flex; gap: 0.8rem; margin: 0.3rem 0; flex-wrap: wrap; }
     .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.4rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.4rem; }
     .preview-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
     .preview-item i { font-size: 1.5rem; color: var(--gold); }
 
+    /* ----- THEME TOGGLE ----- */
     .theme-toggle {
       position: fixed;
       bottom: 80px;
@@ -1089,6 +1140,7 @@
     }
     .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
 
+    /* ----- RESPONSIVE ----- */
     @media (max-width: 850px) {
       body { padding-top: 5rem; }
       .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.5rem; }
@@ -1130,6 +1182,7 @@
 </head>
 <body>
 
+<!-- MENU FIXO -->
 <div class="menu-fixed">
   <div class="hamburger-menu">
     <button class="hamburger-btn" id="menuBtn">
@@ -1155,6 +1208,7 @@
       <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
         <i class="fas fa-sign-in-alt"></i> Admin
       </button>
+      
       <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
         <i class="fas fa-plus"></i> Lançar Beat
       </button>
@@ -1164,20 +1218,25 @@
       <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
         <i class="fas fa-chart-bar"></i> Dashboard
       </button>
+      
       <button class="dropdown-item" id="dropdownPlaylist">
         <i class="fas fa-music"></i> Minha Playlist
         <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.65rem;padding:0.05rem 0.5rem;border-radius:30px;margin-left:auto;">0</span>
       </button>
+      
       <button class="dropdown-item" id="dropdownProfile">
         <i class="fas fa-user"></i> Perfil do Produtor
       </button>
+      
       <button class="dropdown-item" id="dropdownAbout">
         <i class="fas fa-info-circle"></i> Sobre & Contato
       </button>
+      
       <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
       <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
         <i class="fas fa-sign-out-alt"></i> Sair
       </button>
+      
       <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
         Beats Ao v1.0
       </div>
@@ -1185,11 +1244,13 @@
   </div>
 </div>
 
+<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 <div class="share-toast" id="shareToast"><i class="fas fa-check-circle"></i> Link copiado</div>
 <button class="theme-toggle" id="themeToggle" title="Alternar tema"><i class="fas fa-moon"></i></button>
 
 <div class="app">
+
   <header class="header">
     <a href="?" class="logo-wrapper" id="logoLink">
       <img src="logo.png" alt="Beats Ao" class="logo">
@@ -1424,6 +1485,7 @@
   </div>
 </div>
 
+<!-- MODAL SENHA (DOWNLOAD) -->
 <div class="modal-overlay" id="passwordModal">
   <div class="modal" style="max-width: 400px;">
     <h2><i class="fas fa-lock"></i> Download Protegido</h2>
@@ -1440,6 +1502,9 @@
   </div>
 </div>
 
+<!-- ============================================================
+     JAVASCRIPT - COMPLETO E CORRIGIDO
+     ============================================================ -->
 <script>
   (function() {
 
@@ -1845,6 +1910,7 @@
         card.appendChild(deleteBtn);
       }
 
+      // PLAYER
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
@@ -1940,6 +2006,7 @@
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
+      // INFO
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -1980,6 +2047,7 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
+      // DOWNLOAD BOTÕES
       const downloadDiv = document.createElement('div');
       downloadDiv.className = 'download-buttons';
       
@@ -1998,6 +2066,7 @@
       downloadDiv.appendChild(mp3Btn);
       downloadDiv.appendChild(wavBtn);
       
+      // AÇÕES
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
       
@@ -2067,7 +2136,9 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
+      // ============================================================
       // ÁUDIO
+      // ============================================================
       let audio = null;
       let isPlaying = false;
 
@@ -2143,6 +2214,7 @@
         }
       });
 
+      // DOWNLOAD
       mp3Btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2530,98 +2602,31 @@
     }
 
     // ============================================================
-    // 20. AUTH - LOGIN (USANDO API)
+    // 20. AUTH - FUNÇÕES DESATIVADAS (SEM SUPABASE)
     // ============================================================
-    async function doLogin(e) {
+    // As funções de autenticação foram desativadas porque não temos Supabase no frontend.
+    // Para o admin funcionar, precisamos criar endpoints na API.
+    // Por agora, o modo admin está desativado.
+
+    function doLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPass').value.trim();
-      
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-          currentUser = data.user;
-          isLoggedIn = true;
-          document.getElementById('loginError').style.display = 'none';
-          document.getElementById('loginModal').classList.remove('active');
-          updateUI();
-          showToast('Login realizado', 'Bem-vindo!', 'success');
-        } else {
-          document.getElementById('loginError').style.display = 'block';
-          document.getElementById('loginError').textContent = data.error || 'Credenciais inválidas';
-        }
-      } catch (error) {
-        showToast('Erro', 'Não foi possível fazer login.', 'error');
-      }
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
     }
 
-    async function doLogout() {
-      try {
-        await fetch('/api/logout', { method: 'POST' });
-        isLoggedIn = false;
-        currentUser = null;
-        updateUI();
-        showToast('Sessão encerrada', 'Você saiu.', 'info');
-      } catch (error) {
-        showToast('Erro', 'Não foi possível sair.', 'error');
-      }
+    function doLogout() {
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
     }
 
     // ============================================================
-    // 21. DELETE BEAT (USANDO API)
+    // 21. DELETE BEAT - VERSÃO SEM SUPABASE
     // ============================================================
     async function deleteBeat(id) {
-      if (!confirm('Tem certeza que deseja excluir este beat?')) return;
-      
-      try {
-        const response = await fetch(`/api/beats/${id}`, {
-          method: 'DELETE'
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-          await loadBeats();
-          showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
-        } else {
-          showToast('Erro', data.error || 'Não foi possível excluir.', 'error');
-        }
-      } catch (error) {
-        console.error('Erro ao excluir:', error);
-        showToast('Erro', 'Não foi possível excluir o beat.', 'error');
-      }
+      // Por enquanto, apenas mostra um aviso
+      showToast('Funcionalidade indisponível', 'A exclusão de beats está temporariamente indisponível.', 'error');
     }
 
     // ============================================================
-    // 22. SAVE BEAT (USANDO API)
-    // ============================================================
-    async function saveBeatToSupabase(beatData) {
-      try {
-        const response = await fetch('/api/beats', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(beatData)
-        });
-        const data = await response.json();
-        
-        if (!data.success) throw new Error('Erro ao salvar');
-        
-        await loadBeats();
-        closeFormModal();
-        showToast('Sucesso', 'Beat lançado!', 'success');
-      } catch (error) {
-        console.error('Erro ao salvar:', error);
-        showToast('Erro', 'Não foi possível salvar o beat.', 'error');
-      }
-    }
-
-    // ============================================================
-    // 23. EVENTOS
+    // 22. EVENTOS
     // ============================================================
     document.getElementById('menuBtn').addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2639,60 +2644,10 @@
     document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
     document.getElementById('loginForm').addEventListener('submit', doLogin);
     
-    document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
-    document.getElementById('formCancel').addEventListener('click', closeFormModal);
-    
-    document.getElementById('beatForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const title = document.getElementById('fTitle').value.trim();
-      const artist = document.getElementById('fArtist').value.trim();
-      const genre = document.getElementById('fGenre').value.trim();
-      const price = document.getElementById('fPrice').value.trim();
-      const bpm = document.getElementById('fBpm').value.trim();
-      const key = document.getElementById('fKey').value.trim();
-      const cover = document.getElementById('fCoverFile').files[0];
-      const audioStream = document.getElementById('fAudioStream').value.trim();
-      const audioMp3 = document.getElementById('fAudioMp3').value.trim();
-      const audioWav = document.getElementById('fAudioWav').value.trim();
-      const password = document.getElementById('fPassword').value.trim();
-      
-      if (!title || !artist || !genre || !price) {
-        showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error');
-        return;
-      }
-      
-      if (!audioStream) {
-        showToast('Link de streaming obrigatório', 'Adicione o link do OpenDrive para streaming.', 'error');
-        return;
-      }
-      
-      let coverUrl = null;
-      if (cover) {
-        const timestamp = Date.now();
-        coverUrl = await uploadFile(cover, 'covers', `beat-cover-${timestamp}`);
-      }
-      
-      const slug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      
-      const beatData = {
-        title,
-        artist,
-        genre,
-        price,
-        bpm: bpm || null,
-        key: key || null,
-        cover: coverUrl,
-        audio: audioStream,
-        audio_download_mp3: audioMp3,
-        audio_download_wav: audioWav,
-        password: password || 'Thebestwork2026',
-        slug: slug,
-        plays: 0
-      };
-      
-      await saveBeatToSupabase(beatData);
+    document.getElementById('dropdownNewBeat').addEventListener('click', () => {
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
     });
+    document.getElementById('formCancel').addEventListener('click', closeFormModal);
     
     document.getElementById('fCoverFile').addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -2817,26 +2772,19 @@
     });
 
     // ============================================================
-    // 24. UPLOAD FILE - Função auxiliar (ainda usa Supabase)
-    // ============================================================
-    async function uploadFile(file, bucket, path) {
-      // Esta função ainda usa Supabase diretamente.
-      // Para uma solução completa, criar um endpoint /api/upload
-      // Por enquanto, retorna null e mostra aviso
-      showToast('Upload via API', 'A funcionalidade de upload está em desenvolvimento.', 'info');
-      return null;
-    }
-
-    // ============================================================
-    // 25. INIT
+    // 23. INIT
     // ============================================================
     async function init() {
       loadTheme();
+      // Autenticação desativada - modo visitante
+      isLoggedIn = false;
+      currentUser = null;
       await loadBeats();
       updateUI();
-      console.log('Beats Ao v1.0 - Admin via API');
+      console.log('Beats Ao v1.0 - Modo visitante (sem admin)');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
+      console.log('ℹ️ Modo administrador desativado (sem Supabase no frontend)');
     }
     init();
 
