@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/node_modules/*",
+    "/functions/*",
+    "/.git/*",
+    "/.gitignore",
+    "/package.json",
+    "/package-lock.json",
+    "/wrangler.toml",
+    "/_routes.json"
+  ]
+}
