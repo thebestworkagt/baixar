@@ -14,9 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  <!-- ============================================================
-       CSS - MANTIDO IGUAL (NÃO MEXI)
-       ============================================================ -->
   <style>
     /* ============================================================
        CSS COMPLETO - BEATS AO V1.0
@@ -1498,7 +1495,7 @@
 </div>
 
 <!-- ============================================================
-     JAVASCRIPT COMPLETO E CORRIGIDO
+     JAVASCRIPT - COMPLETO E CORRIGIDO
      ============================================================ -->
 <script>
   (function() {
@@ -1874,7 +1871,7 @@
     }
 
     // ============================================================
-    // 13. CREATE BEAT CARD (VERSÃO COMPLETA E CORRIGIDA)
+    // 13. CREATE BEAT CARD
     // ============================================================
     function createBeatCard(beat) {
       const card = document.createElement('div');
@@ -1901,7 +1898,7 @@
         deleteBtn.style.right = '52px';
         deleteBtn.style.color = '#ff6b6b';
         deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); if (confirm('Tem certeza?')) deleteBeat(beat.id); });
+        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteBeat(beat.id); });
         card.appendChild(deleteBtn);
       }
 
@@ -2597,14 +2594,31 @@
     }
 
     // ============================================================
-    // 20. AUTH - MANTIDO COM SUPABASE (AINDA PRECISA SER MIGRADO)
+    // 20. AUTH - FUNÇÕES DESATIVADAS (SEM SUPABASE)
     // ============================================================
-    // NOTA: Estas funções ainda usam supabase diretamente.
-    // Para segurança total, deveriam ser movidas para a API.
-    // Por enquanto, mantemos para não quebrar o admin.
+    // As funções de autenticação foram desativadas porque não temos Supabase no frontend.
+    // Para o admin funcionar, precisamos criar endpoints na API.
+    // Por agora, o modo admin está desativado.
+
+    function doLogin(e) {
+      e.preventDefault();
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
+    }
+
+    function doLogout() {
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
+    }
 
     // ============================================================
-    // 21. EVENTOS
+    // 21. DELETE BEAT - VERSÃO SEM SUPABASE
+    // ============================================================
+    async function deleteBeat(id) {
+      // Por enquanto, apenas mostra um aviso
+      showToast('Funcionalidade indisponível', 'A exclusão de beats está temporariamente indisponível.', 'error');
+    }
+
+    // ============================================================
+    // 22. EVENTOS
     // ============================================================
     document.getElementById('menuBtn').addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2620,11 +2634,12 @@
       document.getElementById('mainDropdown').classList.remove('active');
     });
     document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
-    // NOTA: loginForm ainda usa supabase - precisa ser migrado
+    document.getElementById('loginForm').addEventListener('submit', doLogin);
     
-    document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
+    document.getElementById('dropdownNewBeat').addEventListener('click', () => {
+      showToast('Admin desativado', 'O modo administrador está temporariamente indisponível.', 'error');
+    });
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
-    // NOTA: beatForm ainda usa supabase - precisa ser migrado
     
     document.getElementById('fCoverFile').addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -2749,16 +2764,19 @@
     });
 
     // ============================================================
-    // 22. INIT
+    // 23. INIT
     // ============================================================
     async function init() {
       loadTheme();
-      // NOTA: checkSession ainda usa supabase - precisa ser migrado
+      // Autenticação desativada - modo visitante
+      isLoggedIn = false;
+      currentUser = null;
       await loadBeats();
       updateUI();
-      console.log('Beats Ao v1.0');
+      console.log('Beats Ao v1.0 - Modo visitante (sem admin)');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
+      console.log('ℹ️ Modo administrador desativado (sem Supabase no frontend)');
     }
     init();
 
