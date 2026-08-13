@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 exports.handler = async function(event, context) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type'
   };
 
@@ -17,7 +17,6 @@ exports.handler = async function(event, context) {
   }
 
   // Extrair a rota real do path
-  // Exemplo: "/.netlify/functions/api/beats" → "/api/beats"
   let path = event.path;
   if (path.includes('/.netlify/functions/api/')) {
     path = path.replace('/.netlify/functions/api/', '/api/');
@@ -27,10 +26,10 @@ exports.handler = async function(event, context) {
     path = '/' + path.split('/').pop();
   }
 
-  console.log('🔍 Rota processada:', path);
+  console.log('🔍 Rota:', path, 'Método:', event.httpMethod);
 
   // ============================================================
-  // ROTA: /api/beats (GET)
+  // ROTA: /api/beats (GET) - Listar beats
   // ============================================================
   if (path === '/api/beats' && event.httpMethod === 'GET') {
     try {
@@ -62,7 +61,184 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA: /api/play (POST)
+  // ROTA: /api/beats (POST) - CRIAR NOVO BEAT (ADMIN)
+  // ============================================================
+  if (path === '/api/beats' && event.httpMethod === 'POST') {
+    try {
+      const beatData = JSON.parse(event.body);
+      
+      // Gerar slug automaticamente
+      if (!beatData.slug) {
+        beatData.slug = beatData.title
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+      }
+
+      const { data, error } = await supabase
+        .from('beats')
+        .insert([beatData])
+        .select();
+
+      if (error) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true, data: data })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: error.message || 'Erro interno do servidor' })
+      };
+    }
+  }
+
+  // ============================================================
+  // ROTA: /api/beats/:id (PUT) - EDITAR BEAT (ADMIN)
+  // ============================================================
+  if (path.startsWith('/api/beats/') && event.httpMethod === 'PUT') {
+    try {
+      const id = path.replace('/api/beats/', '');
+      const beatData = JSON.parse(event.body);
+      
+      // Remover campos que não devem ser atualizados
+      delete beatData.id;
+      delete beatData.created_at;
+      delete beatData.plays;
+
+      const { data, error } = await supabase
+        .from('beats')
+        .update(beatData)
+        .eq('id', id)
+        .select();
+
+      if (error) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true, data: data })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: error.message || 'Erro interno do servidor' })
+      };
+    }
+  }
+
+  // ============================================================
+  // ROTA: /api/beats/:id (DELETE) - APAGAR BEAT (ADMIN)
+  // ============================================================
+  if (path.startsWith('/api/beats/') && event.httpMethod === 'DELETE') {
+    try {
+      const id = path.replace('/api/beats/', '');
+      
+      const { error } = await supabase
+        .from('beats')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: error.message || 'Erro interno do servidor' })
+      };
+    }
+  }
+
+  // ============================================================
+  // ROTA: /api/login (POST) - LOGIN ADMIN
+  // ============================================================
+  if (path === '/api/login' && event.httpMethod === 'POST') {
+    try {
+      const { email, password } = JSON.parse(event.body);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({ error: 'Email ou senha inválidos' })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: true, 
+          user: {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.user_metadata?.name || 'Administrador'
+          }
+        })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: error.message || 'Erro interno do servidor' })
+      };
+    }
+  }
+
+  // ============================================================
+  // ROTA: /api/logout (POST) - LOGOUT ADMIN
+  // ============================================================
+  if (path === '/api/logout' && event.httpMethod === 'POST') {
+    try {
+      await supabase.auth.signOut();
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: error.message || 'Erro interno do servidor' })
+      };
+    }
+  }
+
+  // ============================================================
+  // ROTA: /api/play (POST) - Incrementar plays
   // ============================================================
   if (path === '/api/play' && event.httpMethod === 'POST') {
     try {
@@ -121,7 +297,7 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA: /api/ratings (GET)
+  // ROTA: /api/ratings (GET) - Listar avaliações
   // ============================================================
   if (path === '/api/ratings' && event.httpMethod === 'GET') {
     try {
@@ -152,7 +328,7 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA: /api/rate (POST)
+  // ROTA: /api/rate (POST) - Enviar avaliação
   // ============================================================
   if (path === '/api/rate' && event.httpMethod === 'POST') {
     try {
@@ -205,7 +381,7 @@ exports.handler = async function(event, context) {
   }
 
   // ============================================================
-  // ROTA: /api/download (POST)
+  // ROTA: /api/download (POST) - Download com senha
   // ============================================================
   if (path === '/api/download' && event.httpMethod === 'POST') {
     try {
